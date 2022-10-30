@@ -1,3 +1,7 @@
+# Passwords
+/config
+/data
+
 # Logs
 logs
 *.log

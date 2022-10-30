@@ -1,19 +1,24 @@
 const mysql = require('mysql');
+const dbConfig = require('./config/db.config.js')
 
 const conn = mysql.createConnection({
-    host: "database-1.cjrkveiinmqa.us-east-1.rds.amazonaws.com",
-    port: '3306',
-    user: "admin",
-    password: "Waleed123-"
+    host: dbConfig.HOST,
+    port: dbConfig.PORT,
+    user: dbConfig.USER,
+    password: dbConfig.PASSWORD,
+    database: dbConfig.DATABASE
 });
 
 conn.connect(function(err) {
     if (err) throw err;
-    console.log("Connected!");
-    conn.query('CREATE DATABASE IF NOT EXISTS my_db;');
-    conn.query('USE my_db;');
-    conn.query('CREATE TABLE IF NOT EXISTS users(id int NOT NULL AUTO_INCREMENT, username varchar(30), email varchar(255), age int, PRIMARY KEY(id));', function(error, result, fields) {
+    console.log("Connected to the Database!");
+    conn.query("CREATE TABLE IF NOT EXISTS `genre` (" +
+                "id int NOT NULL PRIMARY," +
+                "title varchar(255) NOT NULL" +
+                "PRIMARY KEY(id))", function(error, result, fields) {
         console.log(result);
     });
-    conn.end();
+    conn.end()
 });
+
+module.exports = conn
