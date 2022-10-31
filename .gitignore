@@ -1,6 +1,7 @@
 # Passwords
 /config
 /data
+/uploader
 
 # Logs
 logs

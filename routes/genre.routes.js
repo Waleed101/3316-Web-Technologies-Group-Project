@@ -1,5 +1,5 @@
 module.exports = app => {
-    const genres = require("../genres/genre.controller.js");
+    const genre = require("../controller/genre.controller.js");
   
     var router = require("express").Router();
   
@@ -17,6 +17,9 @@ module.exports = app => {
   
     // Delete a Genre with id
     router.delete("/:id", genre.delete);
+
+    // Delete all
+    router.delete("/", genre.deleteAll);
   
     app.use('/api/genre', router);
   };

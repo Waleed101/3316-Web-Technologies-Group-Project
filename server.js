@@ -17,7 +17,7 @@ app.get("/", (req, res) => {
   res.json({ message: "Welcome to music application" });
 });
 
-require("./app/routes/genre.routes.js")(app);
+require("./routes/genre.routes.js")(app);
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {

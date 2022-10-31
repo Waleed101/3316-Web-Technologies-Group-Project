@@ -1,12 +1,13 @@
 const sql = require('../dbseed.js')
 
 const Genre = function(genre) {
-    this.id = genre.genre_id
+    this.id = genre.id
     this.title = genre.title
 }
 
 Genre.create = (newGenre, result) => {
-    sql.query("INSERT INTO genre SET ?", newGenre, (err, res) => {
+    console.log(newGenre)
+    sql.query(`INSERT INTO genre SET id=${newGenre.id}, title="${newGenre.title}"`, (err, res) => {
         if(err) {
             console.log("Error: ", err)
             result(err, null)
@@ -41,7 +42,7 @@ Genre.getAll = (title, result) => {
     let query = `SELECT * FROM genre`
 
     if (title) {
-        query += `WHERE title LIKE '%${title}%'`
+        query += ` WHERE title LIKE '%${title}%'`
     }
 
     sql.query(query, (err, res) => {
@@ -95,3 +96,18 @@ Genre.remove = (id, result) => {
         result(null, res)
     })
 }
+
+Genre.removeAll = result => {
+    sql.query("DELETE FROM genre", (err, res) => {
+        if (err) {
+            console.log("error: ", err);
+            result(null, err);
+            return;
+        }
+
+        console.log(`deleted ${res.affectedRows} genre`)
+        result(null, res)
+    })
+}
+
+module.exports = Genre
