@@ -19,6 +19,57 @@ conn.connect(function(err) {
         if(error) throw error
         console.log(result);
     });
+    conn.query("CREATE TABLE IF NOT EXISTS `track` (" +
+                "id int NOT NULL," +
+                "title varchar(255) NOT NULL," +
+                "albumID int NOT NULL," +
+                "artistID int NOT NULL," + 
+                "dateRecorded varchar(255)," +
+                "datePublished varchar(255)," +
+                "duration varchar(255)," +
+                "interest varchar(255)," +
+                "listens varchar(255)," +
+                "genres varchar(255)," +
+                "tags varchar(255)," +
+                "trackNum int," +
+                "PRIMARY KEY(id))", function(error, result, fields) {
+        if(error) throw error
+        console.log(result);
+    });
+    
+    conn.query("CREATE TABLE IF NOT EXISTS `artist` (" +
+                "id int NOT NULL," +
+                "name varchar(255) NOT NULL," +
+                "yearStart varchar(50)," +
+                "yearEnd  varchar(50)," + 
+                "contact varchar(255)," +
+                "dateCreated varchar(255)," +
+                "handle varchar(255)," +
+                "location varchar(255)," +
+                "members varchar(255)," +
+                "tags varchar(255)," +
+                "PRIMARY KEY(id))", function(error, result, fields) {
+        if(error) throw error
+        console.log(result);
+    });
+
+    // conn.query("DROP TABLE `album`")
+     conn.query("CREATE TABLE IF NOT EXISTS `album` (" +
+                "id int NOT NULL," +
+                "title varchar(255) NOT NULL," +
+                "artistID int," +
+                "artistName varchar(255)," +
+                "dateReleased varchar(100)," + 
+                "dateUploaded varchar(100)," +
+                "handle varchar(255)," +
+                "listens varchar(20)," +
+                "tracks varchar(255)," +
+                "tags varchar(255)," +
+                "type varchar(255)," +
+                "PRIMARY KEY(id))", function(error, result, fields) {
+        if(error) throw error
+        console.log(result);
+    });
     // conn.end()
 });
 
