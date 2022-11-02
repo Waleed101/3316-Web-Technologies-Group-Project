@@ -53,19 +53,11 @@ conn.connect(function(err) {
         console.log(result);
     });
 
-    // conn.query("DROP TABLE `album`")
-     conn.query("CREATE TABLE IF NOT EXISTS `album` (" +
-                "id int NOT NULL," +
-                "title varchar(255) NOT NULL," +
-                "artistID int," +
-                "artistName varchar(255)," +
-                "dateReleased varchar(100)," + 
-                "dateUploaded varchar(100)," +
-                "handle varchar(255)," +
-                "listens varchar(20)," +
-                "tracks varchar(255)," +
-                "tags varchar(255)," +
-                "type varchar(255)," +
+     conn.query("CREATE TABLE IF NOT EXISTS `list` (" +
+                "id int NOT NULL AUTO_INCREMENT," +
+                "name varchar(255) NOT NULL," +
+                "tracks varchar(510) NOT NULL," +
+                "totalPlayTime int NOT NULL," +
                 "PRIMARY KEY(id))", function(error, result, fields) {
         if(error) throw error
         console.log(result);
