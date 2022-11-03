@@ -2,12 +2,13 @@ const sql = require('../dbseed.js')
 
 const Genre = function(genre) {
     this.id = genre.id
+    this.parent = genre.parent
     this.title = genre.title
 }
 
 Genre.create = (newGenre, result) => {
     console.log(newGenre)
-    sql.query(`INSERT INTO genre SET id=${newGenre.id}, title="${newGenre.title}"`, (err, res) => {
+    sql.query(`INSERT INTO genre SET id=${newGenre.id}, parent=${newGenre.parent}, title="${newGenre.title}"`, (err, res) => {
         if(err) {
             console.log("Error: ", err)
             result(err, null)
@@ -52,7 +53,7 @@ Genre.getAll = (title, result) => {
             return;
         }
       
-        console.log("genres: ", res);
+        // console.log("genres: ", res);
         result(null, res);
     })
 }

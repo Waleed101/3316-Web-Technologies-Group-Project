@@ -1,10 +1,13 @@
+// const sql = require('./dbseed.js')
+
 const express = require("express");
 const cors = require("cors");
+
 
 const app = express();
 
 var corsOptions = {
-  origin: "http://localhost:8081"
+  origin: "https://localhost:8000"
 };
 
 app.use(cors(corsOptions));
@@ -13,9 +16,15 @@ app.use(express.json());
 
 app.use(express.urlencoded({ extended: true }));
 
-app.get("/", (req, res) => {
-  res.json({ message: "Welcome to music application" });
-});
+app.use(express.static("main"))
+   
+// app.get('/api/genre', function (req, res) {
+//   console.log("Temp")
+//   res.json("Temp")
+//   // res.send("Temp")
+//     // console.log("Router Working");
+//     // res.end();
+// })
 
 require("./routes/genre.routes.js")(app);
 require("./routes/track.routes.js")(app);

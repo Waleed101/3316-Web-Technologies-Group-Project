@@ -13,7 +13,8 @@ exports.create = (req, res) => {
   console.log(req.body)
   const genre = new Genre({
     id: req.body.id,
-    title: req.body.title
+    title: req.body.title,
+    parent: req.body.parent
   });
 
   Genre.create(genre, (err, data) => {
@@ -36,7 +37,12 @@ exports.findAll = (req, res) => {
           message:
             err.message || "Some error occurred while retrieving genre."
         });
-      else res.send(data);
+      else {
+        // data = Object.values(JSON.parse(JSON.stringify(data)));
+        console.log(data)
+        res.send(data)
+        // res.send("{'key':'value'}")
+      }
     });
 };
 

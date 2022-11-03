@@ -12,9 +12,11 @@ const conn = mysql.createConnection({
 conn.connect(function(err) {
     if (err) throw err;
     console.log("Connected to the Database!");
+    
     conn.query("CREATE TABLE IF NOT EXISTS `genre` (" +
                 "id int NOT NULL," +
                 "title varchar(255) NOT NULL," +
+                "parent int," +
                 "PRIMARY KEY(id))", function(error, result, fields) {
         if(error) throw error
         console.log(result);
