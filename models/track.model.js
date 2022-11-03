@@ -1,5 +1,7 @@
 const sql = require('../dbseed.js')
 
+const MAX_TRACKS_TO_RETURN = 50
+
 const Track = function(track) {
     this.id = track.id
     this.title = track.title
@@ -86,28 +88,35 @@ Track.findById = (id, result) => {
 Track.getAll = (req, result) => {
     let query = `SELECT * FROM track`
 
-    let additional = ``
-
     if (req.title) {
-        additional += ` WHERE title LIKE '%${req.title}%'`
-    }
-
-    if (req.artistID) {
-        if(additional == ``) {
-            additional += ` WHERE `
-        } else {
-            additional += ` AND `
-        }
-        query += `artistID = ${req.artistID}`
-    }
-
-    if (req.albumID) {
-        if(additional == ``) {
-            additional += ` WHERE `
-        } else {
-            additional += ` AND `
-        }
-        query += `albumID = ${req.albumID}`
+        query = `SELECT * FROM (((SELECT trackID
+            FROM (
+                    SELECT id as albumID 
+                    FROM album
+                    WHERE album.title LIKE '%${req.title}%'
+            ) as album
+            LEFT JOIN
+            (
+                    SELECT id as trackID, albumID
+                    FROM track
+                    WHERE track.title LIKE '%${req.title}%'
+            ) as track
+            on album.albumID = track.albumID)
+            UNION 
+            (SELECT trackID
+            FROM (
+                    SELECT id as albumID 
+                    FROM album
+                    WHERE album.title LIKE '%${req.title}%'
+            ) as album
+            RIGHT JOIN
+            (
+                    SELECT id as trackID, albumID
+                    FROM track
+                    WHERE track.title LIKE '%${req.title}%'
+            ) as track
+            on album.albumID = track.albumID)) LIMIT ${MAX_TRACKS_TO_RETURN}) 
+            AS final WHERE trackID IS NOT NULL`
     }
 
     sql.query(query, (err, res) => {
