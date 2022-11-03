@@ -50,7 +50,7 @@ Artist.findById = (id, result) => {
 }
 
 Artist.getAll = (req, result) => {
-    let query = `SELECT * FROM artist`
+    let query = `SELECT id AS artistID FROM artist`
     let additional = ``
 
     if (req.name != undefined) {

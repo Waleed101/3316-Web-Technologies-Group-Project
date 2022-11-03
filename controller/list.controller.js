@@ -68,18 +68,18 @@ exports.update = (req, res) => {
     
       console.log(req.body);
     
-      List.updateById(
-        req.params.id,
+      List.updateByName(
+        req.params.name,
         new List(req.body),
         (err, data) => {
           if (err) {
             if (err.kind === "not_found") {
               res.status(404).send({
-                message: `List with id ${req.params.id} was not found.`
+                message: `List with name ${req.params.name} was not found.`
               });
             } else {
               res.status(500).send({
-                message: "Error updating List with id " + req.params.id
+                message: "Error updating List with name " + req.params.name
               });
             }
           } else res.send(data);
@@ -89,15 +89,16 @@ exports.update = (req, res) => {
 
 // Delete a List with the specified id in the request
 exports.delete = (req, res) => {
-    List.remove(req.params.name, (err, data) => {
+  console.log("Deleting...")
+    List.remove(req.query.name, (err, data) => {
       if (err) {
         if (err.kind === "not_found") {
           res.status(404).send({
-            message: `Not found List with name ${req.params.nam}.`
+            message: `Not found List with name ${req.query.name}.`
           });
         } else {
           res.status(500).send({
-            message: "Could not delete List with name " + req.params.name
+            message: "Could not delete List with name " + req.query.name
           });
         }
       } else res.send({ message: `List was deleted successfully!` });

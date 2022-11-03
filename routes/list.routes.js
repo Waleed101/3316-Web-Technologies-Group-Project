@@ -12,11 +12,11 @@ module.exports = app => {
     // Retrieve a single list with id
     router.get("/:id", list.findOne);
   
-    // Update a List with id
+    // Update a List with name
     router.put("/:name", list.update);
   
-    // Delete a List with id
-    router.delete("/:name", list.delete);
+    // Delete a List with name
+    router.delete("/", list.delete);
   
     app.use('/api/list', router);
   };

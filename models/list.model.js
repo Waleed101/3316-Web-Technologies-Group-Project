@@ -43,7 +43,7 @@ List.create = (newList, result) => {
 }
 
 List.findById = (id, result) => {
-    sql.query(`SELECT * FROM list WHERE id = ${id}`, (err, res) => {
+    sql.query(`SELECT tracks FROM list WHERE id = ${id}`, (err, res) => {
         if(err) {
             console.log("Error: ", err)
             result(err, null)
@@ -51,25 +51,21 @@ List.findById = (id, result) => {
         }
 
         if(res.length) {
-            console.log("Found List: ", res[0])
-            result(null, res[0])
+            let final = res[0]["tracks"].split(",")
+            final[0] = final[0].slice(1)
+            let l = final.length - 1
+            final[l] = final[l].slice(0, final[l].length - 1)
+            console.log("Found List: ", final)
+            result(null, final)
             return
         }
 
-        result({ans: "Not Found"}, null)
+        result({kind: "not_found"}, null)
     })
 }
 
 List.getAll = (name, result) => {
-    let query = `SELECT * FROM list`
-
-    let additional = ``
-
-    if (name) {
-        additional += ` WHERE name LIKE '%${req.name}%'`
-    }
-
-    query += additional
+    let query = `SELECT name, tracks, totalPlayTime FROM list`
 
     sql.query(query, (err, res) => {
         if(err) {
@@ -77,7 +73,12 @@ List.getAll = (name, result) => {
             result(null, err);
             return;
         }
-      
+
+        for(let i = 0; i < res.length; i+=1) {
+            res[i]["numberOfTracks"] = res[i]["tracks"].split(",").length
+            delete res[i]["tracks"]
+        }
+
         console.log("Lists: ", res);
         result(null, res);
     })
@@ -92,7 +93,8 @@ List.remove = (name, result) => {
         }
 
         if (res.affectedRows == 0) {
-            result({ans: "Not Found"}, null)
+            console.log("Not Found")
+            result({kind: "not_found"}, null)
             return
         }
 
@@ -102,9 +104,11 @@ List.remove = (name, result) => {
 }
 
 List.updateByName = (name, list, result) => {
+    let query = `UPDATE list SET tracks = "${list.tracks}", totalPlayTime = ${list.totalPlayTime} WHERE name = "${name}"`
+    console.log(query)
+    
     sql.query(
-      "UPDATE list SET tracks = ?, totalPlayTime = ? WHERE name = ?",
-      [list.tracks, list.totalPlayTime, name],
+      query,
       (err, res) => {
         if (err) {
           console.log("Error: ", err)
@@ -113,12 +117,12 @@ List.updateByName = (name, list, result) => {
         }
   
         if (res.affectedRows == 0) {
-          result({ans: "Not Found"}, null)
+          result({kind: "not_found"}, null)
           return
         }
   
-        console.log("Updated List: ", { id: id, ...list })
-        result(null, { id: id, ...list })
+        console.log("Updated List: ", { name: name, ...list })
+        result(null, { name: name, ...list })
       }
     )
 }
