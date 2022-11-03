@@ -26,7 +26,7 @@ function getAllGenres() {
     )
 }
 
-function hide(div) {
+function hideButton(div) {
     document.getElementById(div).innerHTML = ""
     document.getElementById("hide_" + div).style.visibility = 'hidden'
 }
