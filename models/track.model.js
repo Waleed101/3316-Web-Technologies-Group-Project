@@ -41,12 +41,45 @@ Track.findById = (id, result) => {
         }
 
         if(res.length) {
-            console.log("Found Track: ", res[0])
-            result(null, res[0])
-            return
-        }
 
-        result({ans: "Not Found"}, null)
+            sql.query(`SELECT * FROM album WHERE id = ${res[0]["albumID"]}`, (err, albumRes) => {
+                console.log(`SELECT * FROM album WHERE id = ${res[0]["albumID"]}`)
+                if(err) {
+                    console.log("Error: ", err)
+                    result(err, null)
+                    return
+                }
+
+                if(albumRes.length) {
+                    res[0]["album"] = albumRes
+                    console.log(`SELECT * FROM artist WHERE id = ${res[0]["artistID"]}`)
+                    sql.query(`SELECT * FROM artist WHERE id = ${res[0]["artistID"]}`, (err, artistRes) => {
+                        if(err) {
+                            console.log("Error: ", err)
+                            result(err, null)
+                            return
+                        }
+        
+                        if(artistRes.length) {
+                            res[0]["artist"] = artistRes
+                            
+                            console.log("Found Track: ", res[0])
+                            result(null, res[0])
+                            return
+                        } else {
+                            console.log("Couldn't find the associated Artist with ID " + res[0]["artistID"])
+                            result({ans: "Not Found", more: "Couldn't find the associated Artist with id " + res[0]["artistID"]}, null)
+                        }
+                    });
+                } else {
+                    console.log("Couldn't find the associated Album with ID " + res[0]["albumID"])
+                    result({ans: "Not Found", more: "Couldn't find the associated Album with id " + res[0]["albumID"]}, null)
+                }
+            });
+        } else {
+            console.log("Couldn't find any tracks with ID " + id)
+            result({ans: "Not Found", more: "Couldn't find any tracks with ID " + id}, null)
+        }        
     })
 }
 

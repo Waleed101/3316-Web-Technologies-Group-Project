@@ -60,7 +60,7 @@ exports.findOne = (req, res) => {
         if (err) {
           if (err.kind === "not_found") {
             res.status(404).send({
-              message: `Track with id ${req.params.id} is not found.`
+              message: err.more || `Track with id ${req.params.id} is not found.`
             })
           } else {
             res.status(500).send({
