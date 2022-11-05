@@ -67,6 +67,8 @@ Album.getAll = (req, result) => {
         query += `artistID = ${req.artistID}`
     }
 
+    query += additional
+
     sql.query(query, (err, res) => {
         if(err) {
             console.log("Error: ", err);

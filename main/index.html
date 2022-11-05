@@ -1,5 +1,8 @@
 <html>
-    <link rel="stylesheet" href="style.css">
+    <head>
+        <title>Music API Frontend Access</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
     <body onload="setup()">
         <h1>Music Data - API</h1>
 
@@ -10,13 +13,45 @@
         <button id="hide_genreContent" onclick="hideButton('genreContent')">Hide all Genres</button>
         <div id="genreContent"></div>
 
-        <!--- Solves DB.4 -->
+        <!--- Solves DB.4 & FE.1a -->
         <h4>Get Track IDs Given a Track or Album Name</h4>
-        <p class="tagline">Database Function #4</p>
+        <p class="tagline">Database Function #4 & Front-End Function #1a</p>
         <input id="trackOrAlbumName" placeholder="Enter a track or album name...">
         <button onclick="getTracksByNameContent()">Search</button>
         <button id="hide_trackByNameContent" onclick="hideButton('trackByNameContent')">Hide all Track IDs</button>
         <div id="trackByNameContent"></div>
+
+        <!--- Solves FE.1b -->
+        <h4>Get Artist Data by Name</h4>
+        <p class="tagline">Front-End Function #1b</p>
+        <input id="artistName" placeholder="Enter an artist's name...">
+        <button onclick="getArtistsByName()">Search</button>
+        <button id="hide_artistByNameContent" onclick="hideButton('artistByNameContent')">Hide all Artists</button>
+        <div id="artistByNameContent"></div>
+
+        <!--- Solves FE.1c -->
+        <h4>Get Album Data by Title</h4>
+        <p class="tagline">Front-End Function #1c</p>
+        <input id="albumTitle" placeholder="Enter an album's title...">
+        <button onclick="getAlbumsByTitle()">Search</button>
+        <button id="hide_albumByTitleContent" onclick="hideButton('albumByTitleContent')">Hide all Albums</button>
+        <div id="albumByTitleContent"></div>
+
+        <!--- Solves DB.2 -->
+        <h4>Get Artist Data by ID</h4>
+        <p class="tagline">Database Function #2</p>
+        <input id="artistID" placeholder="Enter an artist's ID...">
+        <button onclick="getArtistByID()">Search</button>
+        <button id="hide_artistByIDContent" onclick="hideButton('artistByIDContent')">Hide Artist</button>
+        <div id="artistByIDContent"></div>
+
+        <!--- Solves DB.3 -->
+        <h4>Get Track Data by ID</h4>
+        <p class="tagline">Database Function #3</p>
+        <input id="trackID" placeholder="Enter an track's ID...">
+        <button onclick="getTrackByID()">Search</button>
+        <button id="hide_trackByIDContent" onclick="hideButton('trackByIDContent')">Hide Track</button>
+        <div id="trackByIDContent"></div>
     </body>
     <script src="main.js"></script>
 </html>
