@@ -1,12 +1,22 @@
 <html>
+    <link rel="stylesheet" href="style.css">
     <body onload="setup()">
         <h1>Music Data - API</h1>
+
+        <!--- Solves DB.1 -->
         <h3>Genres</h3>
+        <p class="tagline">Database Function #1</p>
         <button onclick="getAllGenres()">Get all Genres</button>
-        <button id="hide_genreContent" onclick="hide('genreContent')">Hide all Genres</button>
-        <div id="genreContent">
-            
-        </div>
+        <button id="hide_genreContent" onclick="hideButton('genreContent')">Hide all Genres</button>
+        <div id="genreContent"></div>
+
+        <!--- Solves DB.4 -->
+        <h4>Get Track IDs Given a Track or Album Name</h4>
+        <p class="tagline">Database Function #4</p>
+        <input id="trackOrAlbumName" placeholder="Enter a track or album name...">
+        <button onclick="getTracksByNameContent()">Search</button>
+        <button id="hide_trackByNameContent" onclick="hideButton('trackByNameContent')">Hide all Track IDs</button>
+        <div id="trackByNameContent"></div>
     </body>
     <script src="main.js"></script>
 </html>

@@ -87,7 +87,7 @@ Track.findById = (id, result) => {
 
 Track.getAll = (req, result) => {
     let query = `SELECT * FROM track`
-
+    console.log(req)
     if (req.title) {
         query = `SELECT * FROM (((SELECT trackID
             FROM (

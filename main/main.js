@@ -1,6 +1,6 @@
 const url = "http://localhost:8000/api/"
 
-const hideButtons = ["hide_genreContent"]
+const hideButtons = ["hide_genreContent", "hide_trackByNameContent"]
 
 function setup() {
     hideButtons.forEach(hB => {
@@ -8,7 +8,7 @@ function setup() {
     })
 }
 
-
+// Method to get all genres (Implements DB.1)
 
 function getAllGenres() {
     console.log("Get Genres")
@@ -25,6 +25,30 @@ function getAllGenres() {
         })        
     )
 }
+
+// Function to search for track by matching album and track title (Implements DB.4)
+
+function getTracksByNameContent() {
+    const input = document.getElementById("trackOrAlbumName").value
+
+    console.log("Searching for tracks or tracks in albums with the following name/pattern: " + input)
+    
+    let trackDiv = document.getElementById("trackByNameContent")
+
+    fetch(url + "track?title=" + input)
+        .then(res => res.json()
+            .then(data => {
+                console.log("Got Tracks...")
+                
+                document.getElementById("hide_trackByNameContent").style.visibility = 'visible'
+                console.log(data)
+                trackDiv.innerHTML = convertResultsToTable(["TrackID"], data, ["trackID"])
+        })        
+    )
+}
+
+
+// Helper methods
 
 function hideButton(div) {
     document.getElementById(div).innerHTML = ""
