@@ -53,6 +53,13 @@
         <button id="hide_trackByIDContent" onclick="hideButton('trackByIDContent')">Hide Track</button>
         <div id="trackByIDContent"></div>
 
+        <!--- Solves DB.10 -->
+        <h3>Lists</h3>
+        <p class="tagline">Database Function #10</p>
+        <button onclick="getAllLists()">Get all Lists</button>
+        <button id="hide_listContent" onclick="hideButton('listContent')">Hide all Lists</button>
+        <div id="listContent"></div>
+
         <!--- Solves DB.6 & FE.2a -->
         <h4>Create List</h4>
         <p class="tagline">Database Function #6 & Front-End #2a</p>
@@ -73,6 +80,14 @@
         <input id="deleteListName" placeholder="Enter a list name...">
         <button onclick="deleteList()">Delete</button>
         <div id="deleteListResult"></div>
+
+        <!--- Solves DB.7 & FE.2a -->
+        <h4>Update List</h4>
+        <p class="tagline">Database Function #7 & Front-End #2a</p>
+        <input id="updateList_name" placeholder="Enter a list name...">
+        <input id="updateList_tracks" placeholder="Enter track IDs seperated by commas...">
+        <button onclick="updateList()">Update</button>
+        <div id="updateListResult"></div>
 
     </body>
     <script src="main.js"></script>

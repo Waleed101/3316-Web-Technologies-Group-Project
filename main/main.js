@@ -1,6 +1,8 @@
 const url = "/api/"
 
-const hideButtons = ["hide_genreContent", "hide_trackByNameContent", "hide_artistByNameContent", "hide_albumByTitleContent", "hide_artistByIDContent", "hide_trackByIDContent"]
+const hideButtons = ["hide_genreContent", "hide_trackByNameContent", "hide_artistByNameContent", 
+                     "hide_albumByTitleContent", "hide_artistByIDContent", "hide_trackByIDContent",
+                     "hide_listContent"]
 
 function setup() {
     hideButtons.forEach(hB => {
@@ -22,6 +24,24 @@ function getAllGenres() {
                 
                 document.getElementById("hide_genreContent").style.visibility = 'visible'
                 genreDiv.innerHTML = convertResultsToTable(["ID", "Name", "Parent ID"], data, ["id", "title", "parent"])
+        })        
+    )
+}
+
+// Method to get all lists (Implements DB.10)
+
+function getAllLists() {
+    console.log("Get Lists")
+    
+    let genreDiv = document.getElementById("listContent")
+
+    fetch(url + "list")
+        .then(res => res.json()
+            .then(data => {
+                console.log("Got Lists...")
+                
+                document.getElementById("hide_listContent").style.visibility = 'visible'
+                genreDiv.innerHTML = convertResultsToTable(["Name", "Total Playtime", "Number of Tracks"], data, ["name", "totalPlayTime", "numberOfTracks"])
         })        
     )
 }
@@ -198,7 +218,7 @@ function searchListName() {
     )
 }
 
-// Function to Create a List (Implements FE2a & DB.6)
+// Function to Create a List (Implements FE.2a & DB.6)
 
 function createList() {
     const input = document.getElementById("createListName").value
@@ -225,6 +245,36 @@ function createList() {
             })
         )
 }
+
+// Function to Update a List (Implements FE.2a & DB.7)
+
+function updateList() {
+    const name = document.getElementById("updateList_name").value
+    const tracks = document.getElementById("updateList_tracks").value
+
+    console.log("Updating list with name: " + name + " to have " + tracks + " tracks.")
+
+    const result = document.getElementById("updateListResult")
+
+    fetch(url + "list/" + name, {
+        method: 'PUT',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ "name": name, "tracks": tracks })
+    })
+        .then(res => res.json()
+            .then(res => {
+                if(res.message) {
+                    result.innerHTML = "<p class='result error'>" + res.message + "</p>"
+                } else {
+                    result.innerHTML = "<p class='result success'>Successfully updated list with name '" + name + "'</p>"
+                }
+            })
+        )
+}
+
 
 // Helper methods
 

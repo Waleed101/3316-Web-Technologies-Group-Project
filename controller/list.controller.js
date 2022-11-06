@@ -70,7 +70,7 @@ exports.update = (req, res) => {
     
       List.updateByName(
         req.params.name,
-        new List(req.body),
+        req.body.tracks,
         (err, data) => {
           if (err) {
             if (err.kind === "not_found") {
@@ -79,7 +79,8 @@ exports.update = (req, res) => {
               });
             } else {
               res.status(500).send({
-                message: "Error updating List with name " + req.params.name
+                message: "Error updating List with name " + req.params.name,
+                additional: err
               });
             }
           } else res.send(data);

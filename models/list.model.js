@@ -103,28 +103,50 @@ List.remove = (name, result) => {
     })
 }
 
-List.updateByName = (name, list, result) => {
-    let query = `UPDATE list SET tracks = "${list.tracks}", totalPlayTime = ${list.totalPlayTime} WHERE name = "${name}"`
+List.updateByName = (name, list, result) => {    
+    let lists = "(" + list + ")" 
+
+    let query = `SELECT id, duration FROM track WHERE id in ${lists}`
+
     console.log(query)
     
-    sql.query(
-      query,
-      (err, res) => {
-        if (err) {
-          console.log("Error: ", err)
-          result(null, err)
-          return
+    sql.query(query, (err, res) => {
+        if(err) {
+            console.log("Error: ", err)
+            result(null, err)
+            return
         }
-  
-        if (res.affectedRows == 0) {
-          result({kind: "not_found"}, null)
-          return
-        }
-  
-        console.log("Updated List: ", { name: name, ...list })
-        result(null, { name: name, ...list })
-      }
-    )
+
+        let totalDuration = 0
+
+        res.forEach(val => {
+            const time = val.duration.split(":")
+            totalDuration += (parseInt(time[0]) * 60 + parseInt(time[1]))
+        })
+
+        query = `UPDATE list SET tracks = "${list}", totalPlayTime = ${totalDuration} WHERE name = "${name}"`
+        
+        sql.query(
+            query,
+            (err, res) => {
+              if (err) {
+                console.log("Error: ", err)
+                result(null, err)
+                return
+              }
+        
+              if (res.affectedRows == 0) {
+                result({kind: "not_found"}, null)
+                return
+              }
+        
+              console.log("Updated List: ", { name: name, ...list })
+              result(null, { name: name, ...list })
+            }
+          )
+
+    })
+
 }
 
 module.exports = List
