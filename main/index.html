@@ -52,6 +52,28 @@
         <button onclick="getTrackByID()">Search</button>
         <button id="hide_trackByIDContent" onclick="hideButton('trackByIDContent')">Hide Track</button>
         <div id="trackByIDContent"></div>
+
+        <!--- Solves DB.6 & FE.2a -->
+        <h4>Create List</h4>
+        <p class="tagline">Database Function #6 & Front-End #2a</p>
+        <input id="createListName" placeholder="Enter a list name...">
+        <button onclick="createList()">Create</button>
+        <div id="createListResult"></div>
+
+        <!--- Solves DB.8 & FE.2b -->
+        <h4>Search for a List</h4>
+        <p class="tagline">Database Function #8 & Front-End #2b</p>
+        <input id="searchListName" placeholder="Enter a list name...">
+        <button onclick="searchListName()">Search</button>
+        <div id="searchListResult"></div>
+
+        <!--- Solves DB.9 -->
+        <h4>Delete List</h4>
+        <p class="tagline">Database Function #9</p>
+        <input id="deleteListName" placeholder="Enter a list name...">
+        <button onclick="deleteList()">Delete</button>
+        <div id="deleteListResult"></div>
+
     </body>
     <script src="main.js"></script>
 </html>

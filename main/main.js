@@ -146,6 +146,86 @@ function getTrackByID() {
     )
 }
 
+// Function to Delete a List (Implements DB.9)
+
+function deleteList() {
+    const input = document.getElementById("deleteListName").value
+
+    console.log("Deleting list with name: " + input)
+
+    const result = document.getElementById("deleteListResult")
+
+    fetch(url + "list/", {
+        method: 'DELETE',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ "name": input })
+    })
+        .then(res => res.json()
+            .then(res => {
+                if(res.message) {
+                    result.innerHTML = "<p class='result error'>" + res.message + "</p>"
+                } else {
+                    result.innerHTML = "<p class='result success'>Successfully deleted list with name '" + input + "'</p>"
+                }
+            })
+        )
+}
+
+// Function to get all tracks on a specific list (Implements DB.2)
+
+function searchListName() {
+    const input = document.getElementById("searchListName").value
+
+    console.log("Retrieving list with name: " + input)
+    
+    let listDiv = document.getElementById("searchListResult")
+
+    fetch(url + "list/?name=" + input)
+        .then(res => res.json()
+            .then(data => {
+                if(data.length == 0) {
+                    listDiv.innerHTML = "<p class='result error'>No results matching the list name '" + input + "'</p>"
+                    return
+                }
+
+                console.log("Got List.")
+                console.log(data)
+                listDiv.innerHTML = "List of name " + input + " has tracks " + data[0]['tracks']                
+            })        
+    )
+}
+
+// Function to Create a List (Implements FE2a & DB.6)
+
+function createList() {
+    const input = document.getElementById("createListName").value
+
+    console.log("Creating list with name: " + input)
+
+    const result = document.getElementById("createListResult")
+
+    fetch(url + "list/", {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ "name": input, "tracks": "[]", "totalPlayTime": "0" })
+    })
+        .then(res => res.json()
+            .then(res => {
+                if(res.message) {
+                    result.innerHTML = "<p class='result error'>" + res.message + "</p>"
+                } else {
+                    result.innerHTML = "<p class='result success'>Successfully created list with name '" + input + "'</p>"
+                }
+            })
+        )
+}
+
 // Helper methods
 
 function hideButton(div) {

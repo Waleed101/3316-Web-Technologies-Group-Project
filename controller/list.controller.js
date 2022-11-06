@@ -90,15 +90,15 @@ exports.update = (req, res) => {
 // Delete a List with the specified id in the request
 exports.delete = (req, res) => {
   console.log("Deleting...")
-    List.remove(req.query.name, (err, data) => {
+    List.remove(req.body.name, (err, data) => {
       if (err) {
         if (err.kind === "not_found") {
           res.status(404).send({
-            message: `Not found List with name ${req.query.name}.`
+            message: `Not found List with name ${req.body.name}.`
           });
         } else {
           res.status(500).send({
-            message: "Could not delete List with name " + req.query.name
+            message: "Could not delete List with name " + req.body.name
           });
         }
       } else res.send({ message: `List was deleted successfully!` });

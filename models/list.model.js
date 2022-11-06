@@ -24,7 +24,7 @@ List.create = (newList, result) => {
 
         if(res.length) {
             console.log(`List with name ${newList.name} exists.`)
-            result({"message": "List already exists"}, null)
+            result({"message": "List with name " + newList.name + " already exists."}, null)
             return
         }
 
@@ -66,6 +66,12 @@ List.findById = (id, result) => {
 
 List.getAll = (name, result) => {
     let query = `SELECT name, tracks, totalPlayTime FROM list`
+    let removeTracks = true
+
+    if(name) {
+        query += ` WHERE name = "${name}"`
+        removeTracks = false
+    }
 
     sql.query(query, (err, res) => {
         if(err) {
@@ -74,9 +80,11 @@ List.getAll = (name, result) => {
             return;
         }
 
-        for(let i = 0; i < res.length; i+=1) {
-            res[i]["numberOfTracks"] = res[i]["tracks"].split(",").length
-            delete res[i]["tracks"]
+        if(removeTracks) {
+            for(let i = 0; i < res.length; i+=1) {
+                res[i]["numberOfTracks"] = res[i]["tracks"].split(",").length
+                delete res[i]["tracks"]
+            }
         }
 
         console.log("Lists: ", res);
