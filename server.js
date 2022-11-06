@@ -1,8 +1,5 @@
-// const sql = require('./dbseed.js')
-
 const express = require("express");
 const cors = require("cors");
-
 
 const app = express();
 
@@ -17,14 +14,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(express.static("main"))
-   
-// app.get('/api/genre', function (req, res) {
-//   console.log("Temp")
-//   res.json("Temp")
-//   // res.send("Temp")
-//     // console.log("Router Working");
-//     // res.end();
-// })
 
 require("./routes/genre.routes.js")(app);
 require("./routes/track.routes.js")(app);

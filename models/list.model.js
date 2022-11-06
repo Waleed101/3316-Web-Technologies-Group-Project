@@ -6,14 +6,6 @@ const List = function(list) {
     this.totalPlayTime = list.totalPlayTime
 }
 
-function getList(name) {
-    result = false
-
-   
-
-    return result
-}
-
 List.create = (newList, result) => {
     sql.query(`SELECT id FROM list WHERE name = "${newList.name}"`, (err, res) => {
         if(err) {
