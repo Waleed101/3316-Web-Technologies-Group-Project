@@ -21,7 +21,7 @@ List.create = (newList, result) => {
             return
         }
 
-        sql.query(`INSERT INTO list SET name="${newList.name}", tracks="${newList.tracks}", totalPlayTime=${newList.totalPlayTime}`, (err, res) => {
+        sql.query(`INSERT INTO list SET name="${newList.name}", tracks="", totalPlayTime=0`, (err, res) => {
             if(err) {
                 console.log("Error: ", err)
                 result(err, null)
@@ -141,7 +141,6 @@ List.updateByName = (name, list, result) => {
                 return
               }
         
-              console.log("Updated List: ", { name: name, ...list })
               result(null, { name: name, ...list })
             }
           )

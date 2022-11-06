@@ -39,11 +39,13 @@ exports.create = (req, res) => {
 exports.findAll = (req, res) => {
     const name = req.query.name;
     // console.log(name)
-  
-    if (sanitize.hasNoScript(name)) {
-      res.status(403).send({ message: "Your input cannot have any of: <, >"})
-      return
-    }  
+
+    if(name) {
+      if (sanitize.hasNoScript(name)) {
+        res.status(403).send({ message: "Your input cannot have any of: <, >"})
+        return
+      }  
+    }
 
     List.getAll(name, (err, data) => {
       if (err)
@@ -101,11 +103,11 @@ exports.update = (req, res) => {
 
       const vals = req.body.tracks.split(",")
 
-      vals.foreach(data => {
-        if (!sanitize.isInteger(data)) {
+      for(let i = 0; i < vals.length; i += 1) {
+        if (!sanitize.isInteger(vals[i])) {
           res.status(403).send({ message: "All the IDs you inputted should only be numbers."})
         }
-      })
+      }
     
       List.updateByName(
         req.params.name,
