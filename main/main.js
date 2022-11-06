@@ -1,13 +1,20 @@
 const url = "/api/"
 
-const hideButtons = ["hide_genreContent", "hide_trackByNameContent", "hide_artistByNameContent", 
-                     "hide_albumByTitleContent", "hide_artistByIDContent", "hide_trackByIDContent",
-                     "hide_listContent"]
-
-function setup() {
-    hideButtons.forEach(hB => {
-        document.getElementById(hB).style.visibility = 'hidden'
-    })
+function openTab(evt, tab) {
+    var i, tabcontent, tablinks;
+  
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+    }
+  
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+  
+    document.getElementById(tab).style.display = "block";
+    evt.currentTarget.className += " active";
 }
 
 // Method to get all genres (Implements DB.1)
@@ -15,14 +22,13 @@ function setup() {
 function getAllGenres() {
     console.log("Get Genres")
     
-    let genreDiv = document.getElementById("genreContent")
+    let genreDiv = document.getElementById("result")
 
     fetch(url + "genre")
         .then(res => res.json()
             .then(data => {
                 console.log("Got Genres...")
                 
-                document.getElementById("hide_genreContent").style.visibility = 'visible'
                 genreDiv.innerHTML = convertResultsToTable(["ID", "Name", "Parent ID"], data, ["id", "title", "parent"])
         })        
     )
@@ -33,14 +39,13 @@ function getAllGenres() {
 function getAllLists() {
     console.log("Get Lists")
     
-    let genreDiv = document.getElementById("listContent")
+    let genreDiv = document.getElementById("result")
 
     fetch(url + "list")
         .then(res => res.json()
             .then(data => {
                 console.log("Got Lists...")
                 
-                document.getElementById("hide_listContent").style.visibility = 'visible'
                 genreDiv.innerHTML = convertResultsToTable(["Name", "Total Playtime", "Number of Tracks"], data, ["name", "totalPlayTime", "numberOfTracks"])
         })        
     )
@@ -53,15 +58,13 @@ function getTracksByNameContent() {
 
     console.log("Searching for tracks or tracks in albums with the following name/pattern: " + input)
     
-    let trackDiv = document.getElementById("trackByNameContent")
+    let trackDiv = document.getElementById("result")
 
     fetch(url + "track?title=" + input)
         .then(res => res.json()
             .then(data => {
                 console.log("Got Tracks...")
                 
-                document.getElementById("hide_trackByNameContent").style.visibility = 'visible'
-                console.log(data)
                 trackDiv.innerHTML = convertResultsToTable(["Track ID"], data, ["trackID"])
         })        
     )
@@ -74,15 +77,13 @@ function getArtistsByName() {
 
     console.log("Searching for artists following name/pattern: " + input)
     
-    let artistDiv = document.getElementById("artistByNameContent")
+    let artistDiv = document.getElementById("result")
 
     fetch(url + "artist?name=" + input)
         .then(res => res.json()
             .then(data => {
                 console.log("Got Artists...")
                 
-                document.getElementById("hide_artistByNameContent").style.visibility = 'visible'
-                console.log(data)
                 artistDiv.innerHTML = convertResultsToTable(["Artist ID"], data, ["artistID"])
         })        
     )
@@ -95,15 +96,13 @@ function getAlbumsByTitle() {
 
     console.log("Searching for albums following title/pattern: " + input)
     
-    let artistDiv = document.getElementById("albumByTitleContent")
+    let artistDiv = document.getElementById("result")
 
     fetch(url + "album?title=" + input)
         .then(res => res.json()
             .then(data => {
                 console.log("Got Albums...")
                 
-                document.getElementById("hide_albumByTitleContent").style.visibility = 'visible'
-                console.log(data)
                 artistDiv.innerHTML = convertResultsToTable(["Album ID", "Title", "Artist Name", "Released", "Uploaded", "Track Count"], data, ["id", "title", "artistName", "dateReleased", "dateUploaded", "tracks"])
         })        
     )
@@ -120,15 +119,13 @@ function getArtistByID() {
 
     console.log("Retrieving artist with ID: " + input)
     
-    let artistDiv = document.getElementById("artistByIDContent")
+    let artistDiv = document.getElementById("result")
 
     fetch(url + "artist/" + input)
         .then(res => res.json()
             .then(data => {
                 console.log("Got Artist.")
                 
-                document.getElementById("hide_artistByIDContent").style.visibility = 'visible'
-                console.log(data)
                 artistDiv.innerHTML = convertResultsToTable(["Name", "Contact", "Location", "Tags", "Year Start", "Year End"], [data], ["name", "contact", "location", "tags", "yearStart", "yearEnd"])
         })        
     )
@@ -145,16 +142,13 @@ function getTrackByID() {
 
     console.log("Retrieving track with ID: " + input)
     
-    let artistDiv = document.getElementById("trackByIDContent")
+    let artistDiv = document.getElementById("result")
 
     fetch(url + "track/" + input)
         .then(res => res.json()
             .then(data => {
                 console.log("Got Track.")
                 
-                document.getElementById("hide_trackByIDContent").style.visibility = 'visible'
-
-
                 data["albumTitle"] = data["album"][0]["title"]
                 data["artistName"] = data["artist"][0]["name"]
 
@@ -215,8 +209,6 @@ function searchListName() {
                     return
                 }
 
-                console.log("Got List.")
-                console.log(data)
                 listDiv.innerHTML = "List of name " + input + " has tracks " + data[0]['tracks']                
             })        
     )
@@ -282,9 +274,8 @@ function updateList() {
 
 // Helper methods
 
-function hideButton(div) {
-    document.getElementById(div).innerHTML = ""
-    document.getElementById("hide_" + div).style.visibility = 'hidden'
+function hide() {
+    document.getElementById("result").innerHTML = ""
 }
 
 function convertResultsToTable(headers, data, attr) {
