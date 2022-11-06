@@ -1,3 +1,5 @@
+const sanitize = require('../helper/sanitize.helper.js')
+
 const List = require("../models/list.model.js");
 
 // Create and Save a new List
@@ -9,12 +11,18 @@ exports.create = (req, res) => {
     });
   }
 
-  // Test
+  if (!sanitize.stringLength(req.body.name, 3, 255)) {
+    res.status(403).send({ message: "Your input is not between the length of 3 and 255"})
+    return
+  }
+
+  if (sanitize.hasNoScript(req.body.name)) {
+    res.status(403).send({ message: "Your input cannot have any of: <, >"})
+  }  
+
   console.log(req.body)
   const list = new List({
-    name: req.body.name,
-    tracks: req.body.tracks,
-    totalPlayTime: req.body.totalPlayTime
+    name: req.body.name
   });
 
   List.create(list, (err, data) => {
@@ -30,6 +38,12 @@ exports.create = (req, res) => {
 // Retrieve all List from the database (with condition).
 exports.findAll = (req, res) => {
     const name = req.query.name;
+    // console.log(name)
+  
+    if (sanitize.hasNoScript(name)) {
+      res.status(403).send({ message: "Your input cannot have any of: <, >"})
+      return
+    }  
 
     List.getAll(name, (err, data) => {
       if (err)
@@ -43,19 +57,28 @@ exports.findAll = (req, res) => {
 
 // Find a single List with a id
 exports.findOne = (req, res) => {
-    List.findById(req.params.id, (err, data) => {
-        if (err) {
-          if (err.kind === "not_found") {
-            res.status(404).send({
-              message: `List with id ${req.params.id} is not found.`
-            })
-          } else {
-            res.status(500).send({
-              message: "Error retrieving List with id " + req.params.id
-            })
-          }
-        } else res.send(data)
-      });
+  
+  if (!sanitize.isInteger(req.params.id)) {
+    res.status(403).send({ message: "The ID you inputted has to be a number."})
+  }  
+
+  if (!sanitize.minimum(req.params.id, 1)) {
+    res.status(403).send({ message: "The ID you inputted has to be atleast 1."})
+  }  
+
+  List.findById(req.params.id, (err, data) => {
+      if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: `List with id ${req.params.id} is not found.`
+          })
+        } else {
+          res.status(500).send({
+            message: "Error retrieving List with id " + req.params.id
+          })
+        }
+      } else res.send(data)
+    });
 };
 
 // Update a List identified by the id in the request
@@ -67,6 +90,22 @@ exports.update = (req, res) => {
       }
     
       console.log(req.body);
+
+      if (sanitize.hasNoScript(req.params.name)) {
+        res.status(403).send({ message: "Your input cannot have any of: <, >"})
+      }  
+
+      if (sanitize.hasNoScript(req.body.tracks)) {
+        res.status(403).send({ message: "Your input cannot have any of: <, >"})
+      }  
+
+      const vals = req.body.tracks.split(",")
+
+      vals.foreach(data => {
+        if (!sanitize.isInteger(data)) {
+          res.status(403).send({ message: "All the IDs you inputted should only be numbers."})
+        }
+      })
     
       List.updateByName(
         req.params.name,
@@ -90,6 +129,11 @@ exports.update = (req, res) => {
 
 // Delete a List with the specified id in the request
 exports.delete = (req, res) => {
+
+  if (sanitize.hasNoScript(req.body.name)) {
+    res.status(403).send({ message: "Your input cannot have any of: <, >"})
+  }  
+
   console.log("Deleting...")
     List.remove(req.body.name, (err, data) => {
       if (err) {
@@ -105,15 +149,3 @@ exports.delete = (req, res) => {
       } else res.send({ message: `List was deleted successfully!` });
     });
   };
-  
-// Delete all Lists
-exports.deleteAll = (req, res) => {
-    List.removeAll((err, data) => {
-        if (err)
-          res.status(500).send({
-            message:
-              err.message || "Some error occurred while removing all lists."
-          });
-        else res.send({ message: `All Lists were deleted successfully!` });
-    });
-};

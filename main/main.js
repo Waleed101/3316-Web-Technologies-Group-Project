@@ -206,6 +206,10 @@ function searchListName() {
     fetch(url + "list/?name=" + input)
         .then(res => res.json()
             .then(data => {
+                if(data.message) {
+                    listDiv.innerHTML = "<p class='result error'>" + data.message + "</p>"
+                    return
+                }
                 if(data.length == 0) {
                     listDiv.innerHTML = "<p class='result error'>No results matching the list name '" + input + "'</p>"
                     return

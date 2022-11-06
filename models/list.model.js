@@ -7,6 +7,7 @@ const List = function(list) {
 }
 
 List.create = (newList, result) => {
+    
     sql.query(`SELECT id FROM list WHERE name = "${newList.name}"`, (err, res) => {
         if(err) {
             console.log("Error: ", err)
