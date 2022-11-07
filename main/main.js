@@ -1,5 +1,7 @@
 const url = "/api/"
 
+document.getElementById('initialTab').click()
+
 const NO_RESULTS_MESSAGE = (query, table) => "Your query " + query + " to the " + table + " records returned no results"
 
 const cleanUserInput = (input) => input.replace(/<\/?[^>]+(>|$)/g, "")
@@ -82,7 +84,15 @@ function getArtistsByName() {
             .then(data => {
                 console.log("Got Artists...")
                 
-                artistDiv.innerHTML = convertResultsToTable(["Artist ID"], data, ["artistID"], "result")
+                artistResult = []
+
+                data.forEach(artist => {
+                    artistResult.push(getBasicArtistInfoById(artist["artistID"]))
+                })
+
+                Promise.all(artistResult).then((vals) => {
+                    convertResultsToTable(["Name", "Year Start", "Year End", "Contact", "Location", "Tags"], vals, ["name", "yearStart", "yearEnd", "contact", "location", "tags"], "result")   
+                })
         })        
     )
 }
@@ -244,6 +254,24 @@ const getBasicTrackInfoByID = async (track_id) => {
     return info
 }
 
+const getBasicArtistInfoById = async (artist_id) => {
+    
+    let res = await fetch(url + "artist/" + artist_id)
+
+    let data = await res.json()
+
+    let info = {
+        "name": data["name"],
+        "yearStart": data["yearStart"],
+        "yearEnd": data["yearEnd"],
+        "contact": data["contact"],
+        "dateCreated": data["location"],
+        "tags": data["tags"]
+    }
+
+    return info
+}
+
 // Function to Create a List (Implements FE.2a & DB.6)
 
 function createList() {
@@ -328,7 +356,10 @@ function convertResultsToTable(headers, data, attr, tP) {
     data.forEach(val => {
         console.log(val)
         info += "<tr>"
-        attr.forEach(col => {info += ("<td>" + cleanUserInput(val[col].toString()) + "</td>")})
+        attr.forEach(col => {
+            val[col] = val[col] == undefined ? "" : val[col]
+            info += ("<td>" + cleanUserInput(val[col].toString()) + "</td>")
+        })
         info += "</tr>"
     })
 
