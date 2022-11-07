@@ -45,7 +45,9 @@ function getAllLists() {
         .then(res => res.json()
             .then(data => {
                 console.log("Got Lists...")
-                
+                data.forEach(indiv => {
+                    indiv["totalPlayTime"] = Math.floor(parseInt(indiv["totalPlayTime"])/60) + ":" + (parseInt(indiv["totalPlayTime"]) % 60)
+                })
                 genreDiv.innerHTML = convertResultsToTable(["Name", "Total Playtime", "Number of Tracks"], data, ["name", "totalPlayTime", "numberOfTracks"])
         })        
     )
