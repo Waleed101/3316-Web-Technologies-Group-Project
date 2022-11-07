@@ -2,6 +2,8 @@ const url = "/api/"
 
 const NO_RESULTS_MESSAGE = (query, table) => "Your query " + query + " to the " + table + " records returned no results"
 
+const cleanUserInput = (input) => input.replace(/<\/?[^>]+(>|$)/g, "")
+
 function openTab(evt, tab) {
     var i, tabcontent, tablinks;
   
@@ -23,15 +25,13 @@ function openTab(evt, tab) {
 
 function getAllGenres() {
     console.log("Get Genres")
-    
-    let genreDiv = document.getElementById("result")
 
     fetch(url + "genre")
         .then(res => res.json()
             .then(data => {
                 console.log("Got Genres...")
                 
-                genreDiv.innerHTML = convertResultsToTable(["ID", "Name", "Parent ID"], data, ["id", "title", "parent"])
+                convertResultsToTable(["ID", "Name", "Parent ID"], data, ["id", "title", "parent"], "result")
         })        
     )
 }
@@ -40,8 +40,6 @@ function getAllGenres() {
 
 function getAllLists() {
     console.log("Get Lists")
-    
-    let genreDiv = document.getElementById("result")
 
     fetch(url + "list")
         .then(res => res.json()
@@ -50,7 +48,7 @@ function getAllLists() {
                 data.forEach(indiv => {
                     indiv["totalPlayTime"] = Math.floor(parseInt(indiv["totalPlayTime"])/60) + ":" + (parseInt(indiv["totalPlayTime"]) % 60)
                 })
-                genreDiv.innerHTML = convertResultsToTable(["Name", "Total Playtime", "Number of Tracks"], data, ["name", "totalPlayTime", "numberOfTracks"])
+                convertResultsToTable(["Name", "Total Playtime", "Number of Tracks"], data, ["name", "totalPlayTime", "numberOfTracks"], "result")
         })        
     )
 }
@@ -61,15 +59,13 @@ function getTracksByNameContent() {
     const input = document.getElementById("trackOrAlbumName").value
 
     console.log("Searching for tracks or tracks in albums with the following name/pattern: " + input)
-    
-    let trackDiv = document.getElementById("result")
 
     fetch(url + "track?title=" + input)
         .then(res => res.json()
             .then(data => {
                 console.log("Got Tracks...")
                 
-                trackDiv.innerHTML = convertResultsToTable(["Track ID"], data, ["trackID"])
+                convertResultsToTable(["Track ID"], data, ["trackID"], "result")
         })        
     )
 }
@@ -80,15 +76,13 @@ function getArtistsByName() {
     const input = document.getElementById("artistName").value
 
     console.log("Searching for artists following name/pattern: " + input)
-    
-    let artistDiv = document.getElementById("result")
 
     fetch(url + "artist?name=" + input)
         .then(res => res.json()
             .then(data => {
                 console.log("Got Artists...")
                 
-                artistDiv.innerHTML = convertResultsToTable(["Artist ID"], data, ["artistID"])
+                artistDiv.innerHTML = convertResultsToTable(["Artist ID"], data, ["artistID"], "result")
         })        
     )
 }
@@ -99,15 +93,14 @@ function getAlbumsByTitle() {
     const input = document.getElementById("albumTitle").value
 
     console.log("Searching for albums following title/pattern: " + input)
-    
-    let artistDiv = document.getElementById("result")
 
     fetch(url + "album?title=" + input)
         .then(res => res.json()
             .then(data => {
                 console.log("Got Albums...")
                 
-                artistDiv.innerHTML = convertResultsToTable(["Album ID", "Title", "Artist Name", "Released", "Uploaded", "Track Count"], data, ["id", "title", "artistName", "dateReleased", "dateUploaded", "tracks"])
+                convertResultsToTable(["Album ID", "Title", "Artist Name", "Released", "Uploaded", "Track Count"], data, 
+                                                            ["id", "title", "artistName", "dateReleased", "dateUploaded", "tracks"], "result")
         })        
     )
 }
@@ -122,8 +115,6 @@ function getArtistByID() {
     }
 
     console.log("Retrieving artist with ID: " + input)
-    
-    let artistDiv = document.getElementById("result")
 
     fetch(url + "artist/" + input)
         .then(res => res.json()
@@ -135,7 +126,8 @@ function getArtistByID() {
                 
                 console.log("Got Artist.")
                 
-                artistDiv.innerHTML = convertResultsToTable(["Name", "Contact", "Location", "Tags", "Year Start", "Year End"], [data], ["name", "contact", "location", "tags", "yearStart", "yearEnd"])
+                convertResultsToTable(["Name", "Contact", "Location", "Tags", "Year Start", "Year End"], [data], 
+                                                            ["name", "contact", "location", "tags", "yearStart", "yearEnd"], "result")
         })        
     )
 }
@@ -150,8 +142,6 @@ function getTrackByID() {
     }
 
     console.log("Retrieving track with ID: " + input)
-    
-    let artistDiv = document.getElementById("result")
 
     fetch(url + "track/" + input)
         .then(res => res.json()
@@ -163,8 +153,8 @@ function getTrackByID() {
 
                 console.log(data)
                 
-                artistDiv.innerHTML = convertResultsToTable(["Title", "Album ID", "Album Title", "Artist ID", "Artist Name", "Tags", "Date Created", "Date Recorded", "Duration", "Genres", "Number"], [data], 
-                                                            ["title", "albumID", "albumTitle", "artistID", "artistName", "tags", "datePublished", "dateRecorded", "duration", "genres", "trackNum"])
+                convertResultsToTable(["Title", "Album ID", "Album Title", "Artist ID", "Artist Name", "Tags", "Date Created", "Date Recorded", "Duration", "Genres", "Number"], [data], 
+                                                            ["title", "albumID", "albumTitle", "artistID", "artistName", "tags", "datePublished", "dateRecorded", "duration", "genres", "trackNum"], "result")
         })        
     )
 }
@@ -203,8 +193,6 @@ function searchListName() {
     const input = document.getElementById("searchListName").value
 
     console.log("Retrieving list with name: " + input)
-    
-    let listDiv = document.getElementById("result")
 
     fetch(url + "list/?name=" + input)
         .then(res => res.json()
@@ -227,8 +215,7 @@ function searchListName() {
                 })
 
                 Promise.all(trackInfo).then((vals) => {
-                    listDiv.innerHTML = convertResultsToTable(["Title", "Album", "Artist", "Playtime"], vals, 
-                                                              ["title", "album", "artist", "playTime"])   
+                    convertResultsToTable(["Title", "Album", "Artist", "Playtime"], vals, ["title", "album", "artist", "playTime"], "result")   
                 })
             })        
     )
@@ -314,22 +301,34 @@ function hide() {
     document.getElementById("result").innerHTML = ""
 }
 
-function convertResultsToTable(headers, data, attr) {
+function convertResultsToTable(headers, data, attr, tP) {
+
+    let tableParent = document.getElementById("output")
+    console.log(data)  
+
+    let info = ""
+
     if(data.length == 0) {
         return "No results found."
     }
 
-    let result = "</br><table><tr>"
-    headers.forEach(h => {result += ("<th><button class='sorting' onclick='sortBy(this)'>" + h + "</button></th>")})
-    result += "</tr>"
+    info += "<tr>"
+    headers.forEach(h => {info += ("<th><button class='sorting' onclick='sortBy(this)'>" + h + "</button></th>")})
+    info += "</tr>"
+
+    console.log(info)
+
     data.forEach(val => {
-        result += "<tr>"
-        attr.forEach(col => {result += ("<td>" + val[col] + "</td>")})
-        result += "</tr>"
+        console.log(val)
+        info += "<tr>"
+        attr.forEach(col => {info += ("<td>" + cleanUserInput(val[col].toString()) + "</td>")})
+        info += "</tr>"
     })
-    result += "</table>"
-    console.log(result)
-    return result
+
+    console.log(info)
+
+    tableParent.innerHTML = info
+    // return result
 }
 
 const getValue = (tr, idx) => tr.children[idx].innerText || tr.children[idx].textContent
