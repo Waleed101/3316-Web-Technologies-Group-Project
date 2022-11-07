@@ -194,6 +194,8 @@ function searchListName() {
 
     console.log("Retrieving list with name: " + input)
 
+    let listDiv = document.getElementById("searchListResult")
+
     fetch(url + "list/?name=" + input)
         .then(res => res.json()
             .then(data => {
@@ -207,6 +209,11 @@ function searchListName() {
                 }
                 
                 tracks = data[0]['tracks'].split(",")
+
+                if(tracks == '[]') {
+                    listDiv.innerHTML = "<p class='result error'>No tracks associated with list name '" + input + "'</p>"
+                    return
+                }
 
                 trackInfo = []
                 
@@ -298,7 +305,7 @@ function updateList() {
 // Helper methods
 
 function hide() {
-    document.getElementById("result").innerHTML = ""
+    document.getElementById("output").innerHTML = ""
 }
 
 function convertResultsToTable(headers, data, attr, tP) {
