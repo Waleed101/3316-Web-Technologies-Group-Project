@@ -41,7 +41,8 @@ exports.findAll = (req, res) => {
     const query = {
         title: req.query.title,
         albumID: req.query.album,
-        artistID: req.query.artist
+        artistID: req.query.artist,
+        id: req.query.id
     }
 
     Track.getAll(query, (err, data) => {
@@ -56,6 +57,7 @@ exports.findAll = (req, res) => {
 
 // Find a single Track with a id
 exports.findOne = (req, res) => {
+  console.log(req)
     Track.findById(req.params.id, (err, data) => {
         if (err) {
           if (err.kind === "not_found") {

@@ -1,5 +1,7 @@
 const url = "/api/"
 
+const NO_RESULTS_MESSAGE = (query, table) => "Your query " + query + " to the " + table + " records returned no results"
+
 function openTab(evt, tab) {
     var i, tabcontent, tablinks;
   
@@ -126,6 +128,11 @@ function getArtistByID() {
     fetch(url + "artist/" + input)
         .then(res => res.json()
             .then(data => {
+                if(data.message) {
+                    document.getElementById("artistByIDContent").innerHTML = "<p class='result error'>" + data.message + "</p>"
+                    return
+                }
+                
                 console.log("Got Artist.")
                 
                 artistDiv.innerHTML = convertResultsToTable(["Name", "Contact", "Location", "Tags", "Year Start", "Year End"], [data], ["name", "contact", "location", "tags", "yearStart", "yearEnd"])
@@ -155,7 +162,7 @@ function getTrackByID() {
                 data["artistName"] = data["artist"][0]["name"]
 
                 console.log(data)
-
+                
                 artistDiv.innerHTML = convertResultsToTable(["Title", "Album ID", "Album Title", "Artist ID", "Artist Name", "Tags", "Date Created", "Date Recorded", "Duration", "Genres", "Number"], [data], 
                                                             ["title", "albumID", "albumTitle", "artistID", "artistName", "tags", "datePublished", "dateRecorded", "duration", "genres", "trackNum"])
         })        
@@ -197,7 +204,7 @@ function searchListName() {
 
     console.log("Retrieving list with name: " + input)
     
-    let listDiv = document.getElementById("searchListResult")
+    let listDiv = document.getElementById("result")
 
     fetch(url + "list/?name=" + input)
         .then(res => res.json()
@@ -210,10 +217,37 @@ function searchListName() {
                     listDiv.innerHTML = "<p class='result error'>No results matching the list name '" + input + "'</p>"
                     return
                 }
+                
+                tracks = data[0]['tracks'].split(",")
 
-                listDiv.innerHTML = "List of name " + input + " has tracks " + data[0]['tracks']                
+                trackInfo = []
+                
+                tracks.forEach(track => {
+                    trackInfo.push(getBasicTrackInfoByID(track))
+                })
+
+                Promise.all(trackInfo).then((vals) => {
+                    listDiv.innerHTML = convertResultsToTable(["Title", "Album", "Artist", "Playtime"], vals, 
+                                                              ["title", "album", "artist", "playTime"])   
+                })
             })        
     )
+}
+
+const getBasicTrackInfoByID = async (track_id) => {
+    
+    let res = await fetch(url + "track/" + track_id)
+
+    let data = await res.json()
+
+    let info = {
+        "artist": data["artist"][0]["name"],
+        "title": data["title"],
+        "album": data["album"][0]["title"],
+        "playTime": data["duration"]
+    }
+
+    return info
 }
 
 // Function to Create a List (Implements FE.2a & DB.6)

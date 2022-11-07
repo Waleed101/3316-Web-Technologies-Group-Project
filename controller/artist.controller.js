@@ -1,3 +1,5 @@
+const sanitize = require('../helper/sanitize.helper.js')
+
 const Artist = require("../models/artist.model.js");
 
 // Create and Save a new Artist
@@ -41,6 +43,15 @@ exports.findAll = (req, res) => {
         members: req.query.members
     }
 
+    if (!sanitize.stringLength(req.query.name, 3, 255)) {
+      res.status(403).send({ message: "Your input is not between the length of 3 and 255"})
+      return
+    }
+
+    if (sanitize.hasNoScript(req.query.name)) {
+      res.status(403).send({ message: "Your input cannot have any of: <, >"})
+    }  
+
     console.log(query)
 
     Artist.getAll(query, (err, data) => {
@@ -55,6 +66,11 @@ exports.findAll = (req, res) => {
 
 // Find a single Artist with a id
 exports.findOne = (req, res) => {
+
+    if (!sanitize.isInteger(req.params.id)) {
+      res.status(403).send({ message: "Your input has to be an integer."})      
+    }
+
     Artist.findById(req.params.id, (err, data) => {
         if (err) {
           if (err.kind === "not_found") {

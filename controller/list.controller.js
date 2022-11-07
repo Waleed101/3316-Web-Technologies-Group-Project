@@ -18,6 +18,7 @@ exports.create = (req, res) => {
 
   if (sanitize.hasNoScript(req.body.name)) {
     res.status(403).send({ message: "Your input cannot have any of: <, >"})
+    return
   }  
 
   console.log(req.body)
@@ -37,6 +38,7 @@ exports.create = (req, res) => {
 
 // Retrieve all List from the database (with condition).
 exports.findAll = (req, res) => {
+    
     const name = req.query.name;
     // console.log(name)
 
@@ -60,6 +62,8 @@ exports.findAll = (req, res) => {
 // Find a single List with a id
 exports.findOne = (req, res) => {
   
+  console.log(req)
+
   if (!sanitize.isInteger(req.params.id)) {
     res.status(403).send({ message: "The ID you inputted has to be a number."})
   }  
