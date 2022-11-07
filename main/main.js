@@ -284,7 +284,7 @@ function convertResultsToTable(headers, data, attr) {
     }
 
     let result = "</br><table><tr>"
-    headers.forEach(h => {result += ("<th>" + h + "</th>")})
+    headers.forEach(h => {result += ("<th><button class='sorting' onclick='sortBy(this)'>" + h + "</button></th>")})
     result += "</tr>"
     data.forEach(val => {
         result += "<tr>"
@@ -295,6 +295,21 @@ function convertResultsToTable(headers, data, attr) {
     console.log(result)
     return result
 }
+
+const getValue = (tr, idx) => tr.children[idx].innerText || tr.children[idx].textContent
+
+const comparator = (idx, asc) => (a, b) => ((v1, v2) => 
+    v1 !== '' && v2 !== '' && !isNaN(v1) && !isNaN(v2) ? v1 - v2 : v1.toString().localeCompare(v2)
+    )(getValue(asc ? a : b, idx), getValue(asc ? b : a, idx))
+
+
+function sortBy(button) {
+    const th = button.closest('th')
+    const table = th.closest('table')
+    Array.from(table.querySelectorAll('tr:nth-child(n+2)'))
+        .sort(comparator(Array.from(th.parentNode.children).indexOf(th), this.asc = !this.asc))
+        .forEach(tr => table.appendChild(tr) )
+};
 
 function isNumber(valToCheck, label) {
     if(/^\d+$/.test(valToCheck)) {
