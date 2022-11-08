@@ -215,6 +215,11 @@ function searchListName() {
 
     let listDiv = document.getElementById("searchListResult")
 
+    if(input.length < 3 || input.length > 255) {
+        listDiv.innerHTML = "<p class='result error'>Your input is not between the length of 3 and 255</p>"
+        return
+    }
+
     fetch(url + "list/?name=" + input)
         .then(res => res.json()
             .then(data => {
@@ -277,7 +282,7 @@ const getBasicArtistInfoById = async (artist_id) => {
         "yearStart": data["yearStart"],
         "yearEnd": data["yearEnd"],
         "contact": data["contact"],
-        "dateCreated": data["location"],
+        "location": data["location"],
         "tags": data["tags"]
     }
 
