@@ -66,8 +66,19 @@ function getTracksByNameContent() {
         .then(res => res.json()
             .then(data => {
                 console.log("Got Tracks...")
+
+                trackInfo = []
+
+                console.log(data)
                 
-                convertResultsToTable(["Track ID"], data, ["trackID"], "result")
+                data.forEach(track => {
+                    console.log(track["trackID"])
+                    trackInfo.push(getBasicTrackInfoByID(track["trackID"]))
+                })
+
+                Promise.all(trackInfo).then((vals) => {
+                    convertResultsToTable(["Title", "Album", "Artist", "Playtime"], vals, ["title", "album", "artist", "playTime"], "result")   
+                })
         })        
     )
 }
@@ -138,33 +149,6 @@ function getArtistByID() {
                 
                 convertResultsToTable(["Name", "Contact", "Location", "Tags", "Year Start", "Year End"], [data], 
                                                             ["name", "contact", "location", "tags", "yearStart", "yearEnd"], "result")
-        })        
-    )
-}
-
-// Function to get specified info about Track by ID (Implements DB.3)
-
-function getTrackByID() {
-    const input = document.getElementById("trackID").value
-
-    if(!isNumber(input)) {
-        return
-    }
-
-    console.log("Retrieving track with ID: " + input)
-
-    fetch(url + "track/" + input)
-        .then(res => res.json()
-            .then(data => {
-                console.log("Got Track.")
-                
-                data["albumTitle"] = data["album"][0]["title"]
-                data["artistName"] = data["artist"][0]["name"]
-
-                console.log(data)
-                
-                convertResultsToTable(["Title", "Album ID", "Album Title", "Artist ID", "Artist Name", "Tags", "Date Created", "Date Recorded", "Duration", "Genres", "Number"], [data], 
-                                                            ["title", "albumID", "albumTitle", "artistID", "artistName", "tags", "datePublished", "dateRecorded", "duration", "genres", "trackNum"], "result")
         })        
     )
 }
@@ -243,6 +227,8 @@ const getBasicTrackInfoByID = async (track_id) => {
     let res = await fetch(url + "track/" + track_id)
 
     let data = await res.json()
+
+    console.log(data)
 
     let info = {
         "artist": data["artist"][0]["name"],
