@@ -373,25 +373,52 @@ function convertResultsToTable(headers, data, attr, tP) {
         return "No results found."
     }
 
-    info += "<tr>"
-    headers.forEach(h => {info += ("<th><button class='sorting' onclick='sortBy(this)'>" + h + "</button></th>")})
-    info += "</tr>"
+    let trParent = document.createElement("tr")
 
-    console.log(info)
+    headers.forEach(h => {
+        let indivTh = document.createElement("th")
+        indivTh.setAttribute('id', h)
+        trParent.appendChild(indivTh)
+    })
+
+    tableParent.appendChild(trParent)
+
+    headers.forEach(h => {
+        let th = document.getElementById(h)
+        th.innerHTML = "<button class='sorting' onclick='sortBy(this)'>" + h + "</button>"
+    })
 
     data.forEach(val => {
         console.log(val)
-        info += "<tr>"
+        let indivTr = document.createElement("tr")
         attr.forEach(col => {
             val[col] = val[col] == undefined ? "" : val[col]
-            info += ("<td>" + cleanUserInput(val[col].toString()) + "</td>")
+            let indivTd = document.createElement("td")
+            indivTd.appendChild(document.createTextNode(cleanUserInput(val[col].toString())))
+            indivTr.appendChild(indivTd)
         })
-        info += "</tr>"
+        tableParent.appendChild(indivTr)
     })
 
-    console.log(info)
+    // info += "<tr>"
+    // headers.forEach(h => {info += ("<th><button class='sorting' onclick='sortBy(this)'>" + h + "</button></th>")})
+    // info += "</tr>"
 
-    tableParent.innerHTML = info
+    // console.log(info)
+
+    // data.forEach(val => {
+    //     console.log(val)
+    //     info += "<tr>"
+    //     attr.forEach(col => {
+    //         val[col] = val[col] == undefined ? "" : val[col]
+    //         info += ("<td>" + cleanUserInput(val[col].toString()) + "</td>")
+    //     })
+    //     info += "</tr>"
+    // })
+
+    // console.log(info)
+
+    // tableParent.innerHTML = info
     // return result
 }
 
