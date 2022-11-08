@@ -259,7 +259,16 @@ const getBasicTrackInfoByID = async (track_id) => {
 
     let data = await res.json()
 
-    console.log(data)
+    if(data.message) {
+        let info = {
+            "artist": "Not Found",
+            "title": "Not Found",
+            "album":  "Not Found",
+            "playTime":  "Not Found"
+        }
+        
+        return info
+    }
 
     let info = {
         "artist": data["artist"][0]["name"],
@@ -389,15 +398,19 @@ function convertResultsToTable(headers, data, attr, tP) {
     })
 
     data.forEach(val => {
-        console.log(val)
-        let indivTr = document.createElement("tr")
-        attr.forEach(col => {
-            val[col] = val[col] == undefined ? "" : val[col]
-            let indivTd = document.createElement("td")
-            indivTd.appendChild(document.createTextNode(cleanUserInput(val[col].toString())))
-            indivTr.appendChild(indivTd)
-        })
-        tableParent.appendChild(indivTr)
+        if(data.message) {
+            console.log("Unable to find.")
+        } else {
+            console.log(val)
+            let indivTr = document.createElement("tr")
+            attr.forEach(col => {
+                val[col] = val[col] == undefined ? "" : val[col]
+                let indivTd = document.createElement("td")
+                indivTd.appendChild(document.createTextNode(cleanUserInput(val[col].toString())))
+                indivTr.appendChild(indivTd)
+            })
+            tableParent.appendChild(indivTr)
+        }
     })
 
     // info += "<tr>"
