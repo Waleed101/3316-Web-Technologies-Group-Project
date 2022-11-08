@@ -2,6 +2,13 @@ const Genre = require("../models/genre.model.js");
 
 // Create and Save a new Genre
 exports.create = (req, res) => {
+
+  res.status(404).send({
+    message: "Access not allowed."
+  });
+
+  return
+
   // Validate request
   if (!req.body) {
     res.status(400).send({
@@ -94,6 +101,13 @@ exports.update = (req, res) => {
 
 // Delete a Genre with the specified id in the request
 exports.delete = (req, res) => {
+
+  res.status(404).send({
+    message: "Access not allowed."
+  });
+
+  return
+  
     Genre.remove(req.params.id, (err, data) => {
       if (err) {
         if (err.kind === "not_found") {
@@ -111,6 +125,13 @@ exports.delete = (req, res) => {
   
 // Delete all Genres
 exports.deleteAll = (req, res) => {
+
+  res.status(404).send({
+    message: "Access not allowed."
+  });
+
+  return
+
     Genre.removeAll((err, data) => {
         if (err)
           res.status(500).send({

@@ -4,6 +4,13 @@ const Artist = require("../models/artist.model.js");
 
 // Create and Save a new Artist
 exports.create = (req, res) => {
+
+  res.status(404).send({
+    message: "Access not allowed."
+  });
+
+  return
+
   // Validate request
   if (!req.body) {
     res.status(400).send({
@@ -90,6 +97,13 @@ exports.findOne = (req, res) => {
 
 // Delete a Artist with the specified id in the request
 exports.delete = (req, res) => {
+
+  res.status(404).send({
+    message: "Access not allowed."
+  });
+
+  return
+
     Artist.remove(req.params.id, (err, data) => {
       if (err) {
         if (err.kind === "not_found") {
@@ -107,6 +121,13 @@ exports.delete = (req, res) => {
   
 // Delete all Artists
 exports.deleteAll = (req, res) => {
+
+  res.status(404).send({
+    message: "Access not allowed."
+  });
+
+  return
+
     Artist.removeAll((err, data) => {
         if (err)
           res.status(500).send({

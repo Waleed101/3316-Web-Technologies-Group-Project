@@ -4,6 +4,13 @@ const Track = require("../models/track.model.js");
 
 // Create and Save a new Track
 exports.create = (req, res) => {
+
+  res.status(404).send({
+    message: "Access not allowed."
+  });
+
+  return
+  
   // Validate request
   if (!req.body) {
     res.status(400).send({
@@ -87,6 +94,13 @@ exports.findOne = (req, res) => {
 
 // Delete a Track with the specified id in the request
 exports.delete = (req, res) => {
+
+  res.status(404).send({
+    message: "Access not allowed."
+  });
+
+  return
+
     Track.remove(req.params.id, (err, data) => {
       if (err) {
         if (err.kind === "not_found") {
@@ -104,6 +118,13 @@ exports.delete = (req, res) => {
   
 // Delete all Tracks
 exports.deleteAll = (req, res) => {
+
+  res.status(404).send({
+    message: "Access not allowed."
+  });
+
+  return
+  
     Track.removeAll((err, data) => {
         if (err)
           res.status(500).send({

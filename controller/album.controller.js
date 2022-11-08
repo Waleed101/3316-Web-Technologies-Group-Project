@@ -5,10 +5,18 @@ const Album = require("../models/album.model.js");
 // Create and Save a new Album
 exports.create = (req, res) => {
   // Validate request
+
+  res.status(404).send({
+    message: "Access not allowed."
+  });
+
+  return
+
   if (!req.body) {
     res.status(400).send({
       message: "Content can not be empty!"
     });
+    return
   }
 
   const album = new Album({
@@ -81,6 +89,13 @@ exports.findOne = (req, res) => {
 
 // Delete a Album with the specified id in the request
 exports.delete = (req, res) => {
+
+  res.status(404).send({
+    message: "Access not allowed."
+  });
+
+  return
+
     Album.remove(req.params.id, (err, data) => {
       if (err) {
         if (err.kind === "not_found") {
@@ -98,6 +113,13 @@ exports.delete = (req, res) => {
   
 // Delete all Albums
 exports.deleteAll = (req, res) => {
+
+  res.status(404).send({
+    message: "Access not allowed."
+  });
+
+  return
+  
     Album.removeAll((err, data) => {
         if (err)
           res.status(500).send({
