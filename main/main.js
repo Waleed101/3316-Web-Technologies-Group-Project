@@ -6,6 +6,15 @@ const NO_RESULTS_MESSAGE = (query, table) => "Your query " + query + " to the " 
 
 const cleanUserInput = (input) => input.replace(/<\/?[^>]+(>|$)/g, "")
 
+const ERROR_MESSAGE_DIVS = ["genreContent", "trackByNameContent", "artistByNameContent", "albumByTitleContent", "listContent", "createListResult", "searchListResult", "deleteListResult", "updateListResult"]
+
+function clearErrorMessages() {
+    hide()
+    ERROR_MESSAGE_DIVS.forEach(error => {
+        document.getElementById(error).innerHTML = ""
+    })
+}
+
 function openTab(evt, tab) {
     var i, tabcontent, tablinks;
   
@@ -26,6 +35,7 @@ function openTab(evt, tab) {
 // Method to get all genres (Implements DB.1)
 
 function getAllGenres() {
+    clearErrorMessages()
     console.log("Get Genres")
 
     fetch(url + "genre")
@@ -41,6 +51,7 @@ function getAllGenres() {
 // Method to get all lists (Implements DB.10)
 
 function getAllLists() {
+    clearErrorMessages()
     console.log("Get Lists")
 
     fetch(url + "list")
@@ -58,14 +69,22 @@ function getAllLists() {
 // Function to search for track by matching album and track title (Implements DB.4 & FE.1a)
 
 function getTracksByNameContent() {
+    clearErrorMessages()
     const input = document.getElementById("trackOrAlbumName").value
 
     console.log("Searching for tracks or tracks in albums with the following name/pattern: " + input)
+
+    let listDiv = document.getElementById("trackByNameContent")
 
     fetch(url + "track?title=" + input)
         .then(res => res.json()
             .then(data => {
                 console.log("Got Tracks...")
+
+                if(data.length == 0) {
+                    listDiv.innerHTML = "<p class='result error'>No results matching the track or album name '" + input + "'</p>"
+                    return
+                }
 
                 trackInfo = []
 
@@ -86,14 +105,22 @@ function getTracksByNameContent() {
 // Function to search for artists by their name (Implements FE.1b)
 
 function getArtistsByName() {
+    clearErrorMessages()
     const input = document.getElementById("artistName").value
 
     console.log("Searching for artists following name/pattern: " + input)
 
+    let listDiv = document.getElementById("artistByNameContent")
+    
     fetch(url + "artist?name=" + input)
         .then(res => res.json()
             .then(data => {
                 console.log("Got Artists...")
+
+                if(data.length == 0) {
+                    listDiv.innerHTML = "<p class='result error'>No results matching the artist name '" + input + "'</p>"
+                    return
+                }
                 
                 artistResult = []
 
@@ -111,14 +138,22 @@ function getArtistsByName() {
 // Function to search for albums by their name (Implements FE.1c)
 
 function getAlbumsByTitle() {
+    clearErrorMessages()
     const input = document.getElementById("albumTitle").value
 
     console.log("Searching for albums following title/pattern: " + input)
+
+    let listDiv = document.getElementById("albumByTitleContent")
 
     fetch(url + "album?title=" + input)
         .then(res => res.json()
             .then(data => {
                 console.log("Got Albums...")
+
+                if(data.length == 0) {
+                    listDiv.innerHTML = "<p class='result error'>No results matching the album name '" + input + "'</p>"
+                    return
+                }                
                 
                 convertResultsToTable(["Album ID", "Title", "Artist Name", "Released", "Uploaded", "Track Count"], data, 
                                                             ["id", "title", "artistName", "dateReleased", "dateUploaded", "tracks"], "result")
@@ -126,36 +161,10 @@ function getAlbumsByTitle() {
     )
 }
 
-// Function to get 6+ artist info by ID (Implements DB.2)
-
-function getArtistByID() {
-    const input = document.getElementById("artistID").value
-
-    if(!isNumber(input)) {
-        return
-    }
-
-    console.log("Retrieving artist with ID: " + input)
-
-    fetch(url + "artist/" + input)
-        .then(res => res.json()
-            .then(data => {
-                if(data.message) {
-                    document.getElementById("artistByIDContent").innerHTML = "<p class='result error'>" + data.message + "</p>"
-                    return
-                }
-                
-                console.log("Got Artist.")
-                
-                convertResultsToTable(["Name", "Contact", "Location", "Tags", "Year Start", "Year End"], [data], 
-                                                            ["name", "contact", "location", "tags", "yearStart", "yearEnd"], "result")
-        })        
-    )
-}
-
 // Function to Delete a List (Implements DB.9)
 
 function deleteList() {
+    clearErrorMessages()
     const input = document.getElementById("deleteListName").value
 
     console.log("Deleting list with name: " + input)
@@ -184,6 +193,7 @@ function deleteList() {
 // Function to get all tracks on a specific list (Implements DB.2)
 
 function searchListName() {
+    clearErrorMessages()
     const input = document.getElementById("searchListName").value
 
     console.log("Retrieving list with name: " + input)
@@ -261,6 +271,8 @@ const getBasicArtistInfoById = async (artist_id) => {
 // Function to Create a List (Implements FE.2a & DB.6)
 
 function createList() {
+    clearErrorMessages()
+
     const input = document.getElementById("createListName").value
 
     console.log("Creating list with name: " + input)
@@ -289,6 +301,8 @@ function createList() {
 // Function to Update a List (Implements FE.2a & DB.7)
 
 function updateList() {
+    clearErrorMessages()
+
     const name = document.getElementById("updateList_name").value
     const tracks = document.getElementById("updateList_tracks").value
 
