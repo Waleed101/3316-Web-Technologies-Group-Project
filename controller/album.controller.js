@@ -1,3 +1,5 @@
+const sanitize = require('../helper/sanitize.helper.js')
+
 const Album = require("../models/album.model.js");
 
 // Create and Save a new Album
@@ -9,8 +11,6 @@ exports.create = (req, res) => {
     });
   }
 
-  // Test
-  console.log(req.body)
   const album = new Album({
     id: req.body.id,
     title: req.body.title,
@@ -41,6 +41,16 @@ exports.findAll = (req, res) => {
         title: req.query.title,
         artistID: req.query.artist
     }
+
+    if (!sanitize.stringLength(req.query.title, 3, 255)) {
+      res.status(403).send({ message: "Your input is not between the length of 3 and 255"})
+      return
+    }
+
+    if (sanitize.hasNoScript(req.query.title)) {
+      res.status(403).send({ message: "Your input cannot have any of: <, >"})
+      return
+    }  
 
     Album.getAll(query, (err, data) => {
       if (err)

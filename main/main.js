@@ -81,6 +81,11 @@ function getTracksByNameContent() {
             .then(data => {
                 console.log("Got Tracks...")
 
+                if (data.message) {
+                    listDiv.innerHTML = "<p class='result error'>" + data.message + "</p>"
+                    return
+                }
+
                 if(data.length == 0) {
                     listDiv.innerHTML = "<p class='result error'>No results matching the track or album name '" + input + "'</p>"
                     return
@@ -115,7 +120,12 @@ function getArtistsByName() {
     fetch(url + "artist?name=" + input)
         .then(res => res.json()
             .then(data => {
-                console.log("Got Artists...")
+                console.log("Got Artists...")                
+
+                if (data.message) {
+                    listDiv.innerHTML = "<p class='result error'>" + data.message + "</p>"
+                    return
+                }
 
                 if(data.length == 0) {
                     listDiv.innerHTML = "<p class='result error'>No results matching the artist name '" + input + "'</p>"
@@ -149,6 +159,11 @@ function getAlbumsByTitle() {
         .then(res => res.json()
             .then(data => {
                 console.log("Got Albums...")
+
+                if (data.message) {
+                    listDiv.innerHTML = "<p class='result error'>" + data.message + "</p>"
+                    return
+                }
 
                 if(data.length == 0) {
                     listDiv.innerHTML = "<p class='result error'>No results matching the album name '" + input + "'</p>"
@@ -203,6 +218,7 @@ function searchListName() {
     fetch(url + "list/?name=" + input)
         .then(res => res.json()
             .then(data => {
+                console.log(data)
                 if(data.message) {
                     listDiv.innerHTML = "<p class='result error'>" + data.message + "</p>"
                     return
@@ -309,6 +325,11 @@ function updateList() {
     console.log("Updating list with name: " + name + " to have " + tracks + " tracks.")
 
     const result = document.getElementById("updateListResult")
+
+    if(name.length < 3 || name.length > 255) {
+        result.innerHTML = "<p class='result error'>Your input is not between the length of 3 and 255</p>"
+        return
+    }
 
     fetch(url + "list/" + name, {
         method: 'PUT',

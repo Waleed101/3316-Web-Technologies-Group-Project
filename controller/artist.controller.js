@@ -50,6 +50,7 @@ exports.findAll = (req, res) => {
 
     if (sanitize.hasNoScript(req.query.name)) {
       res.status(403).send({ message: "Your input cannot have any of: <, >"})
+      return
     }  
 
     console.log(query)
@@ -69,6 +70,7 @@ exports.findOne = (req, res) => {
 
     if (!sanitize.isInteger(req.params.id)) {
       res.status(403).send({ message: "Your input has to be an integer."})      
+      return
     }
 
     Artist.findById(req.params.id, (err, data) => {

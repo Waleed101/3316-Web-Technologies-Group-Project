@@ -41,12 +41,17 @@ exports.findAll = (req, res) => {
     
     const name = req.query.name;
     // console.log(name)
+  
+    if (!sanitize.stringLength(name, 3, 255)) {
+      res.status(403).send({ message: "Your input is not between the length of 3 and 255"})
+      return
+    }
 
     if(name) {
       if (sanitize.hasNoScript(name)) {
         res.status(403).send({ message: "Your input cannot have any of: <, >"})
         return
-      }  
+      }
     }
 
     List.getAll(name, (err, data) => {
@@ -89,20 +94,21 @@ exports.findOne = (req, res) => {
 
 // Update a List identified by the id in the request
 exports.update = (req, res) => {
+  console.log(req)
     if (!req.body) {
         res.status(400).send({
           message: "Content can not be empty!"
         });
       }
-    
-      console.log(req.body);
-
-      if (sanitize.hasNoScript(req.params.name)) {
-        res.status(403).send({ message: "Your input cannot have any of: <, >"})
-      }  
+      
+      if (!sanitize.stringLength(req.body.name, 3, 255)) {
+        res.status(403).send({ message: "Your input is not between the length of 3 and 255"})
+        return
+      }
 
       if (sanitize.hasNoScript(req.body.tracks)) {
         res.status(403).send({ message: "Your input cannot have any of: <, >"})
+        return
       }  
 
       const vals = req.body.tracks.split(",")
@@ -110,6 +116,7 @@ exports.update = (req, res) => {
       for(let i = 0; i < vals.length; i += 1) {
         if (!sanitize.isInteger(vals[i])) {
           res.status(403).send({ message: "All the IDs you inputted should only be numbers."})
+          return
         }
       }
     
@@ -139,6 +146,12 @@ exports.delete = (req, res) => {
   if (sanitize.hasNoScript(req.body.name)) {
     res.status(403).send({ message: "Your input cannot have any of: <, >"})
   }  
+
+    
+  if (!sanitize.stringLength(req.body.name, 3, 255)) {
+    res.status(403).send({ message: "Your input is not between the length of 3 and 255"})
+    return
+  }
 
   console.log("Deleting...")
     List.remove(req.body.name, (err, data) => {
