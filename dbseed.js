@@ -13,13 +13,16 @@ conn.connect(function(err) {
     if (err) throw err;
     console.log("Connected to the Database!");
     
+    conn.query("DROP TABLE IF EXISTS `account`")
+
     conn.query("CREATE TABLE IF NOT EXISTS `account` (" +
-                "id int NOT NULL," +
                 "email varchar(255) NOT NULL," +
                 "password varchar(255) NOT NULL," + 
                 "status int NOT NULL," +
-                "lastUpdated varchar(255) NOT NULL," +
-                "PRIMARY KEY (id))", function(error, result, fields) {
+                "role varchar(5) NOT NULL," + 
+                "updated TIMESTAMP NOT NULL ON UPDATE CURRENT_TIMESTAMP," +
+                "created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP," +
+                "PRIMARY KEY (email))", function(error, result, fields) {
                     if (error) 
                         throw error
                     console.log(result)
