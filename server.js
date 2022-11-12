@@ -5,8 +5,6 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const session = require("express-session")
 
-const bcrypt = require("bcrypt");
-
 const app = express();
 
 var corsOptions = {

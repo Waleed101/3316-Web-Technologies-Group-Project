@@ -12,9 +12,13 @@ exports.register = (req, res) => {
     });
   }
 
+  console.log(req.body)
+  // console.log(req)
+
   const auth = new Auth({
     email: req.body.email,
-    password: req.body.password
+    password: req.body.password,
+    name: req.body.name
   })
 
   Auth.register(auth, (err, data) => {

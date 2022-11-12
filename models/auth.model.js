@@ -1,5 +1,6 @@
 const sql = require('../dbseed.js');
 
+const bcrypt = require("bcrypt");
 const saltRounds = 11;
 
 /*
@@ -7,11 +8,16 @@ const saltRounds = 11;
     1 => Registered & Unverified
     2 => Verified
     3 => Deactiviated
+
+    Role:
+    1 => Normal
+    2 => Admin
 */
 
 const Auth = function(auth) {
-    this.email = email;
-    this.password = password;
+    this.email = auth.email;
+    this.password = auth.password;
+    this.name = auth.name
 }
 
 Auth.register = (auth, result) => {
