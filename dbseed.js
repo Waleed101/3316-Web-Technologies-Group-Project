@@ -13,6 +13,18 @@ conn.connect(function(err) {
     if (err) throw err;
     console.log("Connected to the Database!");
     
+    conn.query("CREATE TABLE IF NOT EXISTS `account` (" +
+                "id int NOT NULL," +
+                "email varchar(255) NOT NULL," +
+                "password varchar(255) NOT NULL," + 
+                "status int NOT NULL," +
+                "lastUpdated varchar(255) NOT NULL," +
+                "PRIMARY KEY (id))", function(error, result, fields) {
+                    if (error) 
+                        throw error
+                    console.log(result)
+                });
+
     // conn.query("CREATE TABLE IF NOT EXISTS `genre` (" +
     //             "id int NOT NULL," +
     //             "title varchar(255) NOT NULL," +
