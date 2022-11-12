@@ -6,6 +6,8 @@ const Auth = require("../models/auth.model.js");
 exports.register = (req, res) => {
 
   // Validate request
+  console.log("here")
+
   if (!req.body) {
     res.status(400).send({
       message: "Content can not be empty!"

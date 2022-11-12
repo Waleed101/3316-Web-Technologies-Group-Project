@@ -7,11 +7,11 @@ const session = require("express-session")
 
 const app = express();
 
-var corsOptions = {
-  origin: "https://localhost:8000"
-};
+// var corsOptions = {
+//   origin: "https://localhost:8000"
+// };
 
-app.use(cors(corsOptions));
+app.use(cors());
 
 app.use(express.json());
 

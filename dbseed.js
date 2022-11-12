@@ -12,8 +12,6 @@ const conn = mysql.createConnection({
 conn.connect(function(err) {
     if (err) throw err;
     console.log("Connected to the Database!");
-    
-    conn.query("DROP TABLE IF EXISTS `account`")
 
     conn.query("CREATE TABLE IF NOT EXISTS `account` (" +
                 "email varchar(255) NOT NULL," +
