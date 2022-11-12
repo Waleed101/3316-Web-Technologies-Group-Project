@@ -15,6 +15,7 @@ conn.connect(function(err) {
 
     conn.query("CREATE TABLE IF NOT EXISTS `account` (" +
                 "email varchar(255) NOT NULL," +
+                "name varchar(255) NOT NULL," + 
                 "password varchar(255) NOT NULL," + 
                 "status int NOT NULL," +
                 "role varchar(5) NOT NULL," + 

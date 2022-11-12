@@ -1,4 +1,5 @@
 import { React, useState } from 'react';
+import { useCookies } from 'react-cookie';
 
 let url = require("../setup/api.setup.js")
 
@@ -6,6 +7,7 @@ function Login() {
 
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+    const [cookies, setCookie, removeCookie] = useCookies(["user"])
 
     const submit = (event) => {
         event.preventDefault();
@@ -29,6 +31,7 @@ function Login() {
                     if(res.message) {
                         alert(`Error: ${res.message}`)
                     } else {
+                        setCookie("user", res, { path: "/" })
                         alert(`Successfully logged in with email ${email}`)
                     }
                 })

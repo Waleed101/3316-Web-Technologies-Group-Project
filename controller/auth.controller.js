@@ -29,7 +29,7 @@ exports.register = (req, res) => {
         message:
           err.message || "Some error occurred while registering a User."
       });
-    else res.send(data);
+    else res.send({data});
   });
 };
 
@@ -61,6 +61,6 @@ exports.login = (req, res) => {
         message:
           err.message || "Some error occurred while logging in the User."
       });
-    else res.send(data);
+    else res.send({ loggedIn: true, email: data.email})
   });  
 }
