@@ -2,6 +2,8 @@ const sanitize = require('../helper/sanitize.helper.js')
 
 const Auth = require("../models/auth.model.js");
 
+let addTime = 24*60*60*1000;
+
 // Register
 exports.register = (req, res) => {
 
@@ -35,7 +37,7 @@ exports.register = (req, res) => {
 
 exports.refresh = (req, res) => {
     if (req.session.email) {
-        res.send({ loggedIn: true, email: req.session.email})
+        res.send({ loggedIn: true, email: req.session.email, name: req.session.name, time: req.session.time})
     } else {
         res.send({ loggedIn: false })
     }
@@ -61,6 +63,9 @@ exports.login = (req, res) => {
         message:
           err.message || "Some error occurred while logging in the User."
       });
-    else res.send({ loggedIn: true, email: data.email})
+    else {
+      let timeToExpire = new Date(new Date().getTime() + addTime);
+      res.send({ loggedIn: true, email: data.email, name: data.name, time: timeToExpire})
+    } 
   });  
 }
