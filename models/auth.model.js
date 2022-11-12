@@ -21,8 +21,8 @@ Auth.register = (auth, result) => {
         }
 
         sql.query(
-            "INSERT INTO account (email, password, status) VALUES (?,?,?)",
-            [auth.email, hash, 1],
+            "INSERT INTO account (email, password, status, role) VALUES (?,?,?,?)",
+            [auth.email, hash, 1, "1"],
             (err, res) => {
                 if (err) {
                     console.log("Error: " + err)
