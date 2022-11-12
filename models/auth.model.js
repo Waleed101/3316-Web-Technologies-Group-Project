@@ -57,7 +57,7 @@ Auth.login = (auth, result) => {
                 bcrypt.compare(auth.password, res[0].password, (error, response) => {
                     if (response) {
                         console.log(res)
-                        result(null, result)
+                        result(null, res[0])
                     } else {
                         result({ message: "Wrong email & password combination."}, null)
                     }
