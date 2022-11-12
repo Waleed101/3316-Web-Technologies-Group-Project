@@ -12,7 +12,21 @@ const conn = mysql.createConnection({
 conn.connect(function(err) {
     if (err) throw err;
     console.log("Connected to the Database!");
-    
+
+    conn.query("CREATE TABLE IF NOT EXISTS `account` (" +
+                "email varchar(255) NOT NULL," +
+                "name varchar(255) NOT NULL," + 
+                "password varchar(255) NOT NULL," + 
+                "status int NOT NULL," +
+                "role varchar(5) NOT NULL," + 
+                "updated TIMESTAMP NOT NULL ON UPDATE CURRENT_TIMESTAMP," +
+                "created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP," +
+                "PRIMARY KEY (email))", function(error, result, fields) {
+                    if (error) 
+                        throw error
+                    console.log(result)
+                });
+
     // conn.query("CREATE TABLE IF NOT EXISTS `genre` (" +
     //             "id int NOT NULL," +
     //             "title varchar(255) NOT NULL," +
