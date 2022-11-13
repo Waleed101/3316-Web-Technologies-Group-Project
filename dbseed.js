@@ -70,7 +70,7 @@ conn.connect(function(err) {
     //     console.log(result);
     // });
 
-    conn.query("DROP TABLE IF EXISTS `list`")
+    // conn.query("DROP TABLE IF EXISTS `list`")
 
     conn.query("CREATE TABLE IF NOT EXISTS `list` (" +
                 "id int NOT NULL AUTO_INCREMENT," +
@@ -79,7 +79,7 @@ conn.connect(function(err) {
                 "tracks varchar(510) NOT NULL," +
                 "totalPlayTime int NOT NULL," +
                 "isPublic int NOT NULL," +
-                "updated TIMESTAMP NOT NULL ON UPDATE CURRENT_TIMESTAMP" +
+                "updated TIMESTAMP NOT NULL ON UPDATE CURRENT_TIMESTAMP," +
                 "created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP," +
                 "PRIMARY KEY(id))", function(error, result, fields) {
         if(error) throw error
@@ -92,6 +92,8 @@ conn.connect(function(err) {
                 "userEmail varchar(255)," +
                 "description varchar(512)," +
                 "rating int," +
+                "updated TIMESTAMP NOT NULL ON UPDATE CURRENT_TIMESTAMP," +
+                "created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP," +
                 "PRIMARY KEY(id))", function(error, result, fields) {
         if(error) throw error
         console.log(result);
