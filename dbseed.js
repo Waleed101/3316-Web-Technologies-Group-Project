@@ -70,15 +70,32 @@ conn.connect(function(err) {
     //     console.log(result);
     // });
 
-    //  conn.query("CREATE TABLE IF NOT EXISTS `list` (" +
-    //             "id int NOT NULL AUTO_INCREMENT," +
-    //             "name varchar(255) NOT NULL," +
-    //             "tracks varchar(510) NOT NULL," +
-    //             "totalPlayTime int NOT NULL," +
-    //             "PRIMARY KEY(id))", function(error, result, fields) {
-    //     if(error) throw error
-    //     console.log(result);
-    // });
+    conn.query("DROP TABLE IF EXISTS `list`")
+
+    conn.query("CREATE TABLE IF NOT EXISTS `list` (" +
+                "id int NOT NULL AUTO_INCREMENT," +
+                "name varchar(255) NOT NULL," +
+                "description varchar(520)," +
+                "tracks varchar(510) NOT NULL," +
+                "totalPlayTime int NOT NULL," +
+                "isPublic int NOT NULL," +
+                "updated TIMESTAMP NOT NULL ON UPDATE CURRENT_TIMESTAMP" +
+                "created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP," +
+                "PRIMARY KEY(id))", function(error, result, fields) {
+        if(error) throw error
+        console.log(result);
+    });
+
+    conn.query("CREATE TABLE IF NOT EXISTS `review` (" +
+                "id int NOT NULL AUTO_INCREMENT," +
+                "listId varchar(255) NOT NULL," +
+                "userEmail varchar(255)," +
+                "description varchar(512)," +
+                "rating int," +
+                "PRIMARY KEY(id))", function(error, result, fields) {
+        if(error) throw error
+        console.log(result);
+    });
     // conn.end()
 });
 
