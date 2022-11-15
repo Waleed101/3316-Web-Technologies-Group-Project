@@ -1,4 +1,4 @@
-import { React, useState } from 'react';
+import { React, useState, useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 
 let url = require("../setup/api.setup.js")
@@ -6,8 +6,10 @@ let url = require("../setup/api.setup.js")
 function Search() {
 
     const [title, setTitle] = useState("")
-    const [genre, setGenre] = useState("")
+    const [genre, setGenre] = useState([])
     const [artist, setArtist] = useState("")
+
+    const [availGenres, setAvailGenres] = useState([])
     // const 
 
     const handleSelect = function(selectedItems) {
@@ -27,6 +29,41 @@ function Search() {
         console.log(genre)
     } 
 
+    useEffect(() => {
+
+        fetch(url + "api/genre/")
+            .then(res => res.json())
+                .then(res => {
+                    // console.log(res)
+                    let availGenres = []
+
+                    res.forEach(ele => {
+                        availGenres.push(<option value={ele.id.toString()}>{ele.title}</option>)
+                    })
+
+                    setAvailGenres(availGenres)
+
+                })
+    }, [])
+
+    // getGenres()
+
+    // getGenres()
+    // console.log(availGenres)
+    // console.log(availGenres.length)
+
+    // getGenres()
+    // let test = []
+
+    // test.push(<option value="1">1</option>)
+    // test.push(<option value="2">2</option>)
+
+    // console.log(test)
+
+    // let availGenres = '<option value="1">1</option>'
+    // availGenres += '<option value="2">2</option>'
+    // console.log(availGenres)
+
     return (
         <form onSubmit={search}>
             <label> Title:
@@ -44,10 +81,8 @@ function Search() {
                 />
             </label>
             <label> Genre:
-                <select multiple={true} value={genre} onChange={(e) => {handleSelect(e.target.selectedOptions)}}>
-                    <option value="Temp">Temp</option>
-                    <option value="Temp1">Temp1</option>
-                    <option value="Temp2">Temp2</option>
+                <select id="genreSelect" multiple={true} value={genre} onChange={(e) => {handleSelect(e.target.selectedOptions)}}>
+                    {availGenres}
                 </select>
             </label>
             <input type = "submit" />
