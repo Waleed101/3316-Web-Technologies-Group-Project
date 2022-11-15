@@ -1,4 +1,3 @@
-import { query } from 'express';
 import { React, useState, useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 
@@ -12,44 +11,44 @@ function Search() {
 
     const [availGenres, setAvailGenres] = useState([])
 
-    // const handleSelect = function(selectedItems) {
-    //     const genre = []
+    const handleSelect = function(selectedItems) {
+        const genre = []
 
-    //     for (let i=0; i < selectedItems.length; i++) {
-    //         genre.push(selectedItems[i].value)
-    //     }
+        for (let i=0; i < selectedItems.length; i++) {
+            genre.push(selectedItems[i].value)
+        }
 
-    //     setGenre(genre)
-    // }
+        setGenre(genre)
+    }
 
-    // const search = (event) => {
-    //     event.preventDefault();
+    const search = (event) => {
+        event.preventDefault();
 
-    //     let query = ["?"]
-    //     let curIdx = 0
+        let query = ["?"]
+        let curIdx = 0
 
-    //     if (title) {
-    //         query[curIdx] += `title=${title}`
-    //         curIdx += 1
-    //     }
+        if (title) {
+            query[curIdx] += `title=${title}`
+            curIdx += 1
+        }
 
-    //     if (artist) {
-    //         if(curIdx != 0) {
-    //             query.push()
-    //         }
-    //         query[curIdx] += `artist=${artist}`
-    //         curIdx += 1
-    //     }
+        if (artist) {
+            if(curIdx != 0) {
+                query.push()
+            }
+            query[curIdx] += `artist=${artist}`
+            curIdx += 1
+        }
 
-    //     if (genre != []) {
-    //         if(curIdx != 0) {
-    //             query.push()
-    //         }
-    //         query[curIdx] += `genres=${genre.join(",")}`
-    //     }
+        if (genre != []) {
+            if(curIdx != 0) {
+                query.push()
+            }
+            query[curIdx] += `genres=${genre.join(",")}`
+        }
 
-    //     console.log(query.join("&"))
-    // } 
+        console.log(query.join("&"))
+    } 
 
     useEffect(() => {
 
@@ -66,10 +65,7 @@ function Search() {
 
                 })
     }, [])
-
-    const search = () => {}
-    const handleSelect = (ele) => {}
-
+    
     return (
         <div id="region">
             <form onSubmit={search}>
