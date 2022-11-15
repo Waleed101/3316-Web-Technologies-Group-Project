@@ -24,30 +24,13 @@ function Search() {
     const search = (event) => {
         event.preventDefault();
 
-        let query = ["?"]
-        let curIdx = 0
+        let query = `?title=${title}&artist=${artist}&genres=${genre.join(",")}`
 
-        if (title) {
-            query[curIdx] += `title=${title}`
-            curIdx += 1
-        }
-
-        if (artist) {
-            if(curIdx != 0) {
-                query.push()
-            }
-            query[curIdx] += `artist=${artist}`
-            curIdx += 1
-        }
-
-        if (genre != []) {
-            if(curIdx != 0) {
-                query.push()
-            }
-            query[curIdx] += `genres=${genre.join(",")}`
-        }
-
-        console.log(query.join("&"))
+        fetch(url + "api/genre/" + query)
+            .then(res => res.json())
+                .then(res => {
+                    console.log(res)
+                })
     } 
 
     useEffect(() => {
@@ -65,7 +48,7 @@ function Search() {
 
                 })
     }, [])
-    
+
     return (
         <div id="region">
             <form onSubmit={search}>
