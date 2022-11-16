@@ -95,9 +95,10 @@ Track.getAll = (req, result) => {
     let genreQuery = req.genre ? `WHERE genreID in (${req.genre.join(",")})` : ''
     let titleQuery = req.title ? `WHERE t.title LIKE '%${req.title}%'` : ''
 
-    let query = `SELECT DISTINCT * FROM track t
-                    JOIN (SELECT id as artistID, name FROM artist ${artistQuery}) AS a
-                    ON t.artistID = a.artistID
+    let query = `SELECT DISTINCT id, title, albumID, artistID, datePublished, duration, interest, listens, artistName, genres FROM 
+                    (SELECT * FROM track t
+                    JOIN (SELECT id as artist, name as artistName FROM artist ${artistQuery}) AS a
+                    ON t.artistID = a.artist
                     JOIN (
                             SELECT * FROM trackGenre
                             JOIN (SELECT id as gId, title as gTitle FROM genre) as genre
@@ -105,7 +106,7 @@ Track.getAll = (req, result) => {
                             ${genreQuery}
                         ) as g
                     ON t.id = g.trackID
-                    ${titleQuery}`
+                    ${titleQuery}) as res`
 
     console.log(query)
 
