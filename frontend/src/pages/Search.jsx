@@ -15,6 +15,8 @@ function Search() {
 
     const [result, setResult] = useState([])
 
+    const [numOfTracksQueued, setNumOfTracksQueued] = useState(0)
+    let tracksSelected = []
 
     const handleSelect = function(selectedItems) {
         const genre = []
@@ -24,6 +26,23 @@ function Search() {
         }
 
         setGenre(genre)
+    }
+
+    const selectTrack = (data) => {
+        console.log("Selecting track " + data)
+        tracksSelected.push(data)
+        setNumOfTracksQueued(tracksSelected.length)
+    }
+
+    const removeTrack = (data) => {
+        console.log("Removing track " + data)
+        const index = tracksSelected.indexOf(data)
+        if (index > - 1) {
+            tracksSelected.splice(index, 1)
+        } else {
+            console.log("Track hasn't been added yet to be removed.")
+        }
+        setNumOfTracksQueued(tracksSelected.length)
     }
 
     const search = (event) => {
@@ -36,8 +55,11 @@ function Search() {
         fetch(url + "api/track/" + query)
             .then(res => res.json())
                 .then(res => {
+                    if(res.message) {
+                        return
+                    }
                     res.forEach(record => {
-                        output.push(<TrackView arr={record} />) 
+                        output.push(<TrackView selectTrack={selectTrack} removeTrack={removeTrack} arr={record} />) 
                     })
                     console.log("1")
                     console.log(output)
@@ -63,6 +85,9 @@ function Search() {
 
     return (
         <div id="region">
+            <div id="list">
+                <button id="createList">Add {numOfTracksQueued} to a list</button>
+            </div>
             <form onSubmit={search}>
                 <label> Title:
                     <input
