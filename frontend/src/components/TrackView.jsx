@@ -17,6 +17,7 @@ export default class TrackView extends React.Component{
         return(
             <div class="track">
                 <h3 class="title">{this.props.arr.title}</h3>
+                <p>{this.props.arr.name}</p>
                 <hr />
                 <div>
                     {genre}
