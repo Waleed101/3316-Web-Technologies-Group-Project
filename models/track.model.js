@@ -90,38 +90,24 @@ Track.findById = (id, result) => {
 }
 
 Track.getAll = (req, result) => {
-    let query = `SELECT * FROM track`
-    console.log(req)
-    if (req.title) {
-        query = `SELECT * FROM (((SELECT trackID
-            FROM (
-                    SELECT id as albumID 
-                    FROM album
-                    WHERE album.title LIKE '%${req.title}%'
-            ) as album
-            LEFT JOIN
-            (
-                    SELECT id as trackID, albumID
-                    FROM track
-                    WHERE track.title LIKE '%${req.title}%'
-            ) as track
-            on album.albumID = track.albumID)
-            UNION 
-            (SELECT trackID
-            FROM (
-                    SELECT id as albumID 
-                    FROM album
-                    WHERE album.title LIKE '%${req.title}%'
-            ) as album
-            RIGHT JOIN
-            (
-                    SELECT id as trackID, albumID
-                    FROM track
-                    WHERE track.title LIKE '%${req.title}%'
-            ) as track
-            on album.albumID = track.albumID)) LIMIT ${MAX_TRACKS_TO_RETURN}) 
-            AS final WHERE trackID IS NOT NULL`
-    }
+
+    let artistQuery = req.artist ? `WHERE name LIKE '%${req.artist}%'` : ''
+    let genreQuery = req.genre ? `WHERE genreID in (${req.genre.join(",")})` : ''
+    let titleQuery = req.title ? `WHERE t.title LIKE '%${req.title}%'` : ''
+
+    let query = `SELECT DISTINCT * FROM track t
+                    JOIN (SELECT id as artistID, name FROM artist ${artistQuery}) AS a
+                    ON t.artistID = a.artistID
+                    JOIN (
+                            SELECT * FROM trackGenre
+                            JOIN (SELECT id as gId, title as gTitle FROM genre) as genre
+                            ON genre.gId = trackGenre.genreID
+                            ${genreQuery}
+                        ) as g
+                    ON t.id = g.trackID
+                    ${titleQuery}`
+
+    console.log(query)
 
     sql.query(query, (err, res) => {
         if(err) {
@@ -130,8 +116,24 @@ Track.getAll = (req, result) => {
             return;
         }
       
-        console.log("Tracks: ", res);
-        result(null, res);
+        res["albumName"] = res["name"]
+        delete res["name"]
+        
+        for (let i = 0; i < res.length; i++) {
+            if (res[i]['genres'] != "[undefined]") {
+                let genresToSearch = res[i]['genres'].replace("[", "(")
+                genresToSearch = genresToSearch.replace("]", ")")
+                
+                sql.query(`SELECT * FROM genre WHERE id in ${genresToSearch}`, (eGenres, rGenres) => {
+                    res[i]['genres'] = rGenres
+
+                    if ((i + 1) == res.length) {
+                        console.log("Done.")
+                        result(null, res)
+                    }
+                })
+            }
+        }
     })
 }
   
