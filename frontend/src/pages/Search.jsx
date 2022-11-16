@@ -1,6 +1,8 @@
 import { React, useState, useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 
+import TrackView from "../components/TrackView";
+
 let url = require("../setup/api.setup.js")
 
 function Search() {
@@ -10,6 +12,9 @@ function Search() {
     const [artist, setArtist] = useState("")
 
     const [availGenres, setAvailGenres] = useState([])
+
+    const [result, setResult] = useState([])
+
 
     const handleSelect = function(selectedItems) {
         const genre = []
@@ -24,12 +29,19 @@ function Search() {
     const search = (event) => {
         event.preventDefault();
 
+        let output = []
+
         let query = `?title=${title}&artist=${artist}&genres=${genre.join(",")}`
 
-        fetch(url + "api/genre/" + query)
+        fetch(url + "api/track/" + query)
             .then(res => res.json())
                 .then(res => {
-                    console.log(res)
+                    res.forEach(record => {
+                        output.push(<TrackView arr={record} />) 
+                    })
+                    console.log("1")
+                    console.log(output)
+                    setResult(output)
                 })
     } 
 
@@ -74,7 +86,7 @@ function Search() {
                 <input type = "submit" />
             </form>
             <div id="result">
-
+                {result.map(r => <div>{r}</div>)}
             </div>
         </div>
     );
