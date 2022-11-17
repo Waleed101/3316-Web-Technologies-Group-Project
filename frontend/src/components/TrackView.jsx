@@ -1,4 +1,5 @@
 import { React, useState } from 'react'
+import { useCookies } from 'react-cookie'
 
 import './css/TrackView.css'
 
@@ -23,6 +24,7 @@ import {
 } from '@chakra-ui/icons'
 
 function TrackView (props) {
+    const [cookies, setCookie, removeCookie] = useCookies(["user"])
 
     const ADD_TO = <AddIcon />
     const REMOVE_FROM = <MinusIcon />
@@ -31,6 +33,16 @@ function TrackView (props) {
     const [btnMsg, setBtnMsg] = useState(ADD_TO)
 
     const COLORS = ["teal", "blue", "green", "cyan", "red"]
+
+    const isBtnDisabled = () => {
+        if (cookies['user']) {
+            return !cookies['user'].isLoggedIn
+        } else {
+            return true
+        }
+    }
+
+    isLoggedIn("user")
 
     let genre = []
     
@@ -71,6 +83,7 @@ function TrackView (props) {
                                         onClick={select} 
                                         size='sm' 
                                         colorScheme={added ? 'red' : 'green'}
+                                        isDisabled={!isBtnDisabled}
                                     >
                                         {btnMsg}
                                     </Button>
