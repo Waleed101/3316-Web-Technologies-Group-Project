@@ -42,6 +42,7 @@ require("./routes/track.routes.js")(app);
 require("./routes/artist.routes.js")(app);
 require("./routes/album.routes.js")(app);
 require("./routes/list.routes.js")(app);
+require("./routes/secure.routes.js")(app);
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {

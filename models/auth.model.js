@@ -55,6 +55,7 @@ Auth.login = (auth, result) => {
 
             if (res.length > 0) {
                 bcrypt.compare(auth.password, res[0].password, (error, response) => {
+                    console.log(response)
                     if (response) {
                         console.log(res)
                         result(null, res[0])
@@ -69,5 +70,26 @@ Auth.login = (auth, result) => {
     )
 }
 
+
+Auth.updatePassword = (auth, result) => {
+    bcrypt.hash(auth.password, saltRounds, (err, hash) => {
+        if (err) {
+            console.log(err)
+        }
+    console.log(hash)
+    sql.query(
+        `UPDATE account SET password = '${hash}' WHERE email = '${auth.email}';`,
+        (err, res) => {
+            if (err) {
+                console.log("Error: " + err)
+                result(err, null)
+                return
+            }
+            console.log(res)
+            result({ message: `Password was updated for: ${auth.email}`})
+        }
+    )
+    })
+}
 
 module.exports = Auth
