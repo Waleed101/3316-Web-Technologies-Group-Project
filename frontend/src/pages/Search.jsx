@@ -15,7 +15,18 @@ import {
     useDisclosure,
     FormLabel,
     Input,
-    Stack
+    Stack,
+    Table,
+    Thead,
+    Tbody,
+    Tfoot,
+    Tr,
+    Th,
+    Td,
+    TableCaption,
+    TableContainer,
+    Textarea,
+    Switch,
   } from '@chakra-ui/react'
 
 let url = require("../setup/api.setup.js")
@@ -32,14 +43,20 @@ function Search() {
 
     const [numOfTracksQueued, setNumOfTracksQueued] = useState(0)
     const [tracks, setTracks] = useState({})
+    const [trackTable, setTrackTable] = useState([])
 
     const { isOpen, onOpen, onClose } = useDisclosure()
 
     let tracksSelected = {}
 
     const createNewList = () => {
-        console.log("Creating Track...")
-        console.log(tracks)
+        let tempTrackTable = []
+
+        for (const[k, v] of Object.entries(tracks)) {
+            tempTrackTable.push(<Tr><Td>{k}</Td><Td>{v}</Td></Tr>)
+        }
+
+        setTrackTable(tempTrackTable)
         onOpen()
     }
 
@@ -87,6 +104,12 @@ function Search() {
                 })
     } 
 
+    const addList = (event) => {
+        event.preventDefault()
+
+        console.log("1")
+    }
+
     useEffect(() => {
 
         fetch(url + "api/genre/")
@@ -109,20 +132,60 @@ function Search() {
                 isOpen={isOpen} 
                 onClose={onClose}
                 motionPreset='slideInBottom'
+                w="500px"
             >
             <ModalOverlay />
             <ModalContent>
-                <ModalHeader>Modal Title</ModalHeader>
+                <ModalHeader>Create a New Playlist</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
-                Temp
+                    <form onSubmit={addList}>
+                        <FormLabel> Title: </FormLabel>
+                            <Input
+                                type = "text"
+                                value = {title}
+                                onChange = {(e) => setTitle(e.target.value)}
+                            />
+                        <br></br><br></br>
+                        <FormLabel> Description: </FormLabel>
+                            <Textarea
+                                placeholder = "Enter a description of your playlist..."
+                                value = {title}
+                                onChange = {(e) => setTitle(e.target.value)}
+                            />
+                        <br></br><br></br>
+                        <Stack align='center' direction='row'>
+                            <FormLabel> Public: </FormLabel>
+                                <Switch size="md" /> 
+                        </Stack>
+                    </form>
+                    <br></br>
+                    <FormLabel> Tracks: </FormLabel>
+                    <TableContainer>
+                        <Table size="sm">
+                            <Thead>
+                                <Tr>
+                                    <Th>ID</Th>
+                                    <Th>Title</Th>
+                                </Tr>
+                            </Thead>
+                            <Tbody>
+                                {trackTable}
+                            </Tbody>
+                            <Tfoot>
+                                <Tr>
+                                    <Th>ID</Th>
+                                    <Th>Title</Th>
+                                </Tr>
+                            </Tfoot>
+                        </Table>
+                    </TableContainer>
                 </ModalBody>
 
                 <ModalFooter>
-                <Button colorScheme='blue' mr={3} onClick={onClose}>
-                    Close
-                </Button>
-                <Button variant='ghost'>Secondary Action</Button>
+                    <Button colorScheme='green' mr={3}>
+                        Create
+                    </Button>
                 </ModalFooter>
             </ModalContent>
             </Modal>
