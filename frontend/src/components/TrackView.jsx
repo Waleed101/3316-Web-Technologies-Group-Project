@@ -1,49 +1,92 @@
-import React from 'react'
+import { React, useState } from 'react'
 
 import './css/TrackView.css'
 
-export default class TrackView extends React.Component{
-    render(){
-        console.log(this.props.arr)
+import {
+    Tag,
+    Heading,
+    Text,
+    Card,
+    CardHeader,
+    CardBody,
+    Button,
+    Grid,
+    GridItem,
+    Divider,
+    Box,
+    Center,
+} from '@chakra-ui/react'
 
-        const ADD_TO_PLAYLIST_MSG = "Add to Playlist"
-        const REMOVE_FROM_PLAYLIST_MSG = "Remove from Playlist"
+import {
+    AddIcon,
+    MinusIcon,
+} from '@chakra-ui/icons'
 
-        const COLORS = ["pill red", "pill yellow", "pill green", "pill cyan", "pill blue", "pill purple"]
+function TrackView (props) {
 
-        let genre = []
-        
-        this.props.arr.genres.forEach(g => {
-            genre.push(<div class={COLORS[g.id % (COLORS.length)]}>{g.title}</div>)
-        })
+    const ADD_TO = <AddIcon />
+    const REMOVE_FROM = <MinusIcon />
 
-        let isAdded = false
-        const id = "addTo" + this.props.arr.id
+    const [added, setAdded] = useState(false)
+    const [btnMsg, setBtnMsg] = useState(ADD_TO)
 
-        const select = () => {
-            if (!isAdded) {
-                this.props.selectTrack(this.props.arr.id)
-            } else {
-                this.props.removeTrack(this.props.arr.id)
-            }
+    const COLORS = ["teal", "blue", "green", "cyan", "red"]
 
-            document.getElementById(id).innerHTML = isAdded ? ADD_TO_PLAYLIST_MSG : REMOVE_FROM_PLAYLIST_MSG 
-            isAdded = !isAdded
+    let genre = []
+    
+    props.arr.genres.forEach(g => {
+        genre.push(<Tag size='md' variant='solid' colorScheme={COLORS[g.id % (COLORS.length)]}>{g.title}</Tag>)
+    })
+
+    const id = "addTo" + props.arr.id
+
+    const select = () => {
+        if (!added) {
+            props.selectTrack(props.arr.id)
+        } else {
+            props.removeTrack(props.arr.id)
         }
 
-
-        return(
-            <div class="track">
-                <h3 class="title">{this.props.arr.title}</h3>
-                <p>{this.props.arr.name}</p>
-                <hr />
-                <div>
-                    {genre}
-                </div>
-                <button id={id} onClick={select}>
-                    {ADD_TO_PLAYLIST_MSG}
-                </button>
-            </div>
-        )
+        setBtnMsg(added ? ADD_TO : REMOVE_FROM)
+        setAdded(!added)
     }
+
+    return(
+        <Box w="50%">
+            <Center>
+                <Card w="90%">
+                    <CardHeader>
+                        <Grid
+                            h='25px'
+                            templateColumns='repeat(5, 1fr)'
+                            gap={4}
+                        >
+                            <GridItem colSpan={4}>
+                                <Heading size="md">{props.arr.title}</Heading>
+                            </GridItem>
+                            <Center>
+                                <GridItem colSpan={1}>
+                                    <Button 
+                                        id={id} 
+                                        onClick={select} 
+                                        size='sm' 
+                                        colorScheme={added ? 'red' : 'green'}
+                                    >
+                                        {btnMsg}
+                                    </Button>
+                                </GridItem>
+                            </Center>
+                        </Grid>
+                    </CardHeader>
+                    <Divider />
+                    <CardBody>
+                        <Heading as="h5" size="md">Performed by {props.arr.artistName}</Heading>
+                        {genre}
+                    </CardBody>
+                </Card>
+            </Center>
+        </Box>
+    )
 }
+
+export default TrackView

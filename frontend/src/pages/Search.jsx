@@ -12,7 +12,10 @@ import {
     ModalFooter,
     ModalBody,
     ModalCloseButton,
-    useDisclosure
+    useDisclosure,
+    FormLabel,
+    Input,
+    Stack
   } from '@chakra-ui/react'
 
 let url = require("../setup/api.setup.js")
@@ -110,8 +113,11 @@ function Search() {
 
     return (
         <>
-            <Button onClick={onOpen}>Open Modal</Button>
-            <Modal isOpen={isOpen} onClose={onClose}>
+            <Modal 
+                isOpen={isOpen} 
+                onClose={onClose}
+                motionPreset='slideInBottom'
+            >
             <ModalOverlay />
             <ModalContent>
                 <ModalHeader>Modal Title</ModalHeader>
@@ -129,34 +135,33 @@ function Search() {
             </ModalContent>
             </Modal>
 
-            <div id="list">
-                <button id="createList" onClick={createNewList}>Add {numOfTracksQueued} to a list</button>
-            </div>
+            <Button id="createList" onClick={onOpen} disabled={numOfTracksQueued==0}>Add {numOfTracksQueued} to a list</Button>
             <form onSubmit={search}>
-                <label> Title:
-                    <input
-                        type = "text"
-                        value = {title}
-                        onChange = {(e) => setTitle(e.target.value)}
-                    />
-                </label>
-                <label> Artist:
-                    <input
-                        type = "text"
-                        value = {artist}
-                        onChange = {(e) => setArtist(e.target.value)}
-                    />
-                </label>
-                <label> Genre:
-                    <select id="genreSelect" multiple={true} value={genre} onChange={(e) => {handleSelect(e.target.selectedOptions)}}>
-                        {availGenres}
-                    </select>
-                </label>
-                <input type = "submit" />
+                <Stack spacing={8} direction='row'>
+                    <FormLabel> Title: </FormLabel>
+                        <Input
+                            type = "text"
+                            value = {title}
+                            onChange = {(e) => setTitle(e.target.value)}
+                        />
+                    <FormLabel> Artist: </FormLabel>
+                        <Input
+                            type = "text"
+                            value = {artist}
+                            onChange = {(e) => setArtist(e.target.value)}
+                        />
+                    <FormLabel> Genre: </FormLabel>
+                        <select id="genreSelect" multiple={true} value={genre} onChange={(e) => {handleSelect(e.target.selectedOptions)}}>
+                            {availGenres}
+                        </select>
+                    <Button type = "submit">
+                        Submit
+                    </Button>
+                </Stack>
             </form>
-            <div id="result">
-                {result.map(r => <div>{r}</div>)}
-            </div>
+            <Stack spacing={8}>
+                {result.map(r => <>{r}</>)}
+            </Stack>
         </>
     );
 }
