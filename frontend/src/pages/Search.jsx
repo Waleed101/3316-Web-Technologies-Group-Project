@@ -32,10 +32,15 @@ import {
 let url = require("../setup/api.setup.js")
 
 function Search() {
+    const [cookies, setCookie, removeCookie] = useCookies(["user"])
 
     const [title, setTitle] = useState("")
     const [genre, setGenre] = useState([])
     const [artist, setArtist] = useState("")
+
+    // Creating the list form
+    const [listTitle, setListTitle] = useState("")
+    const [listDescription, setListDescription] = useState("")
 
     const [availGenres, setAvailGenres] = useState([])
 
@@ -104,10 +109,36 @@ function Search() {
                 })
     } 
 
-    const addList = (event) => {
-        event.preventDefault()
+    const addList = () => {
+        let body = JSON.stringify({
+            "user": cookies["user"].email,
+            "title": listTitle,
+            "description": listDescription,
+            "isPublic": document.getElementById("isPublic").checked,
+            "tracks": Object.keys(tracks)
+        })
 
-        console.log("1")
+        console.log(body)
+
+        fetch(url + "api/list/", {
+            method: "POST",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: body
+        }).then(res => res.json())
+            .then(res => {
+                console.log(res)
+            })
+
+        // fetch(url + "api/list/", requestOptions).then(res => {
+        //     console.log(res)
+        // })
+            // res.json())
+            // .then(res => {
+            //     console.log(res)
+            // })
     }
 
     useEffect(() => {
@@ -139,24 +170,24 @@ function Search() {
                 <ModalHeader>Create a New Playlist</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
-                    <form onSubmit={addList}>
+                    <form>
                         <FormLabel> Title: </FormLabel>
                             <Input
                                 type = "text"
-                                value = {title}
-                                onChange = {(e) => setTitle(e.target.value)}
+                                value = {listTitle}
+                                onChange = {(e) => setListTitle(e.target.value)}
                             />
                         <br></br><br></br>
                         <FormLabel> Description: </FormLabel>
                             <Textarea
                                 placeholder = "Enter a description of your playlist..."
-                                value = {title}
-                                onChange = {(e) => setTitle(e.target.value)}
+                                value = {listDescription}
+                                onChange = {(e) => setListDescription(e.target.value)}
                             />
                         <br></br><br></br>
                         <Stack align='center' direction='row'>
                             <FormLabel> Public: </FormLabel>
-                                <Switch size="md" /> 
+                                <Switch size="md" id="isPublic"/> 
                         </Stack>
                     </form>
                     <br></br>
@@ -183,7 +214,7 @@ function Search() {
                 </ModalBody>
 
                 <ModalFooter>
-                    <Button colorScheme='green' mr={3}>
+                    <Button colorScheme='green' mr={3} onClick={addList}>
                         Create
                     </Button>
                 </ModalFooter>

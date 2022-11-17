@@ -5,28 +5,15 @@ const List = require("../models/list.model.js");
 // Create and Save a new List
 exports.create = (req, res) => {
   // Validate request
+  console.log(req.body)
   if (!req.body) {
     res.status(400).send({
       message: "Content can not be empty!"
     });
   }
 
-  if (!sanitize.stringLength(req.body.name, 3, 255)) {
-    res.status(403).send({ message: "Your input is not between the length of 3 and 255"})
-    return
-  }
-
-  if (sanitize.hasNoScript(req.body.name)) {
-    res.status(403).send({ message: "Your input cannot have any of: <, >"})
-    return
-  }  
-
-  console.log(req.body)
-  const list = new List({
-    name: req.body.name
-  });
-
-  List.create(list, (err, data) => {
+  List.create(req.body, (err, data) => {
+    console.log("Creating...")
     if (err)
       res.status(500).send({
         message:

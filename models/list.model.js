@@ -4,24 +4,36 @@ const List = function(list) {
     this.name = list.name
     this.tracks = list.tracks
     this.totalPlayTime = list.totalPlayTime
+    this.description = list.description
+    this.isPublic = list.isPublic
 }
 
 List.create = (newList, result) => {
     
-    sql.query(`SELECT id FROM list WHERE name = "${newList.name}"`, (err, res) => {
+    let lists = "(" + newList.tracks.join(",") + ")" 
+
+    let query = `SELECT id, duration FROM track WHERE id in ${lists}`
+
+    console.log(query)
+    
+    sql.query(query, (err, res) => {
         if(err) {
             console.log("Error: ", err)
-            result(err, null)
+            result(null, err)
             return
         }
 
-        if(res.length) {
-            console.log(`List with name ${newList.name} exists.`)
-            result({"message": "List with name " + newList.name + " already exists."}, null)
-            return
-        }
+        let totalDuration = 0
 
-        sql.query(`INSERT INTO list SET name="${newList.name}", tracks="", totalPlayTime=0`, (err, res) => {
+        res.forEach(val => {
+            const time = val.duration.split(":")
+            totalDuration += (parseInt(time[0]) * 60 + parseInt(time[1]))
+        })
+
+        console.log(totalDuration)
+
+        sql.query(`INSERT INTO list SET name="${newList.title}", createdBy="${newList.user}", tracks="${newList.tracks.join(",")}",
+                    totalPlayTime=${totalDuration}, description="${newList.description}", isPublic=${newList.isPublic ? 1 : 0}`, (err, res) => {
             if(err) {
                 console.log("Error: ", err)
                 result(err, null)
@@ -31,8 +43,9 @@ List.create = (newList, result) => {
             console.log("Created List: ", { id: res.insertId, ...newList })
             result(null, { id: res.insertId, ...newList })
         })
+
     })
-    
+   
 }
 
 List.findById = (id, result) => {
