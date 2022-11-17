@@ -16,7 +16,16 @@ function Search() {
     const [result, setResult] = useState([])
 
     const [numOfTracksQueued, setNumOfTracksQueued] = useState(0)
+    const [tracks, setTracks] = useState([])
+
     let tracksSelected = []
+
+    const createNewList = () => {
+        console.log("Creating Track...")
+        tracks.forEach(t => {
+            console.log(t)
+        })
+    }
 
     const handleSelect = function(selectedItems) {
         const genre = []
@@ -31,6 +40,7 @@ function Search() {
     const selectTrack = (data) => {
         console.log("Selecting track " + data)
         tracksSelected.push(data)
+        setTracks(tracksSelected)
         setNumOfTracksQueued(tracksSelected.length)
     }
 
@@ -42,6 +52,7 @@ function Search() {
         } else {
             console.log("Track hasn't been added yet to be removed.")
         }
+        setTracks(tracksSelected)
         setNumOfTracksQueued(tracksSelected.length)
     }
 
@@ -86,7 +97,7 @@ function Search() {
     return (
         <div id="region">
             <div id="list">
-                <button id="createList">Add {numOfTracksQueued} to a list</button>
+                <button id="createList" onClick={createNewList}>Add {numOfTracksQueued} to a list</button>
             </div>
             <form onSubmit={search}>
                 <label> Title:
