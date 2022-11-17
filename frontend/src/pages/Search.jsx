@@ -31,17 +31,16 @@ function Search() {
     const [result, setResult] = useState([])
 
     const [numOfTracksQueued, setNumOfTracksQueued] = useState(0)
-    const [tracks, setTracks] = useState([])
+    const [tracks, setTracks] = useState({})
 
     const { isOpen, onOpen, onClose } = useDisclosure()
 
-    let tracksSelected = []
+    let tracksSelected = {}
 
     const createNewList = () => {
         console.log("Creating Track...")
-        tracks.forEach(t => {
-            console.log(t)
-        })
+        console.log(tracks)
+        onOpen()
     }
 
     const handleSelect = function(selectedItems) {
@@ -54,23 +53,18 @@ function Search() {
         setGenre(genre)
     }
 
-    const selectTrack = (data) => {
-        console.log("Selecting track " + data)
-        tracksSelected.push(data)
+    const selectTrack = (id, title) => {
+        console.log("Selecting track " + id)
+        tracksSelected[id] = title
         setTracks(tracksSelected)
-        setNumOfTracksQueued(tracksSelected.length)
+        setNumOfTracksQueued(Object.keys(tracksSelected).length)
     }
 
-    const removeTrack = (data) => {
-        console.log("Removing track " + data)
-        const index = tracksSelected.indexOf(data)
-        if (index > - 1) {
-            tracksSelected.splice(index, 1)
-        } else {
-            console.log("Track hasn't been added yet to be removed.")
-        }
+    const removeTrack = (id) => {
+        console.log("Removing track " + id)
+        delete tracksSelected[id]
         setTracks(tracksSelected)
-        setNumOfTracksQueued(tracksSelected.length)
+        setNumOfTracksQueued(Object.keys(tracksSelected).length)
     }
 
     const search = (event) => {
@@ -89,8 +83,6 @@ function Search() {
                     res.forEach(record => {
                         output.push(<TrackView selectTrack={selectTrack} removeTrack={removeTrack} arr={record} />) 
                     })
-                    console.log("1")
-                    console.log(output)
                     setResult(output)
                 })
     } 
@@ -135,7 +127,7 @@ function Search() {
             </ModalContent>
             </Modal>
 
-            <Button id="createList" onClick={onOpen} disabled={numOfTracksQueued==0}>Add {numOfTracksQueued} to a list</Button>
+            <Button id="createList" onClick={createNewList} disabled={numOfTracksQueued==0}>Add {numOfTracksQueued} to a list</Button>
             <form onSubmit={search}>
                 <Stack spacing={8} direction='row'>
                     <FormLabel> Title: </FormLabel>

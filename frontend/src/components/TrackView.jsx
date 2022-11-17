@@ -42,8 +42,6 @@ function TrackView (props) {
         }
     }
 
-    isLoggedIn("user")
-
     let genre = []
     
     props.arr.genres.forEach(g => {
@@ -54,7 +52,7 @@ function TrackView (props) {
 
     const select = () => {
         if (!added) {
-            props.selectTrack(props.arr.id)
+            props.selectTrack(props.arr.id, props.arr.title)
         } else {
             props.removeTrack(props.arr.id)
         }
