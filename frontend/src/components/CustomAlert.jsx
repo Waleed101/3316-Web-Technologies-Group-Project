@@ -14,7 +14,7 @@ function CustomAlert (props) {
         onClose,
       } = useDisclosure({ defaultIsOpen: true })
 
-    console.log(isVisible)
+    console.log(props.msg)
 
     return (isVisible ? <Alert status={ props.isError ? 'error' : 'success' } variant='subtle'>
         <AlertIcon />
