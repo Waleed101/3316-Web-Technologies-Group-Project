@@ -1,7 +1,19 @@
-import { React, useState, useEffect } from 'react';
+import { React, useState, useEffect, useRef } from 'react';
 import { useCookies } from 'react-cookie';
 
 import TrackView from "../components/TrackView";
+
+import {
+    Button,
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalFooter,
+    ModalBody,
+    ModalCloseButton,
+    useDisclosure
+  } from '@chakra-ui/react'
 
 let url = require("../setup/api.setup.js")
 
@@ -17,6 +29,8 @@ function Search() {
 
     const [numOfTracksQueued, setNumOfTracksQueued] = useState(0)
     const [tracks, setTracks] = useState([])
+
+    const { isOpen, onOpen, onClose } = useDisclosure()
 
     let tracksSelected = []
 
@@ -95,7 +109,26 @@ function Search() {
     }, [])
 
     return (
-        <div id="region">
+        <>
+            <Button onClick={onOpen}>Open Modal</Button>
+            <Modal isOpen={isOpen} onClose={onClose}>
+            <ModalOverlay />
+            <ModalContent>
+                <ModalHeader>Modal Title</ModalHeader>
+                <ModalCloseButton />
+                <ModalBody>
+                Temp
+                </ModalBody>
+
+                <ModalFooter>
+                <Button colorScheme='blue' mr={3} onClick={onClose}>
+                    Close
+                </Button>
+                <Button variant='ghost'>Secondary Action</Button>
+                </ModalFooter>
+            </ModalContent>
+            </Modal>
+
             <div id="list">
                 <button id="createList" onClick={createNewList}>Add {numOfTracksQueued} to a list</button>
             </div>
@@ -124,7 +157,7 @@ function Search() {
             <div id="result">
                 {result.map(r => <div>{r}</div>)}
             </div>
-        </div>
+        </>
     );
 }
 
