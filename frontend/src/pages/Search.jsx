@@ -2,6 +2,7 @@ import { React, useState, useEffect, useRef } from 'react';
 import { useCookies } from 'react-cookie';
 
 import TrackView from "../components/TrackView";
+import CustomAlert from "../components/CustomAlert";
 
 import {
     Button,
@@ -45,6 +46,7 @@ function Search() {
     const [availGenres, setAvailGenres] = useState([])
 
     const [result, setResult] = useState([])
+    const [createState, setCreateState] = useState(null)
 
     const [numOfTracksQueued, setNumOfTracksQueued] = useState(0)
     const [tracks, setTracks] = useState({})
@@ -129,16 +131,13 @@ function Search() {
             body: body
         }).then(res => res.json())
             .then(res => {
-                console.log(res)
+                if (res.message) {
+                    setCreateState(<CustomAlert isError={true} msg={res.message}></CustomAlert>)
+                } else {
+                    setCreateState(<CustomAlert isError={false} msg={'Successfully created ' + res.title + " playlist."}></CustomAlert>)
+                }
+                console.log(createState)
             })
-
-        // fetch(url + "api/list/", requestOptions).then(res => {
-        //     console.log(res)
-        // })
-            // res.json())
-            // .then(res => {
-            //     console.log(res)
-            // })
     }
 
     useEffect(() => {
@@ -222,6 +221,7 @@ function Search() {
             </Modal>
 
             <Button id="createList" onClick={createNewList} disabled={numOfTracksQueued==0}>Add {numOfTracksQueued} to a list</Button>
+            {createState}
             <form onSubmit={search}>
                 <Stack spacing={8} direction='row'>
                     <FormLabel> Title: </FormLabel>
