@@ -1,5 +1,12 @@
 import { React, useState } from 'react';
 import { useCookies } from 'react-cookie';
+import { 
+    Button, 
+    Input,
+    InputGroup,
+    InputRightElement,
+    FormLabel
+ } from '@chakra-ui/react'
 
 let url = require("../setup/api.setup.js")
 
@@ -8,6 +15,9 @@ function Login() {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [cookies, setCookie, removeCookie] = useCookies(["user"])
+
+    const [show, setShow] = useState(false)
+    const handleClick = () => setShow(!show)  
 
     const submit = (event) => {
         event.preventDefault();
@@ -39,21 +49,36 @@ function Login() {
 
     return (
         <form onSubmit={submit}>
-            <label> Email:
-                <input
-                    type = "email"
-                    value = {email}
+            <InputGroup size='md'>
+                <FormLabel>
+                    Enter Email:
+                </FormLabel>
+                <Input
+                    pr='4.5rem'
+                    type='email'
+                    placeholder='Enter email'
                     onChange = {(e) => setEmail(e.target.value)}
                 />
-            </label>
-            <label> Password:
-                <input
-                    type = "password"
-                    value = {password}
+            </InputGroup>
+            <InputGroup size='md'>
+                <FormLabel>
+                    Enter Password:
+                </FormLabel>
+                <Input
+                    pr='4.5rem'
+                    type={show ? 'text' : 'password'}
+                    placeholder='Enter password'
                     onChange = {(e) => setPassword(e.target.value)}
                 />
-            </label>
-            <input type = "submit" />
+                <InputRightElement width='4.5rem'>
+                    <Button h='1.75rem' size='sm' onClick={handleClick}>
+                    {show ? 'Hide' : 'Show'}
+                    </Button>
+                </InputRightElement>
+            </InputGroup>
+            <Button type = "submit" width="full">
+                Submit
+            </Button>
         </form>
     );
 }

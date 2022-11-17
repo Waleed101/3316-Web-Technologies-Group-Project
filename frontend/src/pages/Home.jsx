@@ -1,6 +1,8 @@
 import React from 'react';
 import { useCookies }  from "react-cookie";
 
+import { Button } from '@chakra-ui/react'
+
 function Home() {
     const [cookies, setCookie, removeCookie] = useCookies(["user"])
 
@@ -19,18 +21,18 @@ function Home() {
     }
 
     return (
-        <div id="main">
+        <>
             {name}
 
-            <button onClick={() => {
+            <Button onClick={() => {
                 alert(`User cookie is ${JSON.stringify(cookies["user"])}`)
-            }}>Show User Cookie</button>
+            }}>Show User Cookie</Button>
 
-            <button onClick={() => {
+            <Button onClick={() => {
                 removeCookie("user")
                 console.log("Removed user cookie.")
-            }}>Log-out</button>
-        </div>
+            }}>Log-out</Button>
+        </>
     );
 }
 
