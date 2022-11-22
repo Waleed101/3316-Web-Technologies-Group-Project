@@ -97,12 +97,10 @@ List.getAll = (info, result) => {
             return;
         }
 
-        if(removeTracks) {
-            for(let i = 0; i < res.length; i+=1) {
-                res[i]["numberOfTracks"] = res[i]["tracks"].split(",").length
-                if(removeTracks) {
-                    delete res[i]["tracks"]
-                }
+        for(let i = 0; i < res.length; i+=1) {
+            res[i]["numberOfTracks"] = res[i]["tracks"].split(",").length
+            if(removeTracks) {
+                delete res[i]["tracks"]
             }
         }
 

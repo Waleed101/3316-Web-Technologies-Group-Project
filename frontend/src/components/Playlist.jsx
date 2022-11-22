@@ -16,10 +16,32 @@ import {
     Divider,
     Box,
     Center,
+    Flex,
+    Icon,
+    Avatar,
+    IconButton,
 } from '@chakra-ui/react'
+
+import {
+    AddIcon,
+    HamburgerIcon,
+    TriangleDownIcon,
+    TriangleUpIcon,
+    ViewIcon,
+    ViewOffIcon,
+} from '@chakra-ui/icons'
 
 function Playlist (props) {
     const [cookies, setCookie, removeCookie] = useCookies(["user"])
+    const [isOpen, setIsOpen, setIsClosed] = useState(false)
+
+    const getDate = (val, split) => {
+        return val.split(split)[0]
+    }
+
+    const changeContentState = () => {
+        setIsOpen(!isOpen)
+    }
 
     return(
         <Box w="50%">
@@ -32,7 +54,37 @@ function Playlist (props) {
                             gap={4}
                         >
                             <GridItem colSpan={4}>
-                                <Heading size="md"></Heading>
+                                <Flex spacing='4'>
+                                    <Flex flex='1' gap='4' alignItems='center' flexWrap='wrap'>
+                                        <Box>
+                                            <Heading size='sm'>{props.vals.name}</Heading>
+                                            <Text fontSize="xs" as="i">
+                                                Last Updated on {props.vals.updated == "0000-00-00 00:00:00" ? getDate(props.vals.created, "T") : getDate(props.vals.updated, " ")}
+                                            </Text>
+                                        </Box>
+                                    </Flex>
+                                    <Flex flex='1' gap='2' alignItems='center' flexWrap='wrap'>
+                                        <IconButton
+                                            variant='ghost'
+                                            colorScheme='gray'
+                                            aria-label='See menu'
+                                            icon={isOpen ? <TriangleUpIcon /> : <TriangleDownIcon />}
+                                            onClick={changeContentState}
+                                        />
+                                        <IconButton
+                                            variant='ghost'
+                                            colorScheme='gray'
+                                            aria-label='See menu'
+                                            icon={props.vals.isPublic ? <ViewIcon /> : <ViewOffIcon />}
+                                        />
+                                        <IconButton
+                                            variant='ghost'
+                                            colorScheme='gray'
+                                            aria-label='See menu'
+                                            icon={<HamburgerIcon />}
+                                        />
+                                    </Flex>
+                                </Flex>                                
                             </GridItem>
                             <Center>
                                 <GridItem colSpan={1}>
@@ -49,9 +101,15 @@ function Playlist (props) {
                         </Grid>
                     </CardHeader>
                     <Divider />
-                    <CardBody>
-                        <Heading as="h5" size="md">Performed by</Heading>
-                    </CardBody>
+                    {
+                        isOpen ?
+                            <CardBody>
+                                <Text>Your list has {props.vals.numberOfTracks} track{props.vals.numberOfTracks > 1 ? 's' : ''}</Text>
+                                <Heading as="h5" size="md">Performed by</Heading>
+                            </CardBody> 
+                        : 
+                            <></>
+                    }
                 </Card>
             </Center>
         </Box>

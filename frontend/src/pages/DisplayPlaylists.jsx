@@ -43,7 +43,15 @@ function DisplayPlaylists() {
         fetch(`${url}api/list?user=${cookies['user'].email}`)
             .then(res => res.json())
                 .then(res => {
+                    let temp = []
+
                     console.log(res)
+
+                    res.forEach(row => {
+                        temp.push(<Playlist vals={row}></Playlist>)
+                    })
+
+                    setPlaylists(temp)
                 })
     }, [])
 
@@ -57,7 +65,7 @@ function DisplayPlaylists() {
 
     return (
         <>
-            <Playlist></Playlist>
+            {playlists}
         </>
     );
 }
