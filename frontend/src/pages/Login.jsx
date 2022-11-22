@@ -8,6 +8,8 @@ import {
     FormLabel
  } from '@chakra-ui/react'
 
+import { Navigate, useLocation } from 'react-router-dom';
+
 let url = require("../setup/api.setup.js")
 
 function Login() {
@@ -15,6 +17,10 @@ function Login() {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [cookies, setCookie, removeCookie] = useCookies(["user"])
+    const [redirect, setRedirect] = useState(false)
+
+    const route = new URLSearchParams(useLocation().search).get("rdr")
+    console.log(route)
 
     const [show, setShow] = useState(false)
     const handleClick = () => setShow(!show)  
@@ -42,12 +48,17 @@ function Login() {
                         alert(`Error: ${res.message}`)
                     } else {
                         setCookie("user", res, { path: "/" })
+
                         alert(`Successfully logged in with email ${email}`)
+
+                        if(route != null) {
+                            setRedirect(true)
+                        }                        
                     }
                 })
     }
 
-    return (
+    return ( redirect ? <Navigate to={'/' + route}/> :
         <form onSubmit={submit}>
             <InputGroup size='md'>
                 <FormLabel>
