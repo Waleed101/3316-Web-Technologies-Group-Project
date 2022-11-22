@@ -26,21 +26,12 @@ exports.create = (req, res) => {
 // Retrieve all List from the database (with condition).
 exports.findAll = (req, res) => {
     
-    const name = req.query.name;
-    // console.log(name)
-  
-    if(name) {
-      if (sanitize.hasNoScript(name)) {
-        res.status(403).send({ message: "Your input cannot have any of: <, >"})
-        return
-      }
-      if (!sanitize.stringLength(name, 3, 255)) {
-        res.status(403).send({ message: "Your input is not between the length of 3 and 255"})
-        return
-      }
+    const info = {
+      name: req.query.name,
+      user: req.query.user
     }
 
-    List.getAll(name, (err, data) => {
+    List.getAll(info, (err, data) => {
       if (err)
         res.status(500).send({
           message:

@@ -78,12 +78,15 @@ List.findById = (id, result) => {
     })
 }
 
-List.getAll = (name, result) => {
-    let query = `SELECT name, tracks, totalPlayTime FROM list`
+List.getAll = (info, result) => {
+    let query = `SELECT * FROM list`
     let removeTracks = true
 
-    if(name) {
-        query += ` WHERE name = "${name}"`
+    if(info.name) {
+        query += ` WHERE name = "${info.name}"`
+        removeTracks = false
+    } else if (info.user) {
+        query += ` WHERE createdBy = "${info.user}"`
         removeTracks = false
     }
 
@@ -97,7 +100,9 @@ List.getAll = (name, result) => {
         if(removeTracks) {
             for(let i = 0; i < res.length; i+=1) {
                 res[i]["numberOfTracks"] = res[i]["tracks"].split(",").length
-                delete res[i]["tracks"]
+                if(removeTracks) {
+                    delete res[i]["tracks"]
+                }
             }
         }
 

@@ -1,4 +1,4 @@
-import { React, useState } from 'react';
+import { React, useState, useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 import  { Navigate } from 'react-router-dom'
 
@@ -27,12 +27,25 @@ import {
     Textarea,
     Switch,
  } from '@chakra-ui/react'
+import Playlist from '../components/Playlist.jsx';
 
 let url = require("../setup/api.setup.js")
 
 function DisplayPlaylists() {
 
     const [cookies, setCookie, removeCookie] = useCookies(["user"])
+
+    const [playlists, setPlaylists] = useState([])
+
+
+    useEffect(() => {
+
+        fetch(`${url}api/list?user=${cookies['user'].email}`)
+            .then(res => res.json())
+                .then(res => {
+                    console.log(res)
+                })
+    }, [])
 
     if (cookies["user"]) {
         if (cookies["user"].timeToExpire < Date.now()) {
@@ -44,7 +57,7 @@ function DisplayPlaylists() {
 
     return (
         <>
-
+            <Playlist></Playlist>
         </>
     );
 }

@@ -32,27 +32,25 @@ function Playlist (props) {
                             gap={4}
                         >
                             <GridItem colSpan={4}>
-                                <Heading size="md">{props.arr.title}</Heading>
+                                <Heading size="md"></Heading>
                             </GridItem>
                             <Center>
                                 <GridItem colSpan={1}>
-                                    <Button 
+                                    {/* <Button 
                                         id={id} 
                                         onClick={select} 
                                         size='sm' 
-                                        colorScheme={added ? 'red' : 'green'}
                                         isDisabled={!isBtnDisabled}
                                     >
-                                        {btnMsg}
-                                    </Button>
+                                        
+                                    </Button> */}
                                 </GridItem>
                             </Center>
                         </Grid>
                     </CardHeader>
                     <Divider />
                     <CardBody>
-                        <Heading as="h5" size="md">Performed by {props.arr.artistName}</Heading>
-                        {genre}
+                        <Heading as="h5" size="md">Performed by</Heading>
                     </CardBody>
                 </Card>
             </Center>
