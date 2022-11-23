@@ -44,6 +44,8 @@ function TrackView (props) {
 
     let genre = []
     
+    console.log(props.arr)
+
     props.arr.genres.forEach(g => {
         genre.push(<Tag size='md' variant='solid' colorScheme={COLORS[g.id % (COLORS.length)]}>{g.title}</Tag>)
     })

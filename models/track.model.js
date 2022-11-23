@@ -58,20 +58,17 @@ Track.findById = (id, result) => {
         res["albumName"] = res["name"]
         delete res["name"]
         
-        for (let i = 0; i < res.length; i++) {
-            if (res[i]['genres'] != "[undefined]") {
-                let genresToSearch = res[i]['genres'].replace("[", "(")
-                genresToSearch = genresToSearch.replace("]", ")")
+        if (res[0]['genres'] != "[undefined]") {
+            let genresToSearch = res[0]['genres'].replace("[", "(")
+            genresToSearch = genresToSearch.replace("]", ")")
+            
+            sql.query(`SELECT * FROM genre WHERE id in ${genresToSearch}`, (eGenres, rGenres) => {
+                res[0]['genres'] = rGenres
                 
-                sql.query(`SELECT * FROM genre WHERE id in ${genresToSearch}`, (eGenres, rGenres) => {
-                    res[i]['genres'] = rGenres
-
-                    if ((i + 1) == res.length) {
-                        console.log("Done.")
-                        result(null, res)
-                    }
-                })
-            }
+                console.log("Done.")
+                result(null, res[0])
+                return
+            })
         }
     })
 }
