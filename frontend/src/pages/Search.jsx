@@ -105,7 +105,7 @@ function Search() {
                         return
                     }
                     res.forEach(record => {
-                        output.push(<TrackView selectTrack={selectTrack} removeTrack={removeTrack} arr={record} />) 
+                        output.push(<TrackView selectTrack={selectTrack} removeTrack={removeTrack} arr={record}  addBtn={true} size={'md'} />) 
                     })
                     setResult(output)
                 })

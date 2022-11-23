@@ -13,7 +13,6 @@ let url = require("../setup/api.setup.js")
 
 function TrackList(props) {
 
-    // const [gotTracks, setGotTracks] = useState(false)
     const [tracks, setTracks] = useState([<Spinner />])
 
     console.log(props.tracks)
@@ -25,7 +24,7 @@ function TrackList(props) {
                 .then(res => res.json())
                     .then(res => {
                         console.log(res)
-                        temp.push(<TrackView arr={res}></TrackView>)
+                        temp.push(<TrackView arr={res} addBtn={false} size={'s'} />)
                         if (i == props.tracks.length - 1) {
                             setTracks(temp)
                         } 

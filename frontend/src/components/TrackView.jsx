@@ -43,11 +43,17 @@ function TrackView (props) {
     }
 
     let genre = []
-    
-    console.log(props.arr)
 
     props.arr.genres.forEach(g => {
-        genre.push(<Tag size='md' variant='solid' colorScheme={COLORS[g.id % (COLORS.length)]}>{g.title}</Tag>)
+        genre.push(<Tag 
+                        size='md' 
+                        variant='solid' 
+                        colorScheme={COLORS[g.id % (COLORS.length)]}
+                    >
+                        <Text fontSize={props.size}>
+                            {g.title}
+                        </Text>
+                    </Tag>)
     })
 
     const id = "addTo" + props.arr.id
@@ -64,19 +70,19 @@ function TrackView (props) {
     }
 
     return(
-        <Box w="50%">
+        <Box w="100%">
             <Center>
                 <Card w="90%">
                     <CardHeader>
                         <Grid
-                            h='25px'
+                            h='20px'
                             templateColumns='repeat(5, 1fr)'
                             gap={4}
                         >
                             <GridItem colSpan={4}>
-                                <Heading size="md">{props.arr.title}</Heading>
+                                <Heading size={props.size}>{props.arr.title}</Heading>
                             </GridItem>
-                            <Center>
+                            {props.addBtn ? <Center>
                                 <GridItem colSpan={1}>
                                     <Button 
                                         id={id} 
@@ -88,12 +94,13 @@ function TrackView (props) {
                                         {btnMsg}
                                     </Button>
                                 </GridItem>
-                            </Center>
+                            </Center> : <></> }
                         </Grid>
                     </CardHeader>
                     <Divider />
                     <CardBody>
-                        <Heading as="h5" size="md">Performed by {props.arr.artistName}</Heading>
+                        <Heading as="h5" size={props.size}>Performed by {props.arr.artistName}</Heading>
+                        <br/>
                         {genre}
                     </CardBody>
                 </Card>
