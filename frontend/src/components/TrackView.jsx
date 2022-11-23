@@ -16,15 +16,20 @@ import {
     Divider,
     Box,
     Center,
+    Flex,
+    IconButton,
 } from '@chakra-ui/react'
 
 import {
     AddIcon,
     MinusIcon,
+    TriangleDownIcon,
+    TriangleUpIcon,
 } from '@chakra-ui/icons'
 
 function TrackView (props) {
     const [cookies, setCookie, removeCookie] = useCookies(["user"])
+    const [isOpen, setIsOpen] = useState(false)
 
     const ADD_TO = <AddIcon />
     const REMOVE_FROM = <MinusIcon />
@@ -69,6 +74,10 @@ function TrackView (props) {
         setAdded(!added)
     }
 
+    const changeContentState = () => {
+        setIsOpen(!isOpen)
+    }
+
     return(
         <Box w="100%">
             <Center>
@@ -82,27 +91,40 @@ function TrackView (props) {
                             <GridItem colSpan={4}>
                                 <Heading size={props.size}>{props.arr.title}</Heading>
                             </GridItem>
-                            {props.addBtn ? <Center>
+                             <Center>
                                 <GridItem colSpan={1}>
-                                    <Button 
+                                    {props.addBtn ? <Button 
                                         id={id} 
                                         onClick={select} 
                                         size='sm' 
                                         colorScheme={added ? 'red' : 'green'}
                                         isDisabled={!isBtnDisabled}
-                                    >
+                                    > 
                                         {btnMsg}
-                                    </Button>
+                                    </Button> : <></> }
+                                    <IconButton
+                                        variant='ghost'
+                                        colorScheme='gray'
+                                        aria-label='See menu'
+                                        icon={isOpen ? <TriangleUpIcon /> : <TriangleDownIcon />}
+                                        onClick={changeContentState}
+                                    />
                                 </GridItem>
-                            </Center> : <></> }
+                            </Center>
                         </Grid>
+                        <Flex flex='1' gap='2' alignItems='center' flexWrap='wrap'>
+                        </Flex>
                     </CardHeader>
                     <Divider />
-                    <CardBody>
-                        <Heading as="h5" size={props.size}>Performed by {props.arr.artistName}</Heading>
-                        <br/>
-                        {genre}
-                    </CardBody>
+                    {isOpen ? 
+                        <CardBody>
+                            <Heading as="h5" size={props.size}>Performed by {props.arr.artistName}</Heading>
+                            <br/>
+                            {genre}
+                        </CardBody>
+                        :
+                        <></>
+                    }                    
                 </Card>
             </Center>
         </Box>
