@@ -1,5 +1,6 @@
 import { React, useState } from 'react'
 import { useCookies } from 'react-cookie'
+import  { useNavigate } from 'react-router-dom'
 
 import TrackList from '../components/TrackList'
 
@@ -25,7 +26,7 @@ import {
 
 import {
     AddIcon,
-    HamburgerIcon,
+    EditIcon,
     TriangleDownIcon,
     TriangleUpIcon,
     ViewIcon,
@@ -38,6 +39,8 @@ function Playlist (props) {
     const [cookies, setCookie, removeCookie] = useCookies(["user"])
     const [isOpen, setIsOpen] = useState(false)
     const [isPublic, setIsPublic] = useState(props.vals.isPublic)
+
+    const navigate = useNavigate()
 
     const getDate = (val) => {
         return val.split("T")[0]
@@ -68,6 +71,11 @@ function Playlist (props) {
                     }
                 })
             )
+    }
+
+    const editPlaylist = () => {
+        console.log("Redirecting...")
+        navigate('/search/', { state: props.vals })
     }
 
     return(
@@ -114,7 +122,8 @@ function Playlist (props) {
                                                 variant='ghost'
                                                 colorScheme='gray'
                                                 aria-label='See menu'
-                                                icon={<HamburgerIcon />}
+                                                icon={<EditIcon />}
+                                                onClick={editPlaylist}
                                             />
                                         </Tooltip>
                                     </Flex>

@@ -54,15 +54,15 @@ exports.findAll = (req, res) => {
         id: req.query.id
     }
 
-    if (!sanitize.stringLength(req.query.title, 3, 255)) {
-      res.status(403).send({ message: "Your input is not between the length of 3 and 255"})
-      return
-    }
+    // if (!sanitize.stringLength(req.query.title, 3, 255)) {
+    //   res.status(403).send({ message: "Your input is not between the length of 3 and 255"})
+    //   return
+    // }
 
-    if (sanitize.hasNoScript(req.query.title)) {
-      res.status(403).send({ message: "Your input cannot have any of: <, >"})
-      return
-    }  
+    // if (sanitize.hasNoScript(req.query.title)) {
+    //   res.status(403).send({ message: "Your input cannot have any of: <, >"})
+    //   return
+    // }  
 
     Track.getAll(query, (err, data) => {
       if (err)

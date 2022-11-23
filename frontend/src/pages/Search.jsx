@@ -1,5 +1,6 @@
 import { React, useState, useEffect } from 'react';
 import { useCookies } from 'react-cookie';
+import { useLocation } from 'react-router-dom';
 
 import TrackView from "../components/TrackView";
 import CustomAlert from "../components/CustomAlert";
@@ -34,6 +35,7 @@ let url = require("../setup/api.setup.js")
 
 function Search() {
     const [cookies, setCookie, removeCookie] = useCookies(["user"])
+    const { state } = useLocation() 
 
     const [title, setTitle] = useState("")
     const [genre, setGenre] = useState([])
@@ -92,11 +94,13 @@ function Search() {
     }
 
     const search = (event) => {
-        event.preventDefault();
+        if (event) event.preventDefault();
 
         let output = []
 
-        let query = `?title=${title}&artist=${artist}&genres=${genre.join(",")}`
+        let query = `?title=${title}&artist=${artist}&genres=${genre.join(",")}&id=${state ? state.tracks : ''}`
+
+        const onLoadSelected = state ? state.tracks.split(",") : []
 
         fetch(url + "api/track/" + query)
             .then(res => res.json())
@@ -104,9 +108,25 @@ function Search() {
                     if(res.message) {
                         return
                     }
+                    
                     res.forEach(record => {
-                        output.push(<TrackView selectTrack={selectTrack} removeTrack={removeTrack} arr={record}  addBtn={true} size={'md'} />) 
+
+                        if (onLoadSelected.includes(record.id.toString()) && ! (record.id in tracksSelected)) {
+                            selectTrack(record.id, record.title)
+                        }
+
+                        output.push(
+                            <TrackView 
+                                selectTrack={selectTrack} 
+                                removeTrack={removeTrack} 
+                                arr={record} 
+                                addBtn={true} 
+                                size={'md'} 
+                                isSelected={record.id.toString() in tracksSelected}
+                            />
+                        ) 
                     })
+
                     setResult(output)
                 })
     } 
@@ -141,6 +161,11 @@ function Search() {
     }
 
     useEffect(() => {
+        if (state) {
+            setListDescription(state.description)
+            setListTitle(state.name)
+            search(null)
+        }
 
         fetch(url + "api/genre/")
             .then(res => res.json())
@@ -166,7 +191,7 @@ function Search() {
             >
             <ModalOverlay />
             <ModalContent>
-                <ModalHeader>Create a New Playlist</ModalHeader>
+                <ModalHeader>{state ? "Edit Exisiting " : "Create a New"} Playlist</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
                     <form>
@@ -176,20 +201,20 @@ function Search() {
                                 value = {listTitle}
                                 onChange = {(e) => setListTitle(e.target.value)}
                             />
-                        <br></br><br></br>
+                        <br /><br />
                         <FormLabel> Description: </FormLabel>
                             <Textarea
                                 placeholder = "Enter a description of your playlist..."
                                 value = {listDescription}
                                 onChange = {(e) => setListDescription(e.target.value)}
                             />
-                        <br></br><br></br>
+                        <br /><br />
                         <Stack align='center' direction='row'>
                             <FormLabel> Public: </FormLabel>
-                                <Switch size="md" id="isPublic"/> 
+                                <Switch size="md" id="isPublic" defaultChecked={state && state.isPublic ? true : false}/> 
                         </Stack>
                     </form>
-                    <br></br>
+                    <br />
                     <FormLabel> Tracks: </FormLabel>
                     <TableContainer>
                         <Table size="sm">
@@ -214,13 +239,13 @@ function Search() {
 
                 <ModalFooter>
                     <Button colorScheme='green' mr={3} onClick={addList}>
-                        Create
+                        {state ? "Edit" : "Create"}
                     </Button>
                 </ModalFooter>
             </ModalContent>
             </Modal>
 
-            <Button id="createList" onClick={createNewList} disabled={numOfTracksQueued==0}>Add {numOfTracksQueued} to a list</Button>
+            <Button id="createList" onClick={createNewList} disabled={numOfTracksQueued==0}>{state ? "Edit " : "Add New "} Playlist</Button>
             {createState}
             <form onSubmit={search}>
                 <Stack spacing={8} direction='row'>

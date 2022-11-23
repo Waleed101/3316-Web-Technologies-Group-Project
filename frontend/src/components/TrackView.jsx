@@ -34,10 +34,12 @@ function TrackView (props) {
     const ADD_TO = <AddIcon />
     const REMOVE_FROM = <MinusIcon />
 
-    const [added, setAdded] = useState(false)
-    const [btnMsg, setBtnMsg] = useState(ADD_TO)
+    const [added, setAdded] = useState(props.isSelected)
+    const [btnMsg, setBtnMsg] = useState(props.isSelected ? REMOVE_FROM : ADD_TO)
 
     const COLORS = ["teal", "blue", "green", "cyan", "red"]
+
+    console.log(props.isSelected)
 
     const isBtnDisabled = () => {
         if (cookies['user']) {
