@@ -35,57 +35,44 @@ Track.create = (newTrack, result) => {
 }
 
 Track.findById = (id, result) => {
-    sql.query(`SELECT * FROM track WHERE id = ${id}`, (err, res) => {
+
+    let query = `SELECT DISTINCT id, title, albumID, artistID, datePublished, duration, interest, listens, artistName, genres FROM 
+                    (SELECT * FROM track t
+                    JOIN (SELECT id as artist, name as artistName FROM artist) AS a
+                    ON t.artistID = a.artist
+                    JOIN (
+                            SELECT * FROM trackGenre
+                            JOIN (SELECT id as gId, title as gTitle FROM genre) as genre
+                            ON genre.gId = trackGenre.genreID
+                        ) as g
+                    ON t.id = g.trackID
+                    WHERE id=${id}) as res`
+
+    sql.query(query, (err, res) => {
         if(err) {
-            console.log("Error: ", err)
-            result(err, null)
-            return
+            console.log("Error: ", err);
+            result(null, err);
+            return;
         }
+        
+        res["albumName"] = res["name"]
+        delete res["name"]
+        
+        for (let i = 0; i < res.length; i++) {
+            if (res[i]['genres'] != "[undefined]") {
+                let genresToSearch = res[i]['genres'].replace("[", "(")
+                genresToSearch = genresToSearch.replace("]", ")")
+                
+                sql.query(`SELECT * FROM genre WHERE id in ${genresToSearch}`, (eGenres, rGenres) => {
+                    res[i]['genres'] = rGenres
 
-        if(res.length) {
-
-            sql.query(`SELECT * FROM album WHERE id = ${res[0]["albumID"]}`, (err, albumRes) => {
-                console.log(`SELECT * FROM album WHERE id = ${res[0]["albumID"]}`)
-                if(err) {
-                    console.log("Error: ", err)
-                    result(err, null)
-                    return
-                }
-
-                if(albumRes.length) {
-                    res[0]["album"] = albumRes
-                } else {
-                    console.log("Couldn't find the associated Album with ID " + res[0]["albumID"])
-                    res[0]["album"] = [{"title": "Unknown"}]
-                    // result({ans: "Not Found", more: "Couldn't find the associated Album with id " + res[0]["albumID"]}, null)
-                }
-
-                console.log(`SELECT * FROM artist WHERE id = ${res[0]["artistID"]}`)
-                sql.query(`SELECT * FROM artist WHERE id = ${res[0]["artistID"]}`, (err, artistRes) => {
-                    if(err) {
-                        console.log("Error: ", err)
-                        result(err, null)
-                        return
+                    if ((i + 1) == res.length) {
+                        console.log("Done.")
+                        result(null, res)
                     }
-    
-                    if(artistRes.length) {
-                        res[0]["artist"] = artistRes
-                        
-                        console.log("Found Artist: ", res[0])
-                        result(null, res[0])
-                        return
-                    } else {
-                        console.log("Couldn't find the associated Artist with ID " + res[0]["artistID"])
-                        res[0]["artist"] = [{"name": "Unknown"}]
-                        result(null, res[0])
-                        // result({ans: "Not Found", more: "Couldn't find the associated Artist with id " + res[0]["artistID"]}, null)
-                    }
-                });
-            });
-        } else {
-            console.log("Couldn't find any tracks with ID " + id)
-            result({ans: "Not Found", more: "Couldn't find any tracks with ID " + id}, null)
-        }        
+                })
+            }
+        }
     })
 }
 
