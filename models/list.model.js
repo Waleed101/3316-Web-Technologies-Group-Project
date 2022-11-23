@@ -178,7 +178,7 @@ List.update = (id, body, result) => {
     console.log(id)
     console.log(body)
 
-    let query = `SELECT * FROM list WHERE id=${id} AND createdBy='${body.email}'`
+    let query = `SELECT * FROM list WHERE id=${id} AND createdBy='${body.createdBy}'`
 
     var listExisitsAndUserOwns = new Promise((resolve, reject) => {
         sql.query(
@@ -191,9 +191,12 @@ List.update = (id, body, result) => {
                 }
           
                 if (res.length == 0) {
+                    console.log("Not Found")
                   result({kind: "not_found"}, null)
                   return
                 }
+
+                console.log(1)
                 
                 resolve()
 
@@ -201,25 +204,27 @@ List.update = (id, body, result) => {
     })
 
     listExisitsAndUserOwns.then(() => {
-        query = `UPDATE list SET name=${body.name}, description=${body.description}, tracks=${body.tracks}, 
-                    totalPlaytime=${body.totalPlayTime}, isPublic=${body.isPublic}
+        query = `UPDATE list SET name='${body.name}', description='${body.description}', tracks='${body.tracks}', 
+                    totalPlaytime=${body.totalPlayTime}, isPublic=${body.isPublic ? 1 : 0}
                     WHERE id=${id}`
+
+        console.log(query)
 
         sql.query(
             query,
             (err, res) => {
                 if (err) {
-                console.log("Error: ", err)
-                result(null, err)
-                return
+                    console.log("Error: ", err)
+                    result(null, err)
+                    return
                 }
         
                 if (res.affectedRows == 0) {
-                result({kind: "not_found"}, null)
-                return
+                    result({kind: "not_found"}, null)
+                    return
                 }
         
-                result(null, { name: body.name, ...list })
+                result(null, { name: body.name, ...body })
             }
         )      
         

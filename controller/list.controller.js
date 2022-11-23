@@ -71,7 +71,6 @@ exports.findOne = (req, res) => {
 
 // Update a List identified by the id in the request
 exports.update = (req, res) => {
-  console.log(req)
     // if (!req.body) {
     //     res.status(400).send({
     //       message: "Content can not be empty!"

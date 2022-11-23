@@ -32,9 +32,13 @@ import {
     ViewOffIcon,
 } from '@chakra-ui/icons'
 
+let url = require("../setup/api.setup.js")
+
 function Playlist (props) {
     const [cookies, setCookie, removeCookie] = useCookies(["user"])
     const [isOpen, setIsOpen, setIsClosed] = useState(false)
+
+    console.log(props.vals)
 
     const getDate = (val, split) => {
         return val.split(split)[0]
@@ -42,6 +46,32 @@ function Playlist (props) {
 
     const changeContentState = () => {
         setIsOpen(!isOpen)
+    }
+
+    const changePrivacy = () => {
+
+        props.vals.isPublic = !props.vals.isPublic
+
+        fetch(`${url}api/list/${props.vals.id}`, {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(props.vals)
+        })
+            .then(res => {
+                console.log(res)
+            })
+            // .then(res => res.json()
+            //     .then(res => {
+            //         if (res.message) {
+            //             alert(res.message)
+            //         } else {
+            //             alert("Done")
+            //         }
+            //     })
+            // )
     }
 
     return(
@@ -80,6 +110,7 @@ function Playlist (props) {
                                                 colorScheme='gray'
                                                 aria-label='See menu'
                                                 icon={props.vals.isPublic ? <ViewIcon /> : <ViewOffIcon />}
+                                                onClick={changePrivacy}
                                             />
                                         </Tooltip>
                                         <Tooltip label="Edit Playlist">
