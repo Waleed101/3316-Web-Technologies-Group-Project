@@ -36,12 +36,11 @@ let url = require("../setup/api.setup.js")
 
 function Playlist (props) {
     const [cookies, setCookie, removeCookie] = useCookies(["user"])
-    const [isOpen, setIsOpen, setIsClosed] = useState(false)
+    const [isOpen, setIsOpen] = useState(false)
+    const [isPublic, setIsPublic] = useState(props.vals.isPublic)
 
-    console.log(props.vals)
-
-    const getDate = (val, split) => {
-        return val.split(split)[0]
+    const getDate = (val) => {
+        return val.split("T")[0]
     }
 
     const changeContentState = () => {
@@ -60,18 +59,15 @@ function Playlist (props) {
             },
             body: JSON.stringify(props.vals)
         })
-            .then(res => {
-                console.log(res)
-            })
-            // .then(res => res.json()
-            //     .then(res => {
-            //         if (res.message) {
-            //             alert(res.message)
-            //         } else {
-            //             alert("Done")
-            //         }
-            //     })
-            // )
+            .then(res => res.json()
+                .then(res => {
+                    if (res.message) {
+                        alert(res.message)
+                    } else {
+                        setIsPublic(props.vals.isPublic)
+                    }
+                })
+            )
     }
 
     return(
@@ -90,7 +86,7 @@ function Playlist (props) {
                                         <Box>
                                             <Heading size='sm'>{props.vals.name}</Heading>
                                             <Text fontSize="xs" as="i">
-                                                Last Updated on {props.vals.updated == "0000-00-00 00:00:00" ? getDate(props.vals.created, "T") : getDate(props.vals.updated, " ")}
+                                                Last Updated on {props.vals.updated == "0000-00-00 00:00:00" ? getDate(props.vals.created) : getDate(props.vals.updated)}
                                             </Text>
                                         </Box>
                                     </Flex>
