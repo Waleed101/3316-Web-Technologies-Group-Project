@@ -173,4 +173,58 @@ List.updateByName = (name, list, result) => {
 
 }
 
+List.update = (id, body, result) => {
+
+    console.log(id)
+    console.log(body)
+
+    let query = `SELECT * FROM list WHERE id=${id} AND createdBy='${body.email}'`
+
+    var listExisitsAndUserOwns = new Promise((resolve, reject) => {
+        sql.query(
+            query,
+            (err, res) => {
+                if (err) {
+                  console.log("Error: ", err)
+                  result(null, err)
+                  return
+                }
+          
+                if (res.length == 0) {
+                  result({kind: "not_found"}, null)
+                  return
+                }
+                
+                resolve()
+
+            })
+    })
+
+    listExisitsAndUserOwns.then(() => {
+        query = `UPDATE list SET name=${body.name}, description=${body.description}, tracks=${body.tracks}, 
+                    totalPlaytime=${body.totalPlayTime}, isPublic=${body.isPublic}
+                    WHERE id=${id}`
+
+        sql.query(
+            query,
+            (err, res) => {
+                if (err) {
+                console.log("Error: ", err)
+                result(null, err)
+                return
+                }
+        
+                if (res.affectedRows == 0) {
+                result({kind: "not_found"}, null)
+                return
+                }
+        
+                result(null, { name: body.name, ...list })
+            }
+        )      
+        
+    })
+
+}
+
 module.exports = List

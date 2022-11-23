@@ -72,34 +72,34 @@ exports.findOne = (req, res) => {
 // Update a List identified by the id in the request
 exports.update = (req, res) => {
   console.log(req)
-    if (!req.body) {
-        res.status(400).send({
-          message: "Content can not be empty!"
-        });
-      }
+    // if (!req.body) {
+    //     res.status(400).send({
+    //       message: "Content can not be empty!"
+    //     });
+    //   }
       
-      if (!sanitize.stringLength(req.body.name, 3, 255)) {
-        res.status(403).send({ message: "Your input is not between the length of 3 and 255"})
-        return
-      }
+    //   if (!sanitize.stringLength(req.body.name, 3, 255)) {
+    //     res.status(403).send({ message: "Your input is not between the length of 3 and 255"})
+    //     return
+    //   }
 
-      if (sanitize.hasNoScript(req.body.tracks)) {
-        res.status(403).send({ message: "Your input cannot have any of: <, >"})
-        return
-      }  
+    //   if (sanitize.hasNoScript(req.body.tracks)) {
+    //     res.status(403).send({ message: "Your input cannot have any of: <, >"})
+    //     return
+    //   }  
 
       const vals = req.body.tracks.split(",")
 
-      for(let i = 0; i < vals.length; i += 1) {
-        if (!sanitize.isInteger(vals[i])) {
-          res.status(403).send({ message: "All the IDs you inputted should only be numbers."})
-          return
-        }
-      }
+      // for(let i = 0; i < vals.length; i += 1) {
+      //   if (!sanitize.isInteger(vals[i])) {
+      //     res.status(403).send({ message: "All the IDs you inputted should only be numbers."})
+      //     return
+      //   }
+      // }
     
-      List.updateByName(
-        req.params.name,
-        req.body.tracks,
+      List.update(
+        req.params.id,
+        req.body,
         (err, data) => {
           if (err) {
             if (err.kind === "not_found") {
