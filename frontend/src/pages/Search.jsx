@@ -131,33 +131,35 @@ function Search() {
                 })
     } 
 
-    const addList = () => {
+    const submitList = () => {
         let body = JSON.stringify({
             "user": cookies["user"].email,
-            "title": listTitle,
+            "name": listTitle,
             "description": listDescription,
             "isPublic": document.getElementById("isPublic").checked,
+            "totalPlaytime": 0,
             "tracks": Object.keys(tracks)
         })
 
         console.log(body)
 
-        fetch(url + "api/list/", {
-            method: "POST",
+        fetch(`${url}api/list/${state ? state.id : ''}`, {
+            method: state ? "PUT" : "POST",
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
             body: body
-        }).then(res => res.json())
-            .then(res => {
-                if (res.message) {
-                    setCreateState(<CustomAlert isError={true} msg={res.message}></CustomAlert>)
-                } else {
-                    setCreateState(<CustomAlert isError={false} msg={'Successfully created ' + res.title + " playlist."}></CustomAlert>)
-                }
-                console.log(createState)
-            })
+        }).then(res => console.log(res))
+        // }).then(res => res.json())
+        //     .then(res => {
+        //         if (res.message) {
+        //             setCreateState(<CustomAlert isError={true} msg={res.message}></CustomAlert>)
+        //         } else {
+        //             setCreateState(<CustomAlert isError={false} msg={`Successfully ${state ? "edited" : "created"} ' + res.title + " playlist.`}></CustomAlert>)
+        //         }
+        //         console.log(createState)
+        //     })
     }
 
     useEffect(() => {
@@ -238,7 +240,7 @@ function Search() {
                 </ModalBody>
 
                 <ModalFooter>
-                    <Button colorScheme='green' mr={3} onClick={addList}>
+                    <Button colorScheme='green' mr={3} onClick={submitList}>
                         {state ? "Edit" : "Create"}
                     </Button>
                 </ModalFooter>

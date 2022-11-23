@@ -88,7 +88,7 @@ exports.update = (req, res) => {
     //     return
     //   }  
 
-      const vals = req.body.tracks.split(",")
+      // const vals = req.body.tracks.split(",")
 
       // for(let i = 0; i < vals.length; i += 1) {
       //   if (!sanitize.isInteger(vals[i])) {

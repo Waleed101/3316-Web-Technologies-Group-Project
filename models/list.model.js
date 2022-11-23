@@ -39,7 +39,7 @@ List.create = (newList, result) => {
 
                 console.log(totalDuration)
 
-                sql.query(`INSERT INTO list SET name="${newList.title}", createdBy="${newList.user}", tracks="${newList.tracks.join(",")}",
+                sql.query(`INSERT INTO list SET name="${newList.name}", createdBy="${newList.user}", tracks="${newList.tracks.join(",")}",
                             totalPlayTime=${totalDuration}, description="${newList.description}", isPublic=${newList.isPublic ? 1 : 0}`, (err, res) => {
                     if(err) {
                         console.log("Error: ", err)
@@ -178,7 +178,9 @@ List.update = (id, body, result) => {
     console.log(id)
     console.log(body)
 
-    let query = `SELECT * FROM list WHERE id=${id} AND createdBy='${body.createdBy}'`
+    let query = `SELECT * FROM list WHERE id=${id} AND createdBy='${body.user}'`
+
+    console.log(query)
 
     var listExisitsAndUserOwns = new Promise((resolve, reject) => {
         sql.query(
@@ -205,7 +207,7 @@ List.update = (id, body, result) => {
 
     listExisitsAndUserOwns.then(() => {
         query = `UPDATE list SET name='${body.name}', description='${body.description}', tracks='${body.tracks}', 
-                    totalPlaytime=${body.totalPlayTime}, isPublic=${body.isPublic ? 1 : 0}
+                    totalPlaytime=${body.totalPlaytime}, isPublic=${body.isPublic ? 1 : 0}
                     WHERE id=${id}`
 
         console.log(query)
