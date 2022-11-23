@@ -1,7 +1,7 @@
 import { React, useState } from 'react'
 import { useCookies } from 'react-cookie'
 
-import './css/TrackView.css'
+import TrackList from '../components/TrackList'
 
 import {
     Tag,
@@ -105,7 +105,7 @@ function Playlist (props) {
                         isOpen ?
                             <CardBody>
                                 <Text>Your list has {props.vals.numberOfTracks} track{props.vals.numberOfTracks > 1 ? 's' : ''}</Text>
-                                <Heading as="h5" size="md">Performed by</Heading>
+                                <TrackList tracks={props.vals.tracks.split(",")}></TrackList>
                             </CardBody> 
                         : 
                             <></>

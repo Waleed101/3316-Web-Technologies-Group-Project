@@ -37,6 +37,15 @@ function DisplayPlaylists() {
 
     const [playlists, setPlaylists] = useState([])
 
+    const redirect = false
+
+    if (cookies["user"]) {
+        if (cookies["user"].timeToExpire < Date.now()) {
+            redirect = true
+        }
+    } else {
+        redirect = true
+    }
 
     useEffect(() => {
 
@@ -55,19 +64,7 @@ function DisplayPlaylists() {
                 })
     }, [])
 
-    if (cookies["user"]) {
-        if (cookies["user"].timeToExpire < Date.now()) {
-            return <Navigate to='/login?rdr=playlists' />
-        }
-    } else {
-        return <Navigate to='/login?rdr=playlists' />
-    }
-
-    return (
-        <>
-            {playlists}
-        </>
-    );
+    return (redirect ?  <Navigate to='/login?rdr=playlists' /> : <>{playlists}</>)
 }
 
 export default DisplayPlaylists;
