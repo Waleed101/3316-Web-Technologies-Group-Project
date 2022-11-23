@@ -150,16 +150,16 @@ function Search() {
                 'Content-Type': 'application/json'
             },
             body: body
-        }).then(res => console.log(res))
-        // }).then(res => res.json())
-        //     .then(res => {
-        //         if (res.message) {
-        //             setCreateState(<CustomAlert isError={true} msg={res.message}></CustomAlert>)
-        //         } else {
-        //             setCreateState(<CustomAlert isError={false} msg={`Successfully ${state ? "edited" : "created"} ' + res.title + " playlist.`}></CustomAlert>)
-        //         }
-        //         console.log(createState)
-        //     })
+        }).then(res => res.json())
+            .then(res => {
+                onClose()
+                if (res.message) {
+                    setCreateState(<CustomAlert isError={true} msg={res.message}></CustomAlert>)
+                } else {
+                    setCreateState(<CustomAlert isError={false} msg={`Successfully ${state ? "edited" : "created"} playlist.`}></CustomAlert>)
+                }
+                console.log(createState)
+            })
     }
 
     useEffect(() => {
