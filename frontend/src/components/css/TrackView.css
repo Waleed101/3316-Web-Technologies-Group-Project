@@ -25,3 +25,8 @@
 .purple {
     background-color: #4C0099;
 }
+
+
+.remove {
+    visibility: hidden;
+}

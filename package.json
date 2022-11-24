@@ -18,6 +18,9 @@
   },
   "homepage": "https://github.com/Waleed101/se3316-lab3-wsawan2#readme",
   "dependencies": {
+    "@chakra-ui/react": "^2.4.1",
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
     "bcrypt": "^5.1.0",
     "body-parser": "^1.20.1",
     "cookie-parser": "^1.4.6",
@@ -32,6 +35,12 @@
     "react-dom": "^18.2.0",
     "react-firebase-hooks": "^5.1.1",
     "react-router-dom": "^6.4.3",
-    "react-scripts": "^5.0.1"
+    "react-scripts": "^5.0.1",
+    "framer-motion": "^7.6.7",
+    "lorem-ipsum": "^2.0.8",
+    "mssql": "^9.0.1",
+    "mysql": "^2.18.1",
+    "node": "^19.0.1",
+    "react-hook-form": "^7.39.4"
   }
 }

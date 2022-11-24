@@ -4,6 +4,8 @@ import { getAuth, onAuthStateChanged, signOut} from "firebase/auth";
 import "../firebase.js"
 
 
+import { Button } from '@chakra-ui/react'
+
 function Home() {
     const [cookies, setCookie, removeCookie] = useCookies(["user"])
 
@@ -22,18 +24,19 @@ function Home() {
     }
 
     return (
-        <div id="main">
+        <>
             {name}
 
-            <button onClick={() => {
+            <Button onClick={() => {
                 console.log(user)
-            }}>Show User Cookie</button>
+            }}>Show User Cookie</Button>
 
-            <button onClick={() => {
+            <Button onClick={() => {
                 signOut(auth).then(() => alert("Successfully Logged Out"))
                 removeCookie("user")
-            }}>Log-out</button>
-        </div>
+                console.log("Removed user cookie.")
+            }}>Log-out</Button>
+        </>
     );
 }
 
