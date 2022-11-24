@@ -1,30 +1,40 @@
+// Libraries
+import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { CookiesProvider } from "react-cookie";
+import { ChakraProvider } from "@chakra-ui/react";
 
+// Pages
 import Layout from "./pages/Layout";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Search from "./pages/Search";
-import React from "react";
+import DisplayPlaylists from "./pages/DisplayPlaylists";
+
+// Styling
+import './index.css'
 
 export default function App() {
   return (
     <React.StrictMode>
-      <CookiesProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Layout />}>
-              <Route index element={<Home />} />
-              <Route path="register" element={<Register />} />
-              <Route path="login" element={<Login />} />
-              <Route path="search" element={<Search />} />
-              {/* <Route path="*" element={<NoPage />} /> */}
-            </Route>
-          </Routes>
-        </BrowserRouter>
-      </CookiesProvider>
+      <ChakraProvider>
+        <CookiesProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Layout />}>
+                <Route index element={<Home />} />
+                <Route path="register" element={<Register />} />
+                <Route path="login" element={<Login />} />
+                <Route path="search" element={<Search />} />
+                <Route path="playlists" element={<DisplayPlaylists />} />
+                {/* <Route path="*" element={<NoPage />} /> */}
+              </Route>
+            </Routes>
+          </BrowserRouter>
+        </CookiesProvider>
+      </ChakraProvider>
     </React.StrictMode>
   );
 }
