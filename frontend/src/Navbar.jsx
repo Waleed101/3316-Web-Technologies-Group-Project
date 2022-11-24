@@ -15,6 +15,12 @@ function Navbar() {
           <Link to="/login">Login</Link>
         </li>
         <li>
+          <Link to="/updatePassword">Update Password</Link>
+        </li>
+        <li>
+          <Link to="/deleteAccount">Delete Account</Link>
+        </li>
+        <li>
           <Link to="/search">Search</Link>
         </li>
       </ul>

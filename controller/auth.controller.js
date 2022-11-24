@@ -31,7 +31,10 @@ exports.register = (req, res) => {
         message:
           err.message || "Some error occurred while registering a User."
       });
-    else res.send({data});
+    else {
+      let timeToExpire = new Date(new Date().getTime() + addTime);
+      res.send({ loggedIn: true, email: data.email, name: data.name, time: timeToExpire})
+    }
   });
 };
 
@@ -68,4 +71,55 @@ exports.login = (req, res) => {
       res.send({ loggedIn: true, email: data.email, name: data.name, time: timeToExpire})
     } 
   });  
+}
+
+exports.updatePassword = (req, res) => {
+  
+   // Validate request
+   if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  }
+
+  const auth = new Auth({
+    email: req.params.email,
+    password: req.body.newPassword
+  })
+
+  Auth.updatePassword(auth, (err, data) => {
+    if (err)
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while updating the password."
+      });
+    else {
+      res.send(data)
+    } 
+  });  
+}
+
+exports.delete = (req, res) => {
+  
+  // Validate request
+  if (!req.params) {
+   res.status(400).send({
+     message: "Content can not be empty!"
+   });
+ }
+
+ const auth = new Auth({
+   email: req.params.email
+ })
+
+ Auth.delete(auth, (err, data) => {
+   if (err)
+     res.status(500).send({
+       message:
+         err.message || "Some error occurred while deleting the account."
+     });
+   else {
+     res.send(data)
+   } 
+ });  
 }

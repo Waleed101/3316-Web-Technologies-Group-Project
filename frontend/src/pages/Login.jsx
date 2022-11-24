@@ -1,4 +1,4 @@
-import { React, useState } from 'react';
+import { React, useState, useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 import { 
     Button, 
@@ -9,8 +9,14 @@ import {
  } from '@chakra-ui/react'
 
 import { Navigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate } from "react-router-dom";
+import { signInWithGoogle } from "../firebase.js";
+import { useAuthState } from "react-firebase-hooks/auth";
+import GoogleLogin from "./GoogleLogin"
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 let url = require("../setup/api.setup.js")
+const auth = getAuth();
 
 function Login() {
 
@@ -27,6 +33,19 @@ function Login() {
 
     const submit = (event) => {
         event.preventDefault();
+
+        signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+            // Signed in 
+            const user = userCredential.user;
+            console.log(user)
+            // ...
+        })
+        .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            alert(errorMessage)
+        });
 
         let body = JSON.stringify({
                     "email": email,
@@ -59,6 +78,7 @@ function Login() {
     }
 
     return ( redirect ? <Navigate to={'/' + route}/> :
+    <div>
         <form onSubmit={submit}>
             <InputGroup size='md'>
                 <FormLabel>
@@ -91,6 +111,9 @@ function Login() {
                 Submit
             </Button>
         </form>
+        <GoogleLogin />
+    </div>
+        
     );
 }
 
