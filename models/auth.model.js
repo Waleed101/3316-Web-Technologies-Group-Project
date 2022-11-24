@@ -92,4 +92,21 @@ Auth.updatePassword = (auth, result) => {
     })
 }
 
+Auth.delete = (auth, result) => {
+    console.log(auth.email)
+    sql.query(
+        `DELETE FROM account WHERE email = '${auth.email}';`,
+        (err, res) => {
+            if (err) {
+                console.log("Error: " + err)
+                result(err, null)
+                return
+            }
+            console.log(res)
+            result({ message: `Deleted account associated to: ${auth.email}`})
+        }
+    )
+}
+
+
 module.exports = Auth
