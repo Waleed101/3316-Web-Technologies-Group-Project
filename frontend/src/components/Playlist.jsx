@@ -1,6 +1,8 @@
 import { React, useState } from 'react'
 import { useCookies } from 'react-cookie'
 import  { useNavigate } from 'react-router-dom'
+import { getAuth, onAuthStateChanged, signOut} from "firebase/auth";
+import "../firebase.js"
 
 import TrackList from '../components/TrackList'
 
@@ -36,7 +38,11 @@ import {
 let url = require("../setup/api.setup.js")
 
 function Playlist (props) {
-    const [cookies, setCookie, removeCookie] = useCookies(["user"])
+    const auth = getAuth();
+    const [user, setUser] = useState(null)
+    onAuthStateChanged(auth, (user) => {
+        if (user) setUser(user)
+    })
     const [isOpen, setIsOpen] = useState(false)
     const [isPublic, setIsPublic] = useState(props.vals.isPublic)
 

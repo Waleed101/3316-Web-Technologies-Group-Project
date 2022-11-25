@@ -12,18 +12,21 @@ import { Navigate, useLocation } from 'react-router-dom';
 import { Link, useNavigate } from "react-router-dom";
 import { signInWithGoogle } from "../firebase.js";
 import { useAuthState } from "react-firebase-hooks/auth";
-import GoogleLogin from "./GoogleLogin"
+import GoogleLogin from "../components/GoogleLogin"
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 let url = require("../setup/api.setup.js")
 const auth = getAuth();
+
 
 function Login() {
 
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [cookies, setCookie, removeCookie] = useCookies(["user"])
-    const [redirect, setRedirect] = useState(false)
+    const { state } = useLocation() 
+    const navigate = useNavigate()
+
 
     const route = new URLSearchParams(useLocation().search).get("rdr")
     console.log(route)
@@ -69,15 +72,14 @@ function Login() {
                         setCookie("user", res, { path: "/" })
 
                         alert(`Successfully logged in with email ${email}`)
-
-                        if(route != null) {
-                            setRedirect(true)
+                        console.log(state)
+                        if(state) {
+                            navigate(state.redirectTo)
                         }                        
                     }
                 })
     }
-
-    return ( redirect ? <Navigate to={'/' + route}/> :
+    return (
     <div>
         <form onSubmit={submit}>
             <InputGroup size='md'>
@@ -111,7 +113,7 @@ function Login() {
                 Submit
             </Button>
         </form>
-        <GoogleLogin />
+        <GoogleLogin vals={state}/>
     </div>
         
     );

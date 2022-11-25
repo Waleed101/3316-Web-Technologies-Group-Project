@@ -4,6 +4,8 @@ import { useLocation } from 'react-router-dom';
 
 import TrackView from "../components/TrackView";
 import CustomAlert from "../components/CustomAlert";
+import { getAuth, onAuthStateChanged, signOut} from "firebase/auth";
+import "../firebase.js"
 
 import {
     Button,
@@ -34,7 +36,12 @@ import {
 let url = require("../setup/api.setup.js")
 
 function Search() {
-    const [cookies, setCookie, removeCookie] = useCookies(["user"])
+    const auth = getAuth();
+    const [user, setUser] = useState(null) 
+    onAuthStateChanged(auth, (user) => {
+        if (user) setUser(user)
+    })
+
     const { state } = useLocation() 
 
     const [title, setTitle] = useState("")
@@ -120,7 +127,7 @@ function Search() {
                                 selectTrack={selectTrack} 
                                 removeTrack={removeTrack} 
                                 arr={record} 
-                                addBtn={true} 
+                                addBtn={user ? true : false} 
                                 size={'md'} 
                                 isSelected={record.id.toString() in tracksSelected}
                             />
@@ -133,7 +140,7 @@ function Search() {
 
     const submitList = () => {
         let body = JSON.stringify({
-            "user": cookies["user"].email,
+            "user": user.email,
             "name": listTitle,
             "description": listDescription,
             "isPublic": document.getElementById("isPublic").checked,
@@ -247,7 +254,8 @@ function Search() {
             </ModalContent>
             </Modal>
 
-            <Button id="createList" onClick={createNewList} disabled={numOfTracksQueued==0}>{state ? "Edit " : "Add New "} Playlist</Button>
+            {user ? <Button id="createList" onClick={createNewList} disabled={numOfTracksQueued==0}>{state ? "Edit " : "Add New "} Playlist</Button>
+            : <></>}
             {createState}
             <form onSubmit={search}>
                 <Stack spacing={8} direction='row'>
