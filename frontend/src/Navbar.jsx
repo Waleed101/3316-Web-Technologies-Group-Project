@@ -23,6 +23,12 @@ function Navbar() {
         <li>
           <Link to="/search">Search</Link>
         </li>
+        <li>
+          <Link to="/activation">Activate/Deactivate Account</Link>
+        </li>
+        <li>
+          <Link to="/policies">Policies</Link>
+        </li>
       </ul>
     </nav>
   );

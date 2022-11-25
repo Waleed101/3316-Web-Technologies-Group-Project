@@ -6,19 +6,19 @@ import { useAuthState } from "react-firebase-hooks/auth";
 
 let url = require("../setup/api.setup.js")
 
-function GoogleLogin() {
+function GoogleLogin(props) {
 
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [cookies, setCookie, removeCookie] = useCookies(["user"])
-    const [user, loading, error] = useAuthState(auth);
+    const navigate = useNavigate()
 
     const submit = async () => {
         let cookie = await signInWithGoogle()
         console.log(cookie)
-        setCookie("user", cookie, { path: "/" })                    
+        navigate(props.vals.redirectTo)                   
     }
-
+    console.log(props.vals)
 //   const navigate = useNavigate();
 //   useEffect(() => {
 //     if (loading) {

@@ -5,9 +5,8 @@ const saltRounds = 11;
 
 /*
     Status:
-    1 => Registered & Unverified
-    2 => Verified
-    3 => Deactiviated
+    1 => Activated
+    2 => Deactiviated
 
     Role:
     1 => Normal
@@ -18,6 +17,7 @@ const Auth = function(auth) {
     this.email = auth.email;
     this.password = auth.password;
     this.name = auth.name
+    this.status = auth.status
 }
 
 Auth.register = (auth, result) => {
@@ -108,5 +108,20 @@ Auth.delete = (auth, result) => {
     )
 }
 
+Auth.setActivation = (auth, result) => {
+    console.log(auth.email)
+    sql.query(
+        `UPDATE account SET status = ${auth.status} WHERE email = '${auth.email}';`,
+        (err, res) => {
+            if (err) {
+                console.log("Error: " + err)
+                result(err, null)
+                return
+            }
+            console.log(res)
+            result({ message: `Updated status of account associated to: ${auth.email}`})
+        }
+    )
+}
 
 module.exports = Auth

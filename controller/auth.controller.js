@@ -68,7 +68,7 @@ exports.login = (req, res) => {
       });
     else {
       let timeToExpire = new Date(new Date().getTime() + addTime);
-      res.send({ loggedIn: true, email: data.email, name: data.name, time: timeToExpire})
+      res.send({ loggedIn: true, email: data.email, name: data.name, time: timeToExpire, status: data.status})
     } 
   });  
 }
@@ -117,6 +117,32 @@ exports.delete = (req, res) => {
      res.status(500).send({
        message:
          err.message || "Some error occurred while deleting the account."
+     });
+   else {
+     res.send(data)
+   } 
+ });  
+}
+
+exports.setActivation = (req, res) => {
+  console.log(req)
+
+  // Validate request
+  if (!req.body) {
+   res.status(400).send({
+     message: "Content can not be empty!"
+   });
+ }
+ const auth = new Auth({
+   email: req.params.email,
+   status: req.body.status
+ })
+
+ Auth.setActivation(auth, (err, data) => {
+   if (err)
+     res.status(500).send({
+       message:
+         err.message || "Some error occurred while updating the password."
      });
    else {
      res.send(data)
