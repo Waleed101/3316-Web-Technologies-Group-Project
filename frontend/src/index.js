@@ -14,6 +14,7 @@ import UpdatePassword from "./pages/UpdatePassword"
 import DeleteAccount from "./pages/DeleteAccount";
 import Search from "./pages/Search";
 import DisplayPlaylists from "./pages/DisplayPlaylists";
+import ActivationAccount from "./pages/ActivationAccount";
 
 // Styling
 import './index.css'
@@ -33,6 +34,7 @@ export default function App() {
                 <Route path="search" element={<Search />} />
                 <Route path="playlists" element={<DisplayPlaylists />} />
                 <Route path="deleteAccount" element={<DeleteAccount />} />
+                <Route path="activation" element={<ActivationAccount />} />
               {/* <Route path="*" element={<NoPage />} /> */}
               </Route>
             </Routes>

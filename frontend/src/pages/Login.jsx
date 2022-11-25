@@ -13,7 +13,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { signInWithGoogle } from "../firebase.js";
 import { useAuthState } from "react-firebase-hooks/auth";
 import GoogleLogin from "../components/GoogleLogin"
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
 
 let url = require("../setup/api.setup.js")
 const auth = getAuth();
@@ -22,6 +22,7 @@ const auth = getAuth();
 function Login() {
 
     const [email, setEmail] = useState("")
+    const [user, setUser] = useState(null)
     const [password, setPassword] = useState("")
     const [cookies, setCookie, removeCookie] = useCookies(["user"])
     const { state } = useLocation() 
@@ -37,18 +38,7 @@ function Login() {
     const submit = (event) => {
         event.preventDefault();
 
-        signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            // Signed in 
-            const user = userCredential.user;
-            console.log(user)
-            // ...
-        })
-        .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            alert(errorMessage)
-        });
+        
 
         let body = JSON.stringify({
                     "email": email,
@@ -65,7 +55,22 @@ function Login() {
         })
         .then(res => res.json())
             .then(res => {
-                console.log(res)
+                if (res.status == 2) {
+                    alert("Account is deactivated, please contact site administrator.")
+                    return
+                }
+                signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+            // Signed in 
+            user = userCredential.user
+            console.log(user)
+            // ...
+        })
+        .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            alert(errorMessage)
+        });
                     if(res.message) {
                         alert(`Error: ${res.message}`)
                     } else {
