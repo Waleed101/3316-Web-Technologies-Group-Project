@@ -1,6 +1,9 @@
 import { React, useState } from 'react';
+import { getAuth, createUserWithEmailAndPassword, updateProfile, signInWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
 
 let url = require("../setup/api.setup.js")
+
+const auth = getAuth();
 
 function Register() {
 
@@ -10,6 +13,28 @@ function Register() {
 
     const submit = (event) => {
         event.preventDefault();
+        console.log("t")
+        createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+            console.log("m")    
+            // Signed in 
+            const user = userCredential.user;
+            updateProfile(auth.currentUser, {
+                displayName: name 
+            })
+            console.log(user)
+            sendEmailVerification(user);
+            auth.signOut();
+            alert("Email verification sent!")
+            // ...
+        })
+        .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            alert(error)
+            return
+            // ..
+        });
 
         let body = JSON.stringify({
                     "email": email,

@@ -27,6 +27,15 @@ conn.connect(function(err) {
                     console.log(result)
                 });
 
+    conn.query("CREATE TABLE IF NOT EXISTS `trackGenre` (" +
+            "trackID int," +
+            "genreID int," + 
+            "PRIMARY KEY (trackID, genreID))", function(error, result, fields) {
+                if (error) 
+                    throw error
+                console.log(result)
+            });
+
     // conn.query("CREATE TABLE IF NOT EXISTS `genre` (" +
     //             "id int NOT NULL," +
     //             "title varchar(255) NOT NULL," +
