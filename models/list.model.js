@@ -178,7 +178,7 @@ List.update = (id, body, result) => {
     console.log(id)
     console.log(body)
 
-    let query = `SELECT * FROM list WHERE id=${id} AND createdBy='${body.user}'`
+    let query = `SELECT * FROM list WHERE id=${id} AND createdBy='${body.createdBy}'`
 
     console.log(query)
 
@@ -207,7 +207,7 @@ List.update = (id, body, result) => {
 
     listExisitsAndUserOwns.then(() => {
         query = `UPDATE list SET name='${body.name}', description='${body.description}', tracks='${body.tracks}', 
-                    totalPlaytime=${body.totalPlaytime}, isPublic=${body.isPublic ? 1 : 0}
+                    totalPlaytime=${body.totalPlayTime}, isPublic=${body.isPublic ? 1 : 0}
                     WHERE id=${id}`
 
         console.log(query)

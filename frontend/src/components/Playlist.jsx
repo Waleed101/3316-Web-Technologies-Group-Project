@@ -58,6 +58,8 @@ function Playlist (props) {
 
     const changePrivacy = () => {
 
+        console.log(props.vals)
+
         props.vals.isPublic = !props.vals.isPublic
 
         fetch(`${url}api/list/${props.vals.id}`, {
