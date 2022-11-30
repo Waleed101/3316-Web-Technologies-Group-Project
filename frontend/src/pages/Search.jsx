@@ -67,11 +67,16 @@ function Search() {
     let tracksSelected = useRef({})
 
     const createNewList = () => {
+        console.log(tracks)
         let tempTrackTable = []
 
         for (const[k, v] of Object.entries(tracks)) {
+            if (k == "current") {
+                continue
+            }
             tempTrackTable.push(<Tr><Td>{k}</Td><Td>{v}</Td></Tr>)
         }
+        console.log(tempTrackTable)
 
         setTrackTable(tempTrackTable)
         onOpen()
@@ -133,9 +138,7 @@ function Search() {
                             console.log("Selecting pre-loaded..." + record.id)
                             selectTrack(record.id, record.title)
                         }
-                        
-                        console.log("Getting")
-
+                    
                         output.push(
                             <TrackView 
                                 selectTrack={selectTrack} 
@@ -146,11 +149,7 @@ function Search() {
                             />
                         ) 
                     })
-
-                    console.log("B")
                     setResult(output)
-
-                    console.log(output)
                 })
     } 
 

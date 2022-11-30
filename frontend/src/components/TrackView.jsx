@@ -43,12 +43,8 @@ function TrackView (props) {
     const ADD_TO = <AddIcon />
     const REMOVE_FROM = <MinusIcon />
 
-    console.log(props.arr.title + ", " + props.isSelected)
-
     const [added, setAdded] = useState(props.isSelected)
     const [btnMsg, setBtnMsg] = useState(props.isSelected ? REMOVE_FROM : ADD_TO)
-
-    console.log(added)
 
     const COLORS = ["teal", "blue", "green", "cyan", "red"]
 
