@@ -1,4 +1,4 @@
-import { React, useState, useEffect } from 'react';
+import { React, useState, useEffect, useRef } from 'react';
 import { useCookies } from 'react-cookie';
 import { useLocation } from 'react-router-dom';
 
@@ -31,6 +31,7 @@ import {
     TableContainer,
     Textarea,
     Switch,
+    Spinner,
   } from '@chakra-ui/react'
 
 let url = require("../setup/api.setup.js")
@@ -61,14 +62,19 @@ function Search() {
     const [tracks, setTracks] = useState({})
     const [trackTable, setTrackTable] = useState([])
 
+    const [searching, setSearching] = useState(false)
+
     const { isOpen, onOpen, onClose } = useDisclosure()
 
-    let tracksSelected = {}
+    let tracksSelected = useRef({})
 
     const createNewList = () => {
         let tempTrackTable = []
 
         for (const[k, v] of Object.entries(tracks)) {
+            if (k == "current") {
+                continue
+            }
             tempTrackTable.push(<Tr><Td>{k}</Td><Td>{v}</Td></Tr>)
         }
 
@@ -105,9 +111,20 @@ function Search() {
 
         let output = []
 
-        let query = `?title=${title}&artist=${artist}&genres=${genre.join(",")}&id=${state ? state.tracks : ''}`
+        setResult([])
+        setSearching(true)
+
+        let query;
+
+        if (title || artist || genre.join(",")) {
+            query = `?title=${title}&artist=${artist}&genres=${genre.join(",")}`
+        } else {
+            query = `?id=${state ? state.tracks : ''}`
+        }
 
         const onLoadSelected = state ? state.tracks.split(",") : []
+
+        console.log("Searching " + query)
 
         fetch(url + "api/track/" + query)
             .then(res => res.json())
@@ -119,36 +136,39 @@ function Search() {
                     res.forEach(record => {
 
                         if (onLoadSelected.includes(record.id.toString()) && ! (record.id in tracksSelected)) {
+                            console.log("Selecting pre-loaded..." + record.id)
                             selectTrack(record.id, record.title)
                         }
-
+                    
                         output.push(
                             <TrackView 
                                 selectTrack={selectTrack} 
                                 removeTrack={removeTrack} 
                                 arr={record} 
-                                addBtn={user ? true : false} 
                                 size={'md'} 
                                 isSelected={record.id.toString() in tracksSelected}
                             />
                         ) 
                     })
-
+                    setSearching(false)
                     setResult(output)
                 })
     } 
 
     const submitList = () => {
+
+        if("current" in tracks) {
+            delete tracks["current"]
+        }
+
         let body = JSON.stringify({
-            "user": user.email,
+            "createdBy": user.email,
             "name": listTitle,
             "description": listDescription,
             "isPublic": document.getElementById("isPublic").checked,
             "totalPlaytime": 0,
             "tracks": Object.keys(tracks)
         })
-
-        console.log(body)
 
         fetch(`${url}api/list/${state ? state.id : ''}`, {
             method: state ? "PUT" : "POST",
@@ -164,8 +184,24 @@ function Search() {
                     setCreateState(<CustomAlert isError={true} msg={res.message}></CustomAlert>)
                 } else {
                     setCreateState(<CustomAlert isError={false} msg={`Successfully ${state ? "edited" : "created"} playlist.`}></CustomAlert>)
+                
+                    if (!state) {
+                        // Resetting user inputted data
+                        setListDescription("")
+                        setListTitle("")
+                        setTracks({})
+                        setResult([])
+                        setNumOfTracksQueued(0)
+
+                        // Resetting search data
+                        setTitle("")
+                        setArtist("")
+                                                
+                        Object.keys(tracksSelected).forEach(val => {
+                            delete tracksSelected[val]
+                        })
+                    }
                 }
-                console.log(createState)
             })
     }
 
@@ -281,7 +317,7 @@ function Search() {
                 </Stack>
             </form>
             <Stack spacing={8}>
-                {result.map(r => <>{r}</>)}
+                {searching ? <Spinner /> : result.map(r => <>{r}</>)}
             </Stack>
         </>
     );

@@ -10,6 +10,14 @@ exports.create = (req, res) => {
     res.status(400).send({
       message: "Content can not be empty!"
     });
+    return
+  }
+
+  if (!req.body.name || !req.body.tracks) {
+    res.status(400).send({
+      message: "You have to have a name and tracks."
+    });
+    return
   }
 
   List.create(req.body, (err, data) => {
