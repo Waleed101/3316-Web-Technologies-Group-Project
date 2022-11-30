@@ -18,21 +18,18 @@ List.create = (newList, result) => {
             return
         } else {
 
-            let queryCheckName = `SELECT * FROM list WHERE name = ${newList.name}`
-            
+            let queryCheckName = `SELECT * FROM list WHERE name = '${newList.name}'`
+
             sql.query(queryCheckName, (err, res) => {
-                if(res) {
-                    console.log(res)
+                if(!res || res.length != 0) {
+                    console.log("Exisits...")
                     result({message: `A list with name ${newList.name} already exisits.`}, null)
                     return
                 }
 
-
                 let lists = "(" + newList.tracks.join(",") + ")" 
 
                 query = `SELECT id, duration FROM track WHERE id in ${lists}`
-
-                console.log(query)
             
                 sql.query(query, (err, res) => {
                     if(err) {
@@ -47,8 +44,6 @@ List.create = (newList, result) => {
                         const time = val.duration.split(":")
                         totalDuration += (parseInt(time[0]) * 60 + parseInt(time[1]))
                     })
-
-                    console.log(totalDuration)
 
                     sql.query(`INSERT INTO list SET name="${newList.name}", createdBy="${newList.user}", tracks="${newList.tracks.join(",")}",
                                 totalPlayTime=${totalDuration}, description="${newList.description}", isPublic=${newList.isPublic ? 1 : 0}`, (err, res) => {
