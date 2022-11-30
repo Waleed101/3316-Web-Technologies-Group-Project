@@ -117,3 +117,17 @@ exports.delete = (req, res) => {
     });
 };
   
+// Retrieve all Review from the database as admin
+exports.findAll = (req, res) => {
+  Review.getAll(query, (err, data) => {
+    if (err)
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving Review."
+      });
+    else {
+      console.log(data)
+      res.send(data)
+    }
+  });
+};

@@ -5,12 +5,6 @@ let url = require("../setup/api.setup.js")
 
 const auth = getAuth();
 
-const actionCodeSettings = {
-    // URL you want to redirect back to. The domain (www.example.com) for
-    // this URL must be whitelisted in the Firebase Console.
-    url: url+"/emailVerified"
-  };
-
 function Register() {
 
     const [email, setEmail] = useState("")
@@ -52,8 +46,7 @@ function Register() {
                     alert(`Successfully created account with email ${email}`)
                 }
             })
-            const actionCodeSettings = {url: "https://www.google.com/", handleCodeInApp: true,}
-            sendEmailVerification(user, actionCodeSettings);
+            sendEmailVerification(user);
             auth.signOut();
             alert("Email verification sent!")
             

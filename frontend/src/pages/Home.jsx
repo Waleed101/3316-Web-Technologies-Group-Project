@@ -30,6 +30,8 @@ function Home() {
                         <h2>Admin Privileges:</h2>
                         <Button onClick={() => {navigate('/adminActivation')}}>Grant Admin Acess</Button>
                         <Button onClick={() => {navigate('/activation')}}>Activate/Deactivate Account</Button>
+                        <Button onClick={() => {navigate('/adminReviewAccess')}}>Access Reviews</Button>
+
                     </div>
     
             

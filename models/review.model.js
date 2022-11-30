@@ -11,6 +11,7 @@ const Review = function(review) {
     this.user = review.user
     this.description = review.description
     this.rating = review.rating
+    this.isHidden = review.isHidden
 }
 
 Review.create = (newReview, result) => {
@@ -47,10 +48,14 @@ Review.findById = (id, result) => {
 }
 
 Review.getAll = (req, result) => {
-    let query = `SELECT * FROM review WHERE type=${req.type} AND referenceId=${req.referenceId}`
+    let query = `SELECT * FROM review`
+    console.log(req)
+    if (req.type || req.referenceId) {
+        query = `SELECT * FROM review WHERE type=${req.type} AND referenceId=${req.referenceId} AND isHidden=0`
+    }
 
     if (req.user) {
-        query = `SELECT * FROM review WHERE userEmail=${req.user}`
+        query = `SELECT * FROM review WHERE userEmail=${req.user} and isHidden=0`
     }
 
     sql.query(query, (err, res) => {
@@ -104,6 +109,21 @@ Review.updateById = (id, review, result) => {
         result(null, { id: id, ...review })
       }
     )
+}
+
+Review.getAllAdmin = (req, result) => {
+    let query = `SELECT * FROM review`
+
+    sql.query(query, (err, res) => {
+        if(err) {
+            console.log("Error: ", err);
+            result(null, err);
+            return;
+        }
+
+        console.log("Reviews: ", res);
+        result(null, res);
+    })
 }
 
 module.exports = Review
