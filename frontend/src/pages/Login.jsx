@@ -13,7 +13,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { signInWithGoogle } from "../firebase.js";
 import { useAuthState } from "react-firebase-hooks/auth";
 import GoogleLogin from "../components/GoogleLogin"
-import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, sendEmailVerification, signOut } from "firebase/auth";
 let url = require("../setup/api.setup.js")
 const auth = getAuth();
 
@@ -23,10 +23,12 @@ function Login() {
     const [email, setEmail] = useState("")
     // const [user, setUser] = useState(null)
     const [password, setPassword] = useState("")
+    const [tempEmail, setTempEmail] = useState("")
+    const [tempPassword, setTempPassword] = useState("")
     const [cookies, setCookie, removeCookie] = useCookies(["user"])
     const { state } = useLocation() 
     const navigate = useNavigate()
-    
+    const [resendBtn, setResendBtn] = useState("")
 
 
     const route = new URLSearchParams(useLocation().search).get("rdr")
@@ -34,12 +36,31 @@ function Login() {
 
     const [show, setShow] = useState(false)
     const handleClick = () => setShow(!show)  
-
+    const resend = () => {
+        console.log(tempEmail, tempPassword)
+        signInWithEmailAndPassword(auth, tempEmail, tempPassword)
+        .then((userCredential) => {
+            const user = userCredential.user
+            alert(user.emailVerified)
+        sendEmailVerification(user)
+        alert("Email verification link sent!")
+        auth.signOut()
+        })
+    }
     const submit = (event) => {
         event.preventDefault();
 
-        
+        if (!email && !password) {
+            alert("Please enter an email and password")
+        } else if (!email){
+            alert("Please enter an email")
+        } else if (!password) {
+            alert("Please enter a password")
+        }
 
+        if (!(email && password))
+            return
+            
         let body = JSON.stringify({
                     "email": email,
                     "password": password
@@ -63,34 +84,13 @@ function Login() {
                 signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
             const user = userCredential.user
-            // if (user.emailVerified) {
-            // // Signed in 
-            //     console.log(userCredential.user)
+            alert(user.emailVerified)
+
+            if (user.emailVerified) {
+            // Signed in 
+                console.log(userCredential.user)
                 
-            //     if(res.message) {
-            //         alert(`Error: ${res.message}`)
-            //     } else {
-            //         setCookie("user", res, { path: "/" })
-
-            //         alert(`Successfully logged in with email ${email}`)
-            //         console.log(state)
-            //         if(state) {
-            //             navigate(state.redirectTo)
-            //         }                        
-            //     }
-            // } else {
-            //     auth.signOut()
-            //     alert("Please verify your email before attempting to log in")
-            // }
-        })
-        .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            alert(errorMessage)
-        });
-
-        // DELETE ONCE YOU UNCOMMENT EMAIL VERIFICATION
-        if(res.message) {
+                if(res.message) {
                     alert(`Error: ${res.message}`)
                 } else {
                     setCookie("user", res, { path: "/" })
@@ -101,6 +101,23 @@ function Login() {
                         navigate(state.redirectTo)
                     }                        
                 }
+            } else {
+                console.log(email,password)
+                setTempEmail(email)
+                setTempPassword(password)
+                auth.signOut()
+                alert("Please verify your email before attempting to log in")
+                setResendBtn(<Button onClick={resend}>Resend Email Verification Link</Button>)
+                console.log(tempEmail)
+            }
+        })
+        .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            alert(errorMessage)
+        });
+
+        // DELETE ONCE YOU UNCOMMENT EMAIL VERIFICATION
                     
                 })
     }
@@ -139,6 +156,7 @@ function Login() {
             </Button>
         </form>
         <GoogleLogin vals={state}/>
+        {resendBtn}
     </div>
         
     );
