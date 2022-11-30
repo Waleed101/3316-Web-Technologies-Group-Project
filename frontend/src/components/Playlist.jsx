@@ -56,6 +56,10 @@ function Playlist (props) {
         setIsOpen(!isOpen)
     }
 
+    const convertToTime = (time) => {
+        return Math.floor(time / 60) + ":" + (time % 60)
+    }
+
     const changePrivacy = () => {
 
         console.log(props.vals)
@@ -100,7 +104,7 @@ function Playlist (props) {
                                 <Flex spacing='4'>
                                     <Flex flex='1' gap='4' alignItems='center' flexWrap='wrap'>
                                         <Box>
-                                            <Heading size='sm'>{props.vals.name}</Heading>
+                                            <Heading size='sm'>{props.vals.name} - {convertToTime(props.vals.totalPlayTime)}</Heading>
                                             <Text fontSize="xs" as="i">
                                                 Last Updated on {props.vals.updated == "0000-00-00 00:00:00" ? getDate(props.vals.created) : getDate(props.vals.updated)}
                                             </Text>
