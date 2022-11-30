@@ -10,13 +10,13 @@ module.exports = app => {
     router.get("/", review.findAll);
 
     // Retrieve a single review with id
-    router.get("/:id", list.findOne);
+    router.get("/:id", review.findOne);
   
     // Update a Review with id
-    router.put("/:id", list.update);
+    router.put("/:id", review.update);
   
     // Delete a Review with name
-    router.delete("/:id", list.review);
+    // router.delete("/:id", review.review);
   
     app.use('/api/review', router);
   };

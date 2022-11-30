@@ -14,7 +14,7 @@ const Review = function(review) {
 
 Review.create = (newReview, result) => {
     
-    sql.query(`INSERT INTO review SET referenceID=${newReview.listId ? newReview.listId : newReview.trackId}, type=${newReview.listId ? 1 : 0}, userEmail="${newReview.userEmail}", ` + 
+    sql.query(`INSERT INTO review SET referenceID=${newReview.listId ? newReview.listId : newReview.trackId}, type=${newReview.listId ? 1 : 0}, userEmail="${newReview.user}", ` + 
               `description="${newReview.description}", rating=${newReview.rating}`, (err, res) => {
         if(err) {
             console.log("Error: ", err)

@@ -3,6 +3,8 @@ const Review = require("../models/review.model.js");
 // Create and Save a new Review
 exports.create = (req, res) => {
 
+  console.log("Creating...")
+
   // Validate request
   if (!req.body) {
     res.status(400).send({
@@ -15,7 +17,7 @@ exports.create = (req, res) => {
 
   const review = new Review({
     listId: req.body.listId,
-    user: req.body.user,
+    user: req.body.userEmail,
     description: req.body.description,
     rating: req.body.rating
   });

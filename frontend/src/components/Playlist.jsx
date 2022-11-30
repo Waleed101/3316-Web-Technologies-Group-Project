@@ -103,6 +103,31 @@ function Playlist (props) {
                 })
             )
     }
+    
+    const addReview = () => {
+        // closing()
+
+        let body = JSON.stringify({
+            "listId": props.vals.id,
+            "userEmail": user.email,
+            "description": reviewDescription,
+            "rating": rating
+        })
+
+        console.log(body)
+
+        fetch(`${url}api/review`, {
+            method: "POST",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: body
+        }).then(res => console.log(res))
+            // .then(res => {
+            //     console.log(res)
+            // })
+    }
 
     const editPlaylist = () => {
         console.log("Redirecting...")
@@ -146,7 +171,7 @@ function Playlist (props) {
                     </ModalBody>
 
                     <ModalFooter>
-                        <Button colorScheme='green' mr={3}>
+                        <Button colorScheme='green' mr={3} onClick={addReview}>
                             Comment
                         </Button>
                     </ModalFooter>
