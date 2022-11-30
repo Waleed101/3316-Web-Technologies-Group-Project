@@ -68,7 +68,7 @@ exports.login = (req, res) => {
       });
     else {
       let timeToExpire = new Date(new Date().getTime() + addTime);
-      res.send({ loggedIn: true, email: data.email, name: data.name, time: timeToExpire, status: data.status})
+      res.send({ loggedIn: true, email: data.email, name: data.name, time: timeToExpire, status: data.status, role: parseInt(data.role)})
     } 
   });  
 }
@@ -148,4 +148,26 @@ exports.setActivation = (req, res) => {
      res.send(data)
    } 
  });  
+}
+
+exports.setAdmin = (req, res) => {
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  }
+  const auth = new Auth({
+    email: req.params.email
+  })
+ 
+  Auth.setAdmin(auth, (err, data) => {
+    if (err)
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while updating the password."
+      });
+    else {
+      res.send(data)
+    } 
+  });  
 }

@@ -16,6 +16,7 @@ import Search from "./pages/Search";
 import DisplayPlaylists from "./pages/DisplayPlaylists";
 import ActivationAccount from "./pages/ActivationAccount";
 import Policies from "./pages/Policies";
+import AdminActivation from "./pages/AdminActivation"
 
 // Styling
 import './index.css'
@@ -37,6 +38,7 @@ export default function App() {
                 <Route path="deleteAccount" element={<DeleteAccount />} />
                 <Route path="activation" element={<ActivationAccount />} />
                 <Route path="policies" element={<Policies />} />
+                <Route path="adminActivation" element={<AdminActivation />} />
               {/* <Route path="*" element={<NoPage />} /> */}
               </Route>
             </Routes>
