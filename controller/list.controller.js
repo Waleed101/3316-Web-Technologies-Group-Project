@@ -119,7 +119,7 @@ exports.update = (req, res) => {
 
 // Delete a List with the specified id in the request
 exports.delete = (req, res) => {
-
+  console.log(req)
   if (sanitize.hasNoScript(req.body.name)) {
     res.status(403).send({ message: "Your input cannot have any of: <, >"})
   }  

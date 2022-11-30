@@ -24,6 +24,7 @@ import {
     Avatar,
     IconButton,
     Tooltip,
+    List,
 } from '@chakra-ui/react'
 
 import {
@@ -46,7 +47,6 @@ function Playlist (props) {
     })
     const [isOpen, setIsOpen] = useState(false)
     const [isPublic, setIsPublic] = useState(props.vals.isPublic)
-
     const navigate = useNavigate()
 
     const getDate = (val) => {
@@ -84,9 +84,30 @@ function Playlist (props) {
         console.log("Redirecting...")
         navigate('/search/', { state: props.vals })
     }
-
+    console.log(props.vals)
     const deletePlaylist = () =>{
-
+        let body = JSON.stringify({
+            'user': user.email,
+            'name': props.vals.name
+        })
+        console.log(body)
+        
+        fetch(`${url}api/list/`,{
+            method: "DELETE", 
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: body}).then(res => res.json())
+            .then(res => {
+                    if(!res.message) {
+                        alert(`Error: ${res.message}`)
+                    } else {
+                        alert(res.message)
+                    }
+                })
+        
+            
     }
     return(
         <Box w="50%">
@@ -142,7 +163,7 @@ function Playlist (props) {
                                                 colorScheme='gray'
                                                 aria-label='See menu'
                                                 icon={<DeleteIcon />}
-                                                onClick={editPlaylist}
+                                                onClick={deletePlaylist}
                                             />
                                         </Tooltip>
                                     </Flex>
