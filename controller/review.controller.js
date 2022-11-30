@@ -39,6 +39,7 @@ exports.findAll = (req, res) => {
     }
 
     console.log(req.query)
+    console.log("Looking for above...")
 
     Review.getAll(query, req.query.avg, (err, data) => {
       if (err)

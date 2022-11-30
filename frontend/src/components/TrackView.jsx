@@ -4,6 +4,7 @@ import { getAuth, onAuthStateChanged, signOut} from "firebase/auth";
 import "../firebase.js"
 
 import ReactStars from 'react-rating-stars-component'
+import ReviewList from '../components/ReviewList'
 
 import './css/TrackView.css'
 
@@ -42,6 +43,7 @@ import {
     TriangleDownIcon,
     TriangleUpIcon,
     ChatIcon,
+    StarIcon,
 } from '@chakra-ui/icons'
 
 let url = require("../setup/api.setup.js")
@@ -62,6 +64,9 @@ function TrackView (props) {
     const [btnMsg, setBtnMsg] = useState(props.isSelected ? REMOVE_FROM : ADD_TO)
 
     const [rating, setRating] = useState(0)
+
+    const [stars, setStars] = useState([<StarIcon />])
+    const [avgRating, setAvgRating] = useState(0)
 
     const [reviewDescription, setReviewDescription] = useState("")
     const [isModalOpen, setModalOpen] = useState(false)
@@ -154,6 +159,21 @@ function TrackView (props) {
 
     const closing = () => setModalOpen(false)
 
+    useEffect(() => {
+        fetch(`${url}api/review/?type=0&referenceId=${props.arr.id}&avg=y`)
+            .then(res => res.json())
+                .then(res => {
+                    let temp = []
+
+                    for(let i = 0; i < Math.ceil(res[0]['avg']); i += 1) {
+                        temp.push(<StarIcon />)
+                    }
+
+                    setStars(temp)
+                    setAvgRating(res[0]['avg'])
+                })
+    }, [])
+
     return(
         <>
         
@@ -207,15 +227,25 @@ function TrackView (props) {
                                     <Heading size={props.size}>{props.arr.title}</Heading>
                                 </GridItem>
                                 <Center>
-                                    <GridItem colSpan={1}>
+                                    {user ? <Tooltip label="Add Comment">
+                                        <IconButton
+                                            variant='ghost'
+                                            colorScheme='gray'
+                                            aria-label='See menu'
+                                            icon={<ChatIcon />}
+                                            onClick={addComment}
+                                        />
+                                    </Tooltip> : <></>}  
+                                    <Tooltip label="Search on YouTube">
                                         <IconButton 
                                             id={id} 
                                             onClick={searchYoutube} 
-                                            size='sm' 
-                                            colorScheme={'red'}
+                                            variant='ghost'
+                                            colorScheme='gray'
+                                            aria-label='See menu'
                                             icon = {<ExternalLinkIcon/> }                                       
                                         />
-                                    </GridItem>
+                                    </Tooltip>
                                     <GridItem colSpan={1}>
                                         { props.addBtn ? <Button 
                                             id={id} 
@@ -233,16 +263,7 @@ function TrackView (props) {
                                             icon={isOpen ? <TriangleUpIcon /> : <TriangleDownIcon />}
                                             onClick={changeContentState}
                                         />
-                                    </GridItem>
-                                    {user ? <Tooltip label="Add Comment">
-                                        <IconButton
-                                            variant='ghost'
-                                            colorScheme='gray'
-                                            aria-label='See menu'
-                                            icon={<ChatIcon />}
-                                            onClick={addComment}
-                                        />
-                                    </Tooltip> : <></>}                                  
+                                    </GridItem>                                
                                 </Center>
                             </Grid>
                             <Flex flex='1' gap='2' alignItems='center' flexWrap='wrap'>
@@ -252,7 +273,12 @@ function TrackView (props) {
                         {isOpen ? 
                             <CardBody>
                                 <Heading as="h5" size={props.size}>Performed by {props.arr.artistName}</Heading>
-                                <br/>
+                                <Text><b>Average Rating: </b> {avgRating} - {stars.map((s) => <>{s}</>)}</Text>
+                                <br />
+                                <Heading size="h4">Reviews</Heading>
+                                <Divider />
+                                <ReviewList reference={props.arr.id} type={2} summary={true}></ReviewList>
+                                <br />
                                 {genre}
                             </CardBody>
                             :

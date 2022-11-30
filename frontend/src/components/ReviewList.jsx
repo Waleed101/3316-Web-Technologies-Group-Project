@@ -21,10 +21,16 @@ function ReviewList(props) {
         
         let reference = props.reference ? props.reference : ""
         let type = props.type ? props.type : ""
+
+        if(props.type == 2) {
+            type = 0
+        }
+
         let user = props.user ? props.user : ""
 
         let temp = []
 
+        console.log(`${url}api/review/?ref=${reference}&type=${type}&user=${user}`)
         fetch(`${url}api/review/?ref=${reference}&type=${type}&user=${user}`)
             .then(res => res.json())
                 .then(res => {
