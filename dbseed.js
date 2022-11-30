@@ -97,12 +97,13 @@ conn.connect(function(err) {
 
     conn.query("CREATE TABLE IF NOT EXISTS `review` (" +
                 "id int NOT NULL AUTO_INCREMENT," +
-                "listId varchar(255) NOT NULL," +
+                "referenceId varchar(255) NOT NULL," +
                 "userEmail varchar(255)," +
                 "description varchar(512)," +
                 "rating int," +
                 "updated TIMESTAMP NOT NULL ON UPDATE CURRENT_TIMESTAMP," +
                 "created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP," +
+                "type int," +
                 "PRIMARY KEY(id))", function(error, result, fields) {
         if(error) throw error
         console.log(result);
