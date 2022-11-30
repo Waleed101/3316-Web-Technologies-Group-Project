@@ -45,7 +45,7 @@ function ReviewView (props) {
     }
 
     useEffect(() => {
-        for (let i = 0; i < props.vals.rating; i += 1) {
+        for (let i = 1; i < props.vals.rating; i += 1) {
             stars.push(<StarIcon />)
         }
     
