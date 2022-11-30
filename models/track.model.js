@@ -46,7 +46,8 @@ Track.findById = (id, result) => {
                             ON genre.gId = trackGenre.genreID
                         ) as g
                     ON t.id = g.trackID
-                    WHERE id=${id}) as res`
+                    WHERE id=${id}) as res
+                    LIMIT ${MAX_TRACKS_TO_RETURN}`
 
     sql.query(query, (err, res) => {
         if(err) {
@@ -91,7 +92,8 @@ Track.getAll = (req, result) => {
                             ${genreQuery}
                         ) as g
                     ON t.id = g.trackID
-                    ${titleQuery == '' ? idQuery : titleQuery}) as res`
+                    ${titleQuery == '' ? idQuery : titleQuery}) as res
+                    LIMIT ${MAX_TRACKS_TO_RETURN}`
 
     console.log(idQuery)
     console.log(query)

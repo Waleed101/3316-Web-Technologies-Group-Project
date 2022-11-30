@@ -1,4 +1,4 @@
-import { React } from 'react'
+import { React, useEffect } from 'react'
 
 import {
     Alert,
@@ -9,26 +9,12 @@ import {
 } from '@chakra-ui/react'
 
 function CustomAlert (props) {
-    const {
-        isOpen: isVisible,
-        onClose,
-      } = useDisclosure({ defaultIsOpen: true })
-
-    console.log(props.msg)
-
-    return (isVisible ? <Alert status={ props.isError ? 'error' : 'success' } variant='subtle'>
+    return (<Alert status={ props.isError ? 'error' : 'success' } variant='subtle'>
         <AlertIcon />
             <Box>
                 {props.msg}
             </Box>
-            <CloseButton
-                alignSelf='flex-start'
-                position='relative'
-                right={-1}
-                top={-1}
-                onClick={onClose}
-            />
-        </Alert> : <></>)
+        </Alert>)
 }
 
 export default CustomAlert

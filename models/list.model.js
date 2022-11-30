@@ -10,47 +10,57 @@ const List = function(list) {
 
 List.create = (newList, result) => {
     
-    let query = `SELECT COUNT(1) as numOfLists FROM list WHERE createdBy="${newList.user}"`
+    console.log(newList)
+
+    let query = `SELECT COUNT(1) as numOfLists FROM list WHERE createdBy="${newList.createdBy}"`
 
     sql.query(query, (err, res) => {
         if (res[0].numOfLists >= 20) {
             result({message: `You've already created your maximum number of lists (${res[0].numOfLists}).`}, null)
             return
         } else {
-            let lists = "(" + newList.tracks.join(",") + ")" 
 
-        query = `SELECT id, duration FROM track WHERE id in ${lists}`
+            let queryCheckName = `SELECT * FROM list WHERE name = '${newList.name}'`
 
-        console.log(query)
-        
-            sql.query(query, (err, res) => {
-                if(err) {
-                    console.log("Error: ", err)
-                    result(null, err)
+            sql.query(queryCheckName, (err, res) => {
+                if(!res || res.length != 0) {
+                    console.log("Exisits...")
+                    result({message: `A list with name ${newList.name} already exisits.`}, null)
                     return
                 }
 
-                let totalDuration = 0
+                let lists = "(" + newList.tracks.join(",") + ")" 
 
-                res.forEach(val => {
-                    const time = val.duration.split(":")
-                    totalDuration += (parseInt(time[0]) * 60 + parseInt(time[1]))
-                })
-
-                console.log(totalDuration)
-
-                sql.query(`INSERT INTO list SET name="${newList.name}", createdBy="${newList.user}", tracks="${newList.tracks.join(",")}",
-                            totalPlayTime=${totalDuration}, description="${newList.description}", isPublic=${newList.isPublic ? 1 : 0}`, (err, res) => {
+                query = `SELECT id, duration FROM track WHERE id in ${lists}`
+            
+                sql.query(query, (err, res) => {
                     if(err) {
                         console.log("Error: ", err)
-                        result(err, null)
+                        result(null, err)
                         return
                     }
-            
-                    console.log("Created List: ", { id: res.insertId, ...newList })
-                    result(null, { id: res.insertId, ...newList })
-                })
-            })        
+
+                    let totalDuration = 0
+
+                    res.forEach(val => {
+                        const time = val.duration.split(":")
+                        totalDuration += (parseInt(time[0]) * 60 + parseInt(time[1]))
+                    })
+
+
+                    sql.query(`INSERT INTO list SET name="${newList.name}", createdBy="${newList.createdBy}", tracks="${newList.tracks.join(",")}",
+                                totalPlayTime=${totalDuration}, description="${newList.description}", isPublic=${newList.isPublic ? 1 : 0}`, (err, res) => {
+                        if(err) {
+                            console.log("Error: ", err)
+                            result(err, null)
+                            return
+                        }
+                
+                        console.log("Created List: ", { id: res.insertId, ...newList })
+                        result(null, { id: res.insertId, ...newList })
+                    })
+                })        
+            })
         }
     })
    
@@ -178,7 +188,7 @@ List.update = (id, body, result) => {
     console.log(id)
     console.log(body)
 
-    let query = `SELECT * FROM list WHERE id=${id} AND createdBy='${body.user}'`
+    let query = `SELECT * FROM list WHERE id=${id} AND createdBy='${body.createdBy}'`
 
     console.log(query)
 
@@ -206,30 +216,51 @@ List.update = (id, body, result) => {
     })
 
     listExisitsAndUserOwns.then(() => {
-        query = `UPDATE list SET name='${body.name}', description='${body.description}', tracks='${body.tracks}', 
-                    totalPlaytime=${body.totalPlaytime}, isPublic=${body.isPublic ? 1 : 0}
-                    WHERE id=${id}`
+
+        let lists = "(" + body.tracks + ")" 
+
+        let query = `SELECT id, duration FROM track WHERE id in ${lists}`
 
         console.log(query)
-
-        sql.query(
-            query,
-            (err, res) => {
-                if (err) {
-                    console.log("Error: ", err)
-                    result(null, err)
-                    return
-                }
         
-                if (res.affectedRows == 0) {
-                    result({kind: "not_found"}, null)
-                    return
-                }
-        
-                result(null, { name: body.name, ...body })
+        sql.query(query, (err, res) => {
+            if(err) {
+                console.log("Error: ", err)
+                result(null, err)
+                return
             }
-        )      
-        
+
+            let totalDuration = 0
+
+            res.forEach(val => {
+                const time = val.duration.split(":")
+                totalDuration += (parseInt(time[0]) * 60 + parseInt(time[1]))
+            })
+
+            query = `UPDATE list SET name='${body.name}', description='${body.description}', tracks='${body.tracks}', 
+                        totalPlaytime=${totalDuration}, isPublic=${body.isPublic ? 1 : 0}
+                        WHERE id=${id}`
+
+            console.log(query)
+
+            sql.query(
+                query,
+                (err, res) => {
+                    if (err) {
+                        console.log("Error: ", err)
+                        result(null, err)
+                        return
+                    }
+            
+                    if (res.affectedRows == 0) {
+                        result({kind: "not_found"}, null)
+                        return
+                    }
+            
+                    result(null, { name: body.name, ...body })
+                }
+            )     
+        })        
     })
 
 }

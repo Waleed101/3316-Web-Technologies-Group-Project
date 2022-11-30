@@ -6,31 +6,16 @@ import { getAuth, onAuthStateChanged, signOut} from "firebase/auth";
 import "../firebase.js"
 
 import { 
-    Button,
-    Modal,
-    ModalOverlay,
-    ModalContent,
-    ModalHeader,
-    ModalFooter,
-    ModalBody,
-    ModalCloseButton,
-    useDisclosure,
-    FormLabel,
-    Input,
-    Stack,
-    Table,
-    Thead,
-    Tbody,
-    Tfoot,
-    Tr,
-    Th,
-    Td,
-    TableCaption,
-    TableContainer,
-    Textarea,
-    Switch,
+    Alert,
+    AlertIcon,
+    Link,
+    Text,
  } from '@chakra-ui/react'
+
 import Playlist from '../components/Playlist.jsx';
+
+import {
+} from '@chakra-ui/icons'
 
 let url = require("../setup/api.setup.js")
 
@@ -73,10 +58,20 @@ onAuthStateChanged(auth, (user) => {
 
     const redirect = false
 
-    
-
-
-    return (<>{playlists}</>)
+    return (
+        playlists == [] ?
+            <>
+                <Alert status='warning'>
+                    <AlertIcon />
+                    <Text>
+                        Uh oh! Seems like you haven't created any Playlists yet. Navigate over to the <Link href="/search" color='teal.500'> Search</Link> page to get started.
+                    </Text>
+                </Alert>
+            </>
+        :
+            <>{playlists}</>
+        
+    )
 }
 
 export default DisplayPlaylists;
