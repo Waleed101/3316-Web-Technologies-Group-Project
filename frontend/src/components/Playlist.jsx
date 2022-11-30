@@ -7,7 +7,6 @@ import "../firebase.js"
 import TrackList from '../components/TrackList'
 import ReviewList from '../components/ReviewList'
 import ReactStars from 'react-rating-stars-component'
-import CustomAlert from "../components/CustomAlert";
 
 import {
     Tag,
@@ -126,8 +125,6 @@ function Playlist (props) {
             "rating": rating
         })
 
-        console.log(body)
-
         fetch(`${url}api/review`, {
             method: "POST",
             headers: {
@@ -167,7 +164,6 @@ function Playlist (props) {
             'user': user.email,
             'name': props.vals.name
         })
-        console.log(body)
         
         fetch(`${url}api/list/`,{
             method: "DELETE", 
@@ -296,11 +292,20 @@ function Playlist (props) {
                                                             onClick={editPlaylist}
                                                         />
                                                     </Tooltip>
+                                                    <Tooltip label="Delete Playlist">
+                                                        <IconButton
+                                                            variant='ghost'
+                                                            colorScheme='gray'
+                                                            aria-label='See menu'
+                                                            icon={<DeleteIcon />}
+                                                            onClick={deletePlaylist}
+                                                        />
+                                                    </Tooltip>
                                                 </>                                                
                                                 :
                                                 <></>
                                             }   
-                                            <Tooltip label="Add Comment">
+                                            {user ? <Tooltip label="Add Comment">
                                                 <IconButton
                                                     variant='ghost'
                                                     colorScheme='gray'
@@ -308,7 +313,7 @@ function Playlist (props) {
                                                     icon={<ChatIcon />}
                                                     onClick={addComment}
                                                 />
-                                            </Tooltip>                                     
+                                            </Tooltip> : <></> }                                 
                                         </Flex>
                                     </Flex>                                
                                 </GridItem>
