@@ -25,6 +25,7 @@ import {
     MinusIcon,
     TriangleDownIcon,
     TriangleUpIcon,
+    StarIcon,
 } from '@chakra-ui/icons'
 
 function ReviewView (props) {
@@ -37,11 +38,19 @@ function ReviewView (props) {
 
     const [isOpen, setIsOpen] = useState(false)
 
+    const [stars, setStars] = useState([<StarIcon />])
+
     const changeContentState = () => {
         setIsOpen(!isOpen)
     }
 
-    console.log(props)
+    useEffect(() => {
+        for (let i = 0; i < props.vals.rating; i += 1) {
+            stars.push(<StarIcon />)
+        }
+    
+        setStars(stars)
+    }, [])
 
     return(
         <Box w="100%">
@@ -54,7 +63,7 @@ function ReviewView (props) {
                             gap={4}
                         >
                             <GridItem colSpan={4}>
-                                <Heading size="sm">{props.vals.rating}</Heading>
+                                <Heading size="sm">{stars.map((s) => <>{s}</>)} by {props.vals.userEmail}</Heading>
                             </GridItem>
                              <Center>
                                 <GridItem colSpan={1}>
