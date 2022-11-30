@@ -62,26 +62,46 @@ function Login() {
                 console.log(res)
                 signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
-            // Signed in 
-            console.log(userCredential.user)
-            // ...
+            const user = userCredential.user
+            // if (user.emailVerified) {
+            // // Signed in 
+            //     console.log(userCredential.user)
+                
+            //     if(res.message) {
+            //         alert(`Error: ${res.message}`)
+            //     } else {
+            //         setCookie("user", res, { path: "/" })
+
+            //         alert(`Successfully logged in with email ${email}`)
+            //         console.log(state)
+            //         if(state) {
+            //             navigate(state.redirectTo)
+            //         }                        
+            //     }
+            // } else {
+            //     auth.signOut()
+            //     alert("Please verify your email before attempting to log in")
+            // }
         })
         .catch((error) => {
             const errorCode = error.code;
             const errorMessage = error.message;
             alert(errorMessage)
         });
-                    if(res.message) {
-                        alert(`Error: ${res.message}`)
-                    } else {
-                        setCookie("user", res, { path: "/" })
 
-                        alert(`Successfully logged in with email ${email}`)
-                        console.log(state)
-                        if(state) {
-                            navigate(state.redirectTo)
-                        }                        
-                    }
+        // DELETE ONCE YOU UNCOMMENT EMAIL VERIFICATION
+        if(res.message) {
+                    alert(`Error: ${res.message}`)
+                } else {
+                    setCookie("user", res, { path: "/" })
+
+                    alert(`Successfully logged in with email ${email}`)
+                    console.log(state)
+                    if(state) {
+                        navigate(state.redirectTo)
+                    }                        
+                }
+                    
                 })
     }
     return (
