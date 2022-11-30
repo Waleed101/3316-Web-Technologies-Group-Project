@@ -10,7 +10,9 @@ const List = function(list) {
 
 List.create = (newList, result) => {
     
-    let query = `SELECT COUNT(1) as numOfLists FROM list WHERE createdBy="${newList.user}"`
+    console.log(newList)
+
+    let query = `SELECT COUNT(1) as numOfLists FROM list WHERE createdBy="${newList.createdBy}"`
 
     sql.query(query, (err, res) => {
         if (res[0].numOfLists >= 20) {
@@ -45,7 +47,8 @@ List.create = (newList, result) => {
                         totalDuration += (parseInt(time[0]) * 60 + parseInt(time[1]))
                     })
 
-                    sql.query(`INSERT INTO list SET name="${newList.name}", createdBy="${newList.user}", tracks="${newList.tracks.join(",")}",
+
+                    sql.query(`INSERT INTO list SET name="${newList.name}", createdBy="${newList.createdBy}", tracks="${newList.tracks.join(",")}",
                                 totalPlayTime=${totalDuration}, description="${newList.description}", isPublic=${newList.isPublic ? 1 : 0}`, (err, res) => {
                         if(err) {
                             console.log("Error: ", err)
