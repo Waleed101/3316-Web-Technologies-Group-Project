@@ -14,7 +14,6 @@ import { signInWithGoogle } from "../firebase.js";
 import { useAuthState } from "react-firebase-hooks/auth";
 import GoogleLogin from "../components/GoogleLogin"
 import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
-
 let url = require("../setup/api.setup.js")
 const auth = getAuth();
 
@@ -22,11 +21,12 @@ const auth = getAuth();
 function Login() {
 
     const [email, setEmail] = useState("")
-    const [user, setUser] = useState(null)
+    // const [user, setUser] = useState(null)
     const [password, setPassword] = useState("")
     const [cookies, setCookie, removeCookie] = useCookies(["user"])
     const { state } = useLocation() 
     const navigate = useNavigate()
+    
 
 
     const route = new URLSearchParams(useLocation().search).get("rdr")
@@ -59,11 +59,11 @@ function Login() {
                     alert("Account is deactivated, please contact site administrator.")
                     return
                 }
+                console.log(res)
                 signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
             // Signed in 
-            user = userCredential.user
-            console.log(user)
+            console.log(userCredential.user)
             // ...
         })
         .catch((error) => {

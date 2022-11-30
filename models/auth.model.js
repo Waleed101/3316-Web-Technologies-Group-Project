@@ -124,4 +124,20 @@ Auth.setActivation = (auth, result) => {
     )
 }
 
+Auth.setAdmin = (auth, result) => {
+    console.log(auth.email, "t")
+    sql.query(
+        `UPDATE account SET role = '2' WHERE email = '${auth.email}';`,
+        (err, res) => {
+            if (err) {
+                console.log("Error: " + err)
+                result(err, null)
+                return
+            }
+            console.log(res)
+            result({ message: `Updated admin access of account associated to: ${auth.email}`})
+        }
+    )
+}
+
 module.exports = Auth
