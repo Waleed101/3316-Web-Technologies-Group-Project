@@ -93,6 +93,9 @@ function Search() {
     }
 
     const selectTrack = (id, title) => {
+        if (id == "current") {
+            return
+        }
         console.log("Selecting track " + id)
         tracksSelected[id] = title
         setTracks(tracksSelected)
@@ -102,6 +105,11 @@ function Search() {
     const removeTrack = (id) => {
         console.log("Removing track " + id)
         delete tracksSelected[id]
+
+        if ("current" in tracksSelected) {
+            delete tracksSelected["current"]
+        }
+
         setTracks(tracksSelected)
         setNumOfTracksQueued(Object.keys(tracksSelected).length)
     }
@@ -146,6 +154,7 @@ function Search() {
                                 removeTrack={removeTrack} 
                                 arr={record} 
                                 size={'md'} 
+                                addBtn={true}
                                 isSelected={record.id.toString() in tracksSelected}
                             />
                         ) 

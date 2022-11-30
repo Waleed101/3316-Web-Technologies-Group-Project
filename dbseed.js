@@ -1,6 +1,6 @@
 const mysql = require('mysql');
 const dbConfig = require('./config/db.config.js')
-
+//Creating connection
 const conn = mysql.createConnection({
     host: dbConfig.HOST,
     port: dbConfig.PORT,

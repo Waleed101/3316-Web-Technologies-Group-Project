@@ -24,6 +24,7 @@ import {
 
 import {
     AddIcon,
+    ExternalLinkIcon,
     MinusIcon,
     TriangleDownIcon,
     TriangleUpIcon,
@@ -59,7 +60,7 @@ function TrackView (props) {
                         </Text>
                     </Tag>)
     })
-
+//access the track data
     const id = "addTo" + props.arr.id
 
     const select = () => {
@@ -71,6 +72,12 @@ function TrackView (props) {
 
         setBtnMsg(added ? ADD_TO : REMOVE_FROM)
         setAdded(!added)
+    }
+
+    const searchYoutube = () => {
+        let link = 'https://www.youtube.com/results?search_query=' + props.arr.artistName + props.arr.title
+        console.log(link)
+        window.open(link,'_blank','noopener,noreferrer')
     }
 
     const changeContentState = () => {
@@ -92,7 +99,16 @@ function TrackView (props) {
                             </GridItem>
                              <Center>
                                 <GridItem colSpan={1}>
-                                    {props.addBtn ? <Button 
+                                    <IconButton 
+                                        id={id} 
+                                        onClick={searchYoutube} 
+                                        size='sm' 
+                                        colorScheme={'red'}
+                                        icon = {<ExternalLinkIcon/> }                                       
+                                    />
+                                </GridItem>
+                                <GridItem colSpan={1}>
+                                    { props.addBtn ? <Button 
                                         id={id} 
                                         onClick={select} 
                                         size='sm' 

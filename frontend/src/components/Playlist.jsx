@@ -27,6 +27,7 @@ import {
     Avatar,
     IconButton,
     Tooltip,
+    List,
     Modal,
     ModalOverlay,
     ModalContent,
@@ -41,6 +42,8 @@ import {
 } from '@chakra-ui/react'
 
 import {
+    AddIcon,
+    DeleteIcon,
     EditIcon,
     TriangleDownIcon,
     TriangleUpIcon,
@@ -154,11 +157,34 @@ function Playlist (props) {
         console.log("Redirecting...")
         navigate('/search/', { state: props.vals })
     }
-
+    console.log(props.vals)
+    const deletePlaylist = () =>{
+        let body = JSON.stringify({
+            'user': user.email,
+            'name': props.vals.name
+        })
+        console.log(body)
+        
+        fetch(`${url}api/list/`,{
+            method: "DELETE", 
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: body}).then(res => res.json())
+            .then(res => {
+                    if(!res.message) {
+                        alert(`Error: ${res.message}`)
+                    } else {
+                        alert(res.message)
+                    }
+                })
+    }
+                
     const addComment = () => setModalOpen(true)
 
     const closing = () => setModalOpen(false)
-
+        
     return(
         <>
             <Modal 
