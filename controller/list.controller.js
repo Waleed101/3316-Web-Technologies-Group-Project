@@ -51,8 +51,6 @@ exports.findAll = (req, res) => {
 
 // Find a single List with a id
 exports.findOne = (req, res) => {
-  
-  console.log(req)
 
   if (!sanitize.isInteger(req.params.id)) {
     res.status(403).send({ message: "The ID you inputted has to be a number."})
@@ -79,7 +77,6 @@ exports.findOne = (req, res) => {
 
 // Update a List identified by the id in the request
 exports.update = (req, res) => {
-  console.log(req)
     // if (!req.body) {
     //     res.status(400).send({
     //       message: "Content can not be empty!"
@@ -127,7 +124,6 @@ exports.update = (req, res) => {
 
 // Delete a List with the specified id in the request
 exports.delete = (req, res) => {
-  console.log(req)
   if (sanitize.hasNoScript(req.body.name)) {
     res.status(403).send({ message: "Your input cannot have any of: <, >"})
   }  

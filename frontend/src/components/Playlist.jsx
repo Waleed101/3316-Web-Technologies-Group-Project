@@ -1,4 +1,4 @@
-import { React, useState } from 'react'
+import { React, useEffect, useState } from 'react'
 import { useCookies } from 'react-cookie'
 import  { useNavigate } from 'react-router-dom'
 import { getAuth, onAuthStateChanged, signOut} from "firebase/auth";
@@ -50,6 +50,7 @@ import {
     ViewIcon,
     ViewOffIcon,
     ChatIcon,
+    StarIcon,
 } from '@chakra-ui/icons'
 
 let url = require("../setup/api.setup.js")
@@ -66,6 +67,9 @@ function Playlist (props) {
 
     const [isModalOpen, setModalOpen] = useState(false)
     const [rating, setRating] = useState(0)
+    const [stars, setStars] = useState([<StarIcon />])
+
+    const [avgRating, setAvgRating] = useState(0)
 
     const toast = useToast()
 
@@ -157,7 +161,7 @@ function Playlist (props) {
         console.log("Redirecting...")
         navigate('/search/', { state: props.vals })
     }
-    console.log(props.vals)
+    
     const deletePlaylist = () =>{
         let body = JSON.stringify({
             'user': user.email,
@@ -184,6 +188,22 @@ function Playlist (props) {
     const addComment = () => setModalOpen(true)
 
     const closing = () => setModalOpen(false)
+
+    useEffect(() => {
+        console.log(props.vals.id)
+        fetch(`${url}api/review/?type=1&referenceId=${props.vals.id}&avg=y`)
+            .then(res => res.json())
+                .then(res => {
+                    let temp = []
+
+                    for(let i = 0; i < Math.ceil(res[0]['avg']); i += 1) {
+                        temp.push(<StarIcon />)
+                    }
+
+                    setStars(temp)
+                    setAvgRating(res[0]['avg'])
+                })
+    }, [])
         
     return(
         <>
@@ -299,6 +319,12 @@ function Playlist (props) {
                             isOpen ?
                                 <>
                                     <CardBody>
+                                        <Heading size="h4">Information</Heading>
+                                        <Divider />
+                                        <br />
+                                        <Text><b>Description: </b> {props.vals.description}</Text>
+                                        <Text><b>Average Rating: </b> {avgRating} - {stars.map((s) => <>{s}</>)}</Text>
+                                        <br />
                                         <Heading size="h4">Reviews</Heading>
                                         <Divider />
                                         <ReviewList reference={props.vals.id} type={1} summary={true}></ReviewList>

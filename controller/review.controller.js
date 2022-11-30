@@ -12,9 +12,6 @@ exports.create = (req, res) => {
     });
   }
 
-  // Test
-  console.log(req.body)
-
   const review = new Review({
     referenceId: req.body.listId ? req.body.listId : req.body.trackId,
     type: req.body.listId ? 1 : 0,
@@ -37,11 +34,13 @@ exports.create = (req, res) => {
 exports.findAll = (req, res) => {
     const query = {
         type: req.query.type,
-        referenceId: req.query.ref,
+        referenceId: req.query.referenceId || req.query.ref,
         user: req.query.user
     }
 
-    Review.getAll(query, (err, data) => {
+    console.log(req.query)
+
+    Review.getAll(query, req.query.avg, (err, data) => {
       if (err)
         res.status(500).send({
           message:
