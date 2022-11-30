@@ -66,11 +66,9 @@ function Search() {
 
     const { isOpen, onOpen, onClose } = useDisclosure()
 
-    console.log("Resetting...")
     let tracksSelected = useRef({})
 
     const createNewList = () => {
-        console.log(tracks)
         let tempTrackTable = []
 
         for (const[k, v] of Object.entries(tracks)) {
@@ -79,7 +77,6 @@ function Search() {
             }
             tempTrackTable.push(<Tr><Td>{k}</Td><Td>{v}</Td></Tr>)
         }
-        console.log(tempTrackTable)
 
         setTrackTable(tempTrackTable)
         onOpen()
@@ -187,6 +184,22 @@ function Search() {
                     setCreateState(<CustomAlert isError={true} msg={res.message}></CustomAlert>)
                 } else {
                     setCreateState(<CustomAlert isError={false} msg={`Successfully ${state ? "edited" : "created"} playlist.`}></CustomAlert>)
+                
+                    if (!state) {
+                        // Resetting user inputted data
+                        setListDescription("")
+                        setListTitle("")
+                        setTracks({})
+                        setResult([])
+
+                        // Resetting search data
+                        setTitle("")
+                        setArtist("")
+                                                
+                        Object.keys(tracksSelected).forEach(val => {
+                            delete tracksSelected[val]
+                        })
+                    }
                 }
             })
     }

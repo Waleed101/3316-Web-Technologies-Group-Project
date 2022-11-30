@@ -30,9 +30,7 @@ import {
 } from '@chakra-ui/icons'
 
 function TrackView (props) {
-
-    console.log(props.isSelected)
-
+    
     const auth = getAuth();
     const [user, setUser] = useState(null) 
     onAuthStateChanged(auth, (user) => {

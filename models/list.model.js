@@ -21,7 +21,8 @@ List.create = (newList, result) => {
             let queryCheckName = `SELECT * FROM list WHERE name = ${newList.name}`
             
             sql.query(queryCheckName, (err, res) => {
-                if(!res) {
+                if(res) {
+                    console.log(res)
                     result({message: `A list with name ${newList.name} already exisits.`}, null)
                     return
                 }
