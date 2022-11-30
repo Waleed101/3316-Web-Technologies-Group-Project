@@ -6,14 +6,15 @@ const sql = require('../dbseed.js')
 */
 
 const Review = function(review) {
-    this.listId = review.listId
+    this.referenceId = review.referenceId
+    this.type = review.type
     this.user = review.user
     this.description = review.description
     this.rating = review.rating
 }
 
 Review.create = (newReview, result) => {
-    
+    console.log("Creating...")
     sql.query(`INSERT INTO review SET referenceID=${newReview.referenceId}, type=${newReview.type}, userEmail="${newReview.user}", ` + 
               `description="${newReview.description}", rating=${newReview.rating}`, (err, res) => {
         if(err) {
