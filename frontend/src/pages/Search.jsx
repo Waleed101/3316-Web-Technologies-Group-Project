@@ -159,6 +159,11 @@ function Search() {
     } 
 
     const submitList = () => {
+
+        if("current" in tracks) {
+            delete tracks["current"]
+        }
+
         let body = JSON.stringify({
             "createdBy": user.email,
             "name": listTitle,
