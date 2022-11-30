@@ -31,6 +31,7 @@ import {
     TableContainer,
     Textarea,
     Switch,
+    Spinner,
   } from '@chakra-ui/react'
 
 let url = require("../setup/api.setup.js")
@@ -60,6 +61,8 @@ function Search() {
     const [numOfTracksQueued, setNumOfTracksQueued] = useState(0)
     const [tracks, setTracks] = useState({})
     const [trackTable, setTrackTable] = useState([])
+
+    const [searching, setSearching] = useState(false)
 
     const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -112,6 +115,7 @@ function Search() {
         let output = []
 
         setResult([])
+        setSearching(true)
 
         let query;
 
@@ -149,6 +153,7 @@ function Search() {
                             />
                         ) 
                     })
+                    setSearching(false)
                     setResult(output)
                 })
     } 
@@ -293,7 +298,7 @@ function Search() {
                 </Stack>
             </form>
             <Stack spacing={8}>
-                {result.map(r => <>{r}</>)}
+                {searching ? <Spinner /> : result.map(r => <>{r}</>)}
             </Stack>
         </>
     );
