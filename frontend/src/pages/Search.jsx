@@ -1,4 +1,4 @@
-import { React, useState, useEffect } from 'react';
+import { React, useState, useEffect, useRef } from 'react';
 import { useCookies } from 'react-cookie';
 import { useLocation } from 'react-router-dom';
 
@@ -63,7 +63,8 @@ function Search() {
 
     const { isOpen, onOpen, onClose } = useDisclosure()
 
-    let tracksSelected = {}
+    console.log("Resetting...")
+    let tracksSelected = useRef({})
 
     const createNewList = () => {
         let tempTrackTable = []
@@ -105,9 +106,19 @@ function Search() {
 
         let output = []
 
-        let query = `?title=${title}&artist=${artist}&genres=${genre.join(",")}&id=${state ? state.tracks : ''}`
+        setResult([])
+
+        let query;
+
+        if (title || artist || genre.join(",")) {
+            query = `?title=${title}&artist=${artist}&genres=${genre.join(",")}`
+        } else {
+            query = `?id=${state ? state.tracks : ''}`
+        }
 
         const onLoadSelected = state ? state.tracks.split(",") : []
+
+        console.log("Searching " + query)
 
         fetch(url + "api/track/" + query)
             .then(res => res.json())
@@ -119,22 +130,27 @@ function Search() {
                     res.forEach(record => {
 
                         if (onLoadSelected.includes(record.id.toString()) && ! (record.id in tracksSelected)) {
+                            console.log("Selecting pre-loaded..." + record.id)
                             selectTrack(record.id, record.title)
                         }
+                        
+                        console.log("Getting")
 
                         output.push(
                             <TrackView 
                                 selectTrack={selectTrack} 
                                 removeTrack={removeTrack} 
                                 arr={record} 
-                                addBtn={user ? true : false} 
                                 size={'md'} 
                                 isSelected={record.id.toString() in tracksSelected}
                             />
                         ) 
                     })
 
+                    console.log("B")
                     setResult(output)
+
+                    console.log(output)
                 })
     } 
 
@@ -147,8 +163,6 @@ function Search() {
             "totalPlaytime": 0,
             "tracks": Object.keys(tracks)
         })
-
-        console.log(body)
 
         fetch(`${url}api/list/${state ? state.id : ''}`, {
             method: state ? "PUT" : "POST",
@@ -165,7 +179,6 @@ function Search() {
                 } else {
                     setCreateState(<CustomAlert isError={false} msg={`Successfully ${state ? "edited" : "created"} playlist.`}></CustomAlert>)
                 }
-                console.log(createState)
             })
     }
 

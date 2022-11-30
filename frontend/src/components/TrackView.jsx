@@ -1,5 +1,7 @@
-import { React, useState } from 'react'
-import { useCookies } from 'react-cookie'
+import { React, useEffect, useState } from 'react'
+
+import { getAuth, onAuthStateChanged, signOut} from "firebase/auth";
+import "../firebase.js"
 
 import './css/TrackView.css'
 
@@ -28,26 +30,27 @@ import {
 } from '@chakra-ui/icons'
 
 function TrackView (props) {
-    const [cookies, setCookie, removeCookie] = useCookies(["user"])
+
+    console.log(props.isSelected)
+
+    const auth = getAuth();
+    const [user, setUser] = useState(null) 
+    onAuthStateChanged(auth, (user) => {
+        if (user) setUser(user)
+    })
     const [isOpen, setIsOpen] = useState(false)
 
     const ADD_TO = <AddIcon />
     const REMOVE_FROM = <MinusIcon />
 
+    console.log(props.arr.title + ", " + props.isSelected)
+
     const [added, setAdded] = useState(props.isSelected)
     const [btnMsg, setBtnMsg] = useState(props.isSelected ? REMOVE_FROM : ADD_TO)
 
+    console.log(added)
+
     const COLORS = ["teal", "blue", "green", "cyan", "red"]
-
-    console.log(props.isSelected)
-
-    const isBtnDisabled = () => {
-        if (cookies['user']) {
-            return !cookies['user'].isLoggedIn
-        } else {
-            return true
-        }
-    }
 
     let genre = []
 
@@ -95,15 +98,15 @@ function TrackView (props) {
                             </GridItem>
                              <Center>
                                 <GridItem colSpan={1}>
-                                    {props.addBtn ? <Button 
+                                    <Button 
                                         id={id} 
                                         onClick={select} 
                                         size='sm' 
                                         colorScheme={added ? 'red' : 'green'}
-                                        isDisabled={!isBtnDisabled}
+                                        isDisabled={user ? false : true}
                                     > 
                                         {btnMsg}
-                                    </Button> : <></> }
+                                    </Button>
                                     <IconButton
                                         variant='ghost'
                                         colorScheme='gray'
