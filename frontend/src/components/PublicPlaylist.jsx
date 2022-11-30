@@ -53,12 +53,12 @@ import {
 } from '@chakra-ui/icons'
 let url = require("../setup/api.setup.js")
 
-function Playlist (props) {
-    const auth = getAuth();
-    const [user, setUser] = useState(null)
-    onAuthStateChanged(auth, (user) => {
-        if (user) setUser(user)
-    })
+function PublicPlaylist (props) {
+    //const auth = getAuth();
+    //const [user, setUser] = useState(null)
+    // onAuthStateChanged(auth, (user) => {
+    //     if (user) setUser(user)
+    // })
     const [isOpen, setIsOpen] = useState(false)
     const [isPublic, setIsPublic] = useState(props.vals.isPublic)
     const [reviewDescription, setReviewDescription] = useState("")
@@ -68,9 +68,9 @@ function Playlist (props) {
 
     const toast = useToast()
 
-    const ratingChanged = (newRating) => {
-        setRating(newRating)
-    }
+    // const ratingChanged = (newRating) => {
+    //     setRating(newRating)
+    // }
 
     const navigate = useNavigate()
 
@@ -86,101 +86,101 @@ function Playlist (props) {
         return Math.floor(time / 60) + ":" + (time % 60).toString().padStart(2, '0')
     }
 
-    const changePrivacy = () => {
+    // const changePrivacy = () => {
 
-        console.log(props.vals)
+    //     console.log(props.vals)
 
-        props.vals.isPublic = !props.vals.isPublic
+    //     props.vals.isPublic = !props.vals.isPublic
 
-        fetch(`${url}api/list/${props.vals.id}`, {
-            method: 'PUT',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(props.vals)
-        })
-            .then(res => res.json()
-                .then(res => {
-                    if (res.message) {
-                        alert(res.message)
-                    } else {
-                        setIsPublic(props.vals.isPublic)
-                    }
-                })
-            )
-    }
+    //     fetch(`${url}api/list/${props.vals.id}`, {
+    //         method: 'PUT',
+    //         headers: {
+    //             'Accept': 'application/json',
+    //             'Content-Type': 'application/json'
+    //         },
+    //         body: JSON.stringify(props.vals)
+    //     })
+    //         .then(res => res.json()
+    //             .then(res => {
+    //                 if (res.message) {
+    //                     alert(res.message)
+    //                 } else {
+    //                     setIsPublic(props.vals.isPublic)
+    //                 }
+    //             })
+    //         )
+    // }
     
-    const addReview = () => {
-        closing()
+    // const addReview = () => {
+    //     closing()
 
-        let body = JSON.stringify({
-            "listId": props.vals.id,
-            "userEmail": user.email,
-            "description": reviewDescription,
-            "rating": rating
-        })
+    //     let body = JSON.stringify({
+    //         "listId": props.vals.id,
+    //         "userEmail": user.email,
+    //         "description": reviewDescription,
+    //         "rating": rating
+    //     })
 
-        console.log(body)
+    //     console.log(body)
 
-        fetch(`${url}api/review`, {
-            method: "POST",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: body
-        }).then(res => console.log(res))
-            .then(res => {
-                if(res && res.message) {
-                    toast({
-                        title: 'Error Publishing Review',
-                        description: res.message,
-                        status: 'error',
-                        duration: 5000,
-                        isClosable: true,
-                    })
-                } else {
-                    toast({
-                        title: 'Review Published.',
-                        description: `We've published your review on ${props.vals.name}.`,
-                        status: 'success',
-                        duration: 5000,
-                        isClosable: true,
-                    })
-                }
-            })
-    }
+    //     fetch(`${url}api/review`, {
+    //         method: "POST",
+    //         headers: {
+    //             'Accept': 'application/json',
+    //             'Content-Type': 'application/json'
+    //         },
+    //         body: body
+    //     }).then(res => console.log(res))
+    //         .then(res => {
+    //             if(res && res.message) {
+    //                 toast({
+    //                     title: 'Error Publishing Review',
+    //                     description: res.message,
+    //                     status: 'error',
+    //                     duration: 5000,
+    //                     isClosable: true,
+    //                 })
+    //             } else {
+    //                 toast({
+    //                     title: 'Review Published.',
+    //                     description: `We've published your review on ${props.vals.name}.`,
+    //                     status: 'success',
+    //                     duration: 5000,
+    //                     isClosable: true,
+    //                 })
+    //             }
+    //         })
+    // }
 
-    const editPlaylist = () => {
-        console.log("Redirecting...")
-        navigate('/search/', { state: props.vals })
-    }
-    console.log(props.vals)
-    const deletePlaylist = () =>{
-        let body = JSON.stringify({
-            'user': user.email,
-            'name': props.vals.name
-        })
-        console.log(body)
+    // const editPlaylist = () => {
+    //     console.log("Redirecting...")
+    //     navigate('/search/', { state: props.vals })
+    // }
+    // console.log(props.vals)
+    // const deletePlaylist = () =>{
+    //     let body = JSON.stringify({
+    //         'user': user.email,
+    //         'name': props.vals.name
+    //     })
+    //     console.log(body)
         
-        fetch(`${url}api/list/`,{
-            method: "DELETE", 
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: body}).then(res => res.json())
-            .then(res => {
-                    if(!res.message) {
-                        alert(`Error: ${res.message}`)
-                    } else {
-                        alert(res.message)
-                    }
-                })
-    }
+    //     fetch(`${url}api/list/`,{
+    //         method: "DELETE", 
+    //         headers: {
+    //             'Accept': 'application/json',
+    //             'Content-Type': 'application/json'
+    //         },
+    //         body: body}).then(res => res.json())
+    //         .then(res => {
+    //                 if(!res.message) {
+    //                     alert(`Error: ${res.message}`)
+    //                 } else {
+    //                     alert(res.message)
+    //                 }
+    //             })
+    // }
                 
-    const addComment = () => setModalOpen(true)
+    // const addComment = () => setModalOpen(true)
 
     const closing = () => setModalOpen(false)
         
@@ -194,33 +194,33 @@ function Playlist (props) {
             >
                 <ModalOverlay />
                 <ModalContent>
-                    <ModalHeader>Commenting on playlist <b>{props.vals.name}</b></ModalHeader>
+                    {/* <ModalHeader>Commenting on playlist <b>{props.vals.name}</b></ModalHeader> */}
                     <ModalCloseButton />
                     <ModalBody>
                         <form>
                             <FormLabel>Rating</FormLabel>
                             <ReactStars
                                 count={5}
-                                onChange={ratingChanged}
+                                // onChange={ratingChanged}
                                 size={40}
                                 activeColor="#ffd700"
                             />
                             <br /><br />
-                            <FormLabel> Description: </FormLabel>
+                            {/* <FormLabel> Description: </FormLabel>
                                 <Textarea
                                     placeholder = "Enter in your review..."
                                     value = {reviewDescription}
                                     onChange = {(e) => setReviewDescription(e.target.value)}
                                 />
-                            <br /><br />
+                            <br /><br /> */}
                         </form>
                     </ModalBody>
 
-                    <ModalFooter>
-                        <Button colorScheme='green' mr={3} onClick={addReview}>
-                            Comment
+                    {/* <ModalFooter>
+                        {/* <Button colorScheme='green' mr={3} onClick={addReview}> */}
+                            {/* Comment
                         </Button>
-                    </ModalFooter>
+                    </ModalFooter> */} 
                 </ModalContent>
             </Modal>
             <Box w="50%">
@@ -253,7 +253,7 @@ function Playlist (props) {
                                                 />
                                             </Tooltip>
                                             
-                                            {
+                                            {/* {
                                                 user &&
                                                 user.email == props.vals.createdBy ?
                                                 <>
@@ -297,7 +297,7 @@ function Playlist (props) {
                                                             icon={<DeleteIcon />}
                                                             onClick={deletePlaylist}
                                                         />
-                                                    </Tooltip>                                   
+                                                    </Tooltip>                                    */}
                                         </Flex>
                                     </Flex>                                
                                 </GridItem>
@@ -330,4 +330,4 @@ function Playlist (props) {
     )
 }
 
-export default Playlist
+export default PublicPlaylist

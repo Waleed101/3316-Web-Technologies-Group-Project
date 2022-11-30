@@ -14,6 +14,7 @@ import Register from "./pages/Register";
 import UpdatePassword from "./pages/UpdatePassword"
 import DeleteAccount from "./pages/DeleteAccount";
 import Search from "./pages/Search";
+import DisplayPublicPlaylists from "./pages/DisplayPublicPlaylists";
 import DisplayPlaylists from "./pages/DisplayPlaylists";
 import ActivationAccount from "./pages/ActivationAccount";
 import Policies from "./pages/Policies";
@@ -32,6 +33,7 @@ export default function App() {
               <Route path="/" element={<Layout />}>
                 <Route index element={<Home />} />
                 <Route path="start" element={<Start />} />
+                <Route path="public/playlists" element={<DisplayPublicPlaylists />} />
                 <Route path="register" element={<Register />} />
                 <Route path="login" element={<Login />} />
                 <Route path="updatePassword" element={<UpdatePassword />} />

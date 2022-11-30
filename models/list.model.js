@@ -89,11 +89,17 @@ List.findById = (id, result) => {
 }
 
 List.getAll = (info, result) => {
+    console.log("Hello")
     let query = `SELECT * FROM list`
-    let removeTracks = true
+    let removeTracks = false
 
-    if(info.name) {
-        query += ` WHERE name = "${info.name}"`
+    if (info.isPublic){
+        console.log('In tha loop')
+        query+= ` WHERE isPublic = 1 ORDER BY created LIMIT 10`
+        console.log(query.length)
+    }
+    else if(info.name) {
+        query += ` WHERE name = "${info.name}" `
         removeTracks = false
     } else if (info.user) {
         query += ` WHERE createdBy = "${info.user}"`
