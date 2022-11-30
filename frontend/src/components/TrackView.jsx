@@ -22,12 +22,14 @@ import {
 
 import {
     AddIcon,
+    ExternalLinkIcon,
     MinusIcon,
     TriangleDownIcon,
     TriangleUpIcon,
 } from '@chakra-ui/icons'
 
 function TrackView (props) {
+    console.log(props.arr)
     const [cookies, setCookie, removeCookie] = useCookies(["user"])
     const [isOpen, setIsOpen] = useState(false)
 
@@ -62,7 +64,7 @@ function TrackView (props) {
                         </Text>
                     </Tag>)
     })
-
+//access the track data
     const id = "addTo" + props.arr.id
 
     const select = () => {
@@ -74,6 +76,12 @@ function TrackView (props) {
 
         setBtnMsg(added ? ADD_TO : REMOVE_FROM)
         setAdded(!added)
+    }
+
+    const youtube = () => {
+        let link = 'https://www.youtube.com/results?search_query=' + props.arr.artistName + props.arr.title
+        console.log(link)
+        window.open(link,'_blank','noopener,noreferrer')
     }
 
     const changeContentState = () => {
@@ -94,6 +102,19 @@ function TrackView (props) {
                                 <Heading size={props.size}>{props.arr.title}</Heading>
                             </GridItem>
                              <Center>
+                                <GridItem colSpan={1}>
+                                    <IconButton 
+                                        id={id} 
+                                        onClick={youtube} 
+                                        size='sm' 
+                                        colorScheme={'red'}
+                                        icon = {<ExternalLinkIcon/> }
+                                        
+                                    
+                                       
+                                    /> 
+                                    
+                                </GridItem>
                                 <GridItem colSpan={1}>
                                     {props.addBtn ? <Button 
                                         id={id} 
