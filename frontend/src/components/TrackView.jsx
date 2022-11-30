@@ -78,7 +78,7 @@ function TrackView (props) {
         setAdded(!added)
     }
 
-    const youtube = () => {
+    const searchYoutube = () => {
         let link = 'https://www.youtube.com/results?search_query=' + props.arr.artistName + props.arr.title
         console.log(link)
         window.open(link,'_blank','noopener,noreferrer')
@@ -105,7 +105,7 @@ function TrackView (props) {
                                 <GridItem colSpan={1}>
                                     <IconButton 
                                         id={id} 
-                                        onClick={youtube} 
+                                        onClick={searchYoutube} 
                                         size='sm' 
                                         colorScheme={'red'}
                                         icon = {<ExternalLinkIcon/> }

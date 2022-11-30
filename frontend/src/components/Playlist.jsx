@@ -28,6 +28,7 @@ import {
 
 import {
     AddIcon,
+    DeleteIcon,
     EditIcon,
     TriangleDownIcon,
     TriangleUpIcon,
@@ -84,6 +85,9 @@ function Playlist (props) {
         navigate('/search/', { state: props.vals })
     }
 
+    const deletePlaylist = () =>{
+
+    }
     return(
         <Box w="50%">
             <Center>
@@ -129,6 +133,15 @@ function Playlist (props) {
                                                 colorScheme='gray'
                                                 aria-label='See menu'
                                                 icon={<EditIcon />}
+                                                onClick={editPlaylist}
+                                            />
+                                        </Tooltip>
+                                        <Tooltip label="Delete Playlist">
+                                            <IconButton
+                                                variant='ghost'
+                                                colorScheme='gray'
+                                                aria-label='See menu'
+                                                icon={<DeleteIcon />}
                                                 onClick={editPlaylist}
                                             />
                                         </Tooltip>
