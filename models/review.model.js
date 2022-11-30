@@ -1,15 +1,21 @@
 const sql = require('../dbseed.js')
 
+/* Type:
+    0 -> Review on a Track
+    1 -> Review on a List
+*/
+
 const Review = function(review) {
-    this.listId = review.listId
+    this.referenceId = review.referenceId
+    this.type = review.type
     this.user = review.user
     this.description = review.description
     this.rating = review.rating
 }
 
 Review.create = (newReview, result) => {
-    
-    sql.query(`INSERT INTO review SET listId=${newReview.listId}, userEmail="${newReview.userEmail}", ` + 
+    console.log("Creating...")
+    sql.query(`INSERT INTO review SET referenceID=${newReview.referenceId}, type=${newReview.type}, userEmail="${newReview.user}", ` + 
               `description="${newReview.description}", rating=${newReview.rating}`, (err, res) => {
         if(err) {
             console.log("Error: ", err)
@@ -41,14 +47,10 @@ Review.findById = (id, result) => {
 }
 
 Review.getAll = (req, result) => {
-    let query = `SELECT * FROM review`
+    let query = `SELECT * FROM review WHERE type=${req.type} AND referenceId=${req.referenceId}`
 
     if (req.user) {
-        query += ` WHERE userEmail = "${req.user}"`
-    } else if (req.list) {
-        query += ` WHERE listId = ${req.list}`
-    } else if (req.user && req.list) {
-        query += ` WHERE listId = ${req.list} AND userEmail="${req.user}"`
+        query = `SELECT * FROM review WHERE userEmail=${req.user}`
     }
 
     sql.query(query, (err, res) => {

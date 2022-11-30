@@ -31,7 +31,7 @@ import {
 } from '@chakra-ui/icons'
 
 function TrackView (props) {
-    
+
     const auth = getAuth();
     const [user, setUser] = useState(null) 
     onAuthStateChanged(auth, (user) => {
@@ -104,15 +104,11 @@ function TrackView (props) {
                                         onClick={searchYoutube} 
                                         size='sm' 
                                         colorScheme={'red'}
-                                        icon = {<ExternalLinkIcon/> }
-                                        
-                                    
-                                       
-                                    /> 
-                                    
+                                        icon = {<ExternalLinkIcon/> }                                       
+                                    />
                                 </GridItem>
                                 <GridItem colSpan={1}>
-                                    {props.addBtn ? <Button 
+                                    { props.addBtn ? <Button 
                                         id={id} 
                                         onClick={select} 
                                         size='sm' 
