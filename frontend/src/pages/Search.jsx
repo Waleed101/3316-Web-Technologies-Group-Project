@@ -191,6 +191,7 @@ function Search() {
                         setListTitle("")
                         setTracks({})
                         setResult([])
+                        setNumOfTracksQueued(0)
 
                         // Resetting search data
                         setTitle("")
