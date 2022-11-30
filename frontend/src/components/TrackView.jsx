@@ -83,7 +83,7 @@ function TrackView (props) {
     const changeContentState = () => {
         setIsOpen(!isOpen)
     }
-
+   
     return(
         <Box w="100%">
             <Center>
@@ -137,7 +137,10 @@ function TrackView (props) {
                     <Divider />
                     {isOpen ? 
                         <CardBody>
-                            <Heading as="h5" size={props.size}>Performed by {props.arr.artistName}</Heading>
+                            <Heading as="h5" size={props.size}>Performed by: {props.arr.artistName}</Heading>
+                            <Heading as="h5" size={props.size}>Track length: {props.arr.duration}</Heading>
+                            <Heading as="h5" size={props.size}>Date published: {props.arr.datePublished}</Heading>
+                            <Heading as="h5" size={props.size}>Number of Listens: {props.arr.listens}</Heading>
                             <br/>
                             {genre}
                         </CardBody>
