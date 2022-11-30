@@ -8,6 +8,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 // Pages
 import Layout from "./pages/Layout";
 import Home from "./pages/Home";
+import Start from "./pages/Start";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import UpdatePassword from "./pages/UpdatePassword"
@@ -30,6 +31,7 @@ export default function App() {
             <Routes>
               <Route path="/" element={<Layout />}>
                 <Route index element={<Home />} />
+                <Route path="start" element={<Start />} />
                 <Route path="register" element={<Register />} />
                 <Route path="login" element={<Login />} />
                 <Route path="updatePassword" element={<UpdatePassword />} />

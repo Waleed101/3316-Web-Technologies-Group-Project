@@ -24,6 +24,9 @@ function Navbar() {
           <Link to="/search">Search</Link>
         </li>
         <li>
+          <Link to="/playlists">Playlists</Link>
+        </li>
+        <li>
           <Link to="/policies">Policies</Link>
         </li>
       </ul>
