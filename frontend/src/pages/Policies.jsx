@@ -29,7 +29,10 @@ import {
     Switch,
     Text,
     Heading,
-    InputGroup
+    InputGroup,
+    ListItem,
+    OrderedList,
+    UnorderedList
   } from '@chakra-ui/react'
 
 let url = require("../setup/api.setup.js")
@@ -42,22 +45,33 @@ function Policies() {
      <Heading>
       Security Policy
      </Heading>
-     <Text>
-     1.	Overview
+     <OrderedList>
+      <ListItem>
+        <Heading as="h2" size='m'>
+     Overview
+     </Heading>
 Web application vulnerabilities account for the largest portion of attack vectors outside of malware.   It is crucial that any web application be assessed for vulnerabilities and any vulnerabilities be remediated prior to production deployment.
-
-2.	Purpose
+</ListItem>
+<ListItem>
+<Heading as="h2" size='m'>
+Purpose
+</Heading>
 The purpose of this policy is to define web application security assessments within the website. Web application assessments are performed to identify potential or realized weaknesses as a result of inadvertent mis-configuration, weak authentication, insufficient error handling, sensitive information leakage, etc.  Discovery and subsequent mitigation of these issues will limit the attack surface of the website services available both internally and externally as well as satisfy compliance with any relevant policies in place.
-
-3.	Scope
+</ListItem>
+<ListItem>
+<Heading as="h2" size='m'>
+Scope
+</Heading>
 This policy covers all web application security assessments requested by any individual, group or department for the purposes of maintaining the security posture, compliance, risk management, and change control of technologies in use at the website.
 
 All web application security assessments will be performed by delegated security personnel either employed or contracted by the website.   All findings are considered confidential and are to be distributed to persons on a “need to know” basis.  Distribution of any findings outside of the website is strictly prohibited unless approved by the Chief Information Officer.
 
 Any relationships within multi-tiered applications found during the scoping phase will be included in the assessment unless explicitly limited.  Limitations and subsequent justification will be documented prior to the start of the assessment.
-
-4.	Policy
-
+</ListItem>
+<ListItem>
+<Heading as="h2" size='m'>
+Policy
+</Heading>
 4.1 Web applications are subject to security assessments based on the following criteria:
 
 4.1.1 New or Major Application Release will be subject to a full assessment prior to approval of the change control documentation and/or release into the live environment.
@@ -82,8 +96,11 @@ Any relationships within multi-tiered applications found during the scoping phas
 
 Other tools and/or techniques may be used depending upon what is found in the default assessment and the need to determine validity and risk are subject to the discretion of the Security Engineering team.
 
-5.	Policy Compliance
-
+</ListItem>
+<ListItem>
+<Heading as="h2" size='m'>
+Policy Compliance
+</Heading>
 5.1	Compliance Measurement
 The Infosec team will verify compliance to this policy through various methods, including but not limited to, business tool reports, internal and external audits, and feedback to the policy owner. 
 5.2	Exceptions
@@ -91,22 +108,37 @@ Any exception to the policy must be approved by the Infosec team in advance.
 5.3	Non-Compliance
 An employee found to have violated this policy may be subject to disciplinary action, up to and including termination of employment. 
 Web application assessments are a requirement of the change control process and are required to adhere to this policy unless found to be exempt.   All application releases must pass through the change control process.  Any web applications that do not adhere to this policy may be taken offline until such time that a formal assessment can be performed at the discretion of the Chief Information Officer.
-     </Text>
-
-     <Heading>
+</ListItem>
+</OrderedList>
+<Heading>
       Acceptable Use Policy
      </Heading>
-     <Text>
-     1.	Overview
+<OrderedList>
+<ListItem>
+       <Heading as="h2" size='m'>
+     	Overview
+     </Heading>
 Infosec Team’s intentions for publishing an Acceptable Use Policy are not to impose restrictions that are contrary to the website’s established culture of openness, trust and integrity. the website is committed to protecting the website's employees, partners and the company from illegal or damaging actions by individuals, either knowingly or unknowingly.
 Internet/Intranet/Extranet-related systems, including but not limited to computer equipment, mobile devices, software, operating systems, storage media, network accounts providing electronic mail, WWW browsing, and FTP, are the property of the website. These systems are to be used for business purposes in serving the interests of the company, and of our clients and customers during normal operations. Please review Human Resources policies for further details.
 Effective security is a team effort involving the participation and support of every the website employee and affiliate who deals with information and/or information systems. It is the responsibility of every computer user to know these guidelines, and to conduct their activities accordingly.
-2.	Purpose
+</ListItem>
+<ListItem>
+<Heading as="h2" size='m'>
+Purpose
+</Heading>
 The purpose of this policy is to outline the acceptable use of computer equipment and other electronic devices at the website. These rules are in place to protect the employee and the website. Inappropriate use exposes the website to cyber risks including virus attacks including ransomware, compromise of network systems and services, data breach, and legal issues. 
-3.	Scope
+</ListItem>
+<ListItem>
+<Heading as="h2" size='m'>
+Scope
+</Heading>
 This policy applies to the use of information, electronic and computing devices, and network resources to conduct the website business or interact with internal networks and business systems, whether owned or leased by the website, the employee, or a third party. All employees, contractors, consultants, temporary, and other workers at the website and its subsidiaries are responsible for exercising good judgment regarding appropriate use of information, electronic devices, and network resources in accordance with the website policies and standards, and local laws and regulation. Exceptions to this policy are documented in section 5.2
 This policy applies to employees, contractors, consultants, temporaries, and other workers at the website, including all personnel affiliated with third parties. This policy applies to all equipment that is owned or leased by the website. 
-4.	Policy
+</ListItem>
+<ListItem>
+<Heading as="h2" size='m'>
+Policy
+</Heading>
 
 4.1	General Use and Ownership 
 
@@ -172,7 +204,11 @@ When using company resources to access and use the Internet, users must realize 
 3.	Employees shall not engage in any blogging that may harm or tarnish the image, reputation and/or goodwill of the website and/or any of its employees. Employees are also prohibited from making any discriminatory, disparaging, defamatory or harassing comments when blogging or otherwise engaging in any conduct prohibited by the website’s Non-Discrimination and Anti-Harassment policy.
 4.	Employees may also not attribute personal statements, opinions or beliefs to the website when engaged in blogging. If an employee is expressing his or her beliefs and/or opinions in blogs, the employee may not, expressly, or implicitly, represent themselves as an employee or representative of the website. Employees assume any and all risk associated with blogging.
 5.	Apart from following all laws pertaining to the handling and disclosure of copyrighted or export-controlled materials, the website’s trademarks, logos and any other the website intellectual property may also not be used in connection with any blogging or social media activity
-5.	Policy Compliance
+</ListItem>
+<ListItem>
+<Heading as="h2" size='m'>
+Policy Compliance
+</Heading>
 
 5.1	Compliance Measurement
 The Infosec Team will verify compliance to this policy through various methods, including but not limited to, business tool reports, internal and external audits, and feedback to the policy owner. 
@@ -180,15 +216,21 @@ The Infosec Team will verify compliance to this policy through various methods, 
 Any exception to the policy must be approved by the Infosec team in advance. 
 5.3	Non-Compliance
 An employee found to have violated this policy may be subject to disciplinary action, up to and including termination of employment. 
-
-6.	Related Standards, Policies and Processes
+</ListItem>
+<ListItem>
+<Heading as="h2" size='m'>
+Related Standards, Policies and Processes
+</Heading>
 •	Data Classification Policy
 •	Data Protection Standard
 •	Social Media Policy
 •	Minimum Access Policy
 •	Password Policy
-
-7.	Definitions and Terms
+</ListItem>
+<ListItem>
+<Heading as="h2" size='m'>
+Definitions and Terms
+</Heading>
 The following definition and terms can be found in the SANS Glossary located at:
 https://www.sans.org/security-resources/glossary-of-terms/
 
@@ -198,8 +240,39 @@ https://www.sans.org/security-resources/glossary-of-terms/
 •	Proprietary Information 
 •	Spam
 •	Ransomware
+</ListItem>
+     </OrderedList>
 
-     </Text>
+     <Heading>
+      DMCA Notice & Takedown Policy
+     </Heading>
+     <UnorderedList>
+      <ListItem>
+     If you believe that your copyrighted work has been copied in a way that constitutes copyright infringement and is accessible via the Service, please notify the website's copyright agent, as set forth in the Digital Millennium Copyright Act of 1998 ("DMCA"). For your complaint to be valid under the DMCA, you must provide the following information in writing:
+</ListItem>
+<ListItem>
+An electronic or physical signature of a person authorized to act on behalf of the copyright owner;
+Identification of the copyrighted work that you claim has been infringed;
+Identification of the material that is claimed to be infringing and where it is located on the Service;
+Information reasonably sufficient to permit the website to contact you, such as your address, telephone number, and, e-mail address;
+A statement that you have a good faith belief that use of the material in the manner complained of is not authorized by the copyright owner, its agent, or law; and
+A statement, made under penalty of perjury, that the above information is accurate, and that you are the copyright owner or are authorized to act on behalf of the owner.
+The above information must be submitted to the following DMCA Agent:
+</ListItem>
+<ListItem>
+Attn: DMCA Notice
+TheWebsite: TheWebsite, Inc.
+Address: 415 Mission Street, Suite 300, San Francisco, CA 94105
+Fax: 415.520.5622
+Email: dmca@thewebsite.com
+</ListItem>
+<ListItem>
+UNDER FEDERAL LAW, IF YOU KNOWINGLY MISREPRESENT THAT ONLINE MATERIAL IS INFRINGING, YOU MAY BE SUBJECT TO CRIMINAL PROSECUTION FOR PERJURY AND CIVIL PENALTIES, INCLUDING MONETARY DAMAGES, COURT COSTS, AND ATTORNEYS’ FEES.
+</ListItem>
+<ListItem>
+Please note that this procedure is exclusively for notifying the website that your copyrighted material has been infringed. The preceding requirements are intended to comply with the website's rights and obligations under the DMCA, including 17 U.S.C. §512(c), but do not constitute legal advice. It may be advisable to contact an attorney regarding your rights and obligations under the DMCA and other applicable laws.
+</ListItem>
+     </UnorderedList>
      </> 
     )
     

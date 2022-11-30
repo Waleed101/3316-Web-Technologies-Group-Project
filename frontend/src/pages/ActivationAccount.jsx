@@ -39,8 +39,8 @@ function ActivationAccount() {
     const submit = (event) => {
         event.preventDefault();
             
-        console.log(url + `api/secure/activation/${email}`)
-        fetch(url + `api/secure/activation/${email}`, {
+        console.log(url + `api/admin/activation/${email}`)
+        fetch(url + `api/admin/activation/${email}`, {
             method: "POST",
             headers: {
                 'Accept': 'application/json',

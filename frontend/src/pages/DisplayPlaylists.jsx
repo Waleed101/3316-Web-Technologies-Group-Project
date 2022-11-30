@@ -40,34 +40,36 @@ function DisplayPlaylists() {
     const navigate = useNavigate()
     const auth = getAuth();
     const [user, setUser] = useState(null)
+    const [playlists, setPlaylists] = useState([])
 
-    useEffect(() => {
+
+        useEffect(() => {
+            if (user) {
+            fetch(`${url}api/list?user=${user.email}`)
+            .then(res => res.json())
+                .then(res => {
+                    let temp = []
+
+
+                    res.forEach(row => {
+                        temp.push(<Playlist vals={row}></Playlist>)
+                    })
+
+                    setPlaylists(temp)
+                })
+            }
+        }, [user])
+    
+
 onAuthStateChanged(auth, (user) => {
         if (user) {
             setUser(user)
-        fetch(`${url}api/list?user=${user.email}`)
-                .then(res => res.json())
-                    .then(res => {
-                        let temp = []
-
-                        console.log(res)
-
-                        res.forEach(row => {
-                            temp.push(<Playlist vals={row}></Playlist>)
-                        })
-
-                        setPlaylists(temp)
-                    })
-            
             } else {
-            console.log("Redirecting...")
             navigate('/login', { state: {redirectTo: '/playlists'} })
         }
     })
-    }, [])
     
 
-    const [playlists, setPlaylists] = useState([])
 
     const redirect = false
 
