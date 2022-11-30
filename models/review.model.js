@@ -46,14 +46,10 @@ Review.findById = (id, result) => {
 }
 
 Review.getAll = (req, result) => {
-    let query = `SELECT * FROM review`
+    let query = `SELECT * FROM review WHERE type=${req.listId ? 1 : 0}, referenceId=${req.listId ? req.listId : req.trackId}`
 
     if (req.user) {
-        query += ` WHERE userEmail = "${req.user}"`
-    } else if (req.list) {
-        query += ` WHERE listId = ${req.list}`
-    } else if (req.user && req.list) {
-        query += ` WHERE listId = ${req.list} AND userEmail="${req.user}"`
+        query = `SELECT * FROM review WHERE userEmail=${req.user}`
     }
 
     sql.query(query, (err, res) => {

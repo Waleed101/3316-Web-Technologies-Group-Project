@@ -6,6 +6,7 @@ import "../firebase.js"
 
 import TrackList from '../components/TrackList'
 import ReactStars from 'react-rating-stars-component'
+import CustomAlert from "../components/CustomAlert";
 
 import {
     Tag,
@@ -35,6 +36,7 @@ import {
     useDisclosure,
     FormLabel,
     Textarea,
+    useToast,
 } from '@chakra-ui/react'
 
 import {
@@ -61,8 +63,10 @@ function Playlist (props) {
     const [isModalOpen, setModalOpen] = useState(false)
     const [rating, setRating] = useState(0)
 
+    const toast = useToast()
+
     const ratingChanged = (newRating) => {
-        console.log(newRating);
+        setRating(newRating)
     }
 
     const navigate = useNavigate()
@@ -105,7 +109,7 @@ function Playlist (props) {
     }
     
     const addReview = () => {
-        // closing()
+        closing()
 
         let body = JSON.stringify({
             "listId": props.vals.id,
@@ -124,9 +128,25 @@ function Playlist (props) {
             },
             body: body
         }).then(res => console.log(res))
-            // .then(res => {
-            //     console.log(res)
-            // })
+            .then(res => {
+                if(res && res.message) {
+                    toast({
+                        title: 'Error Publishing Review',
+                        description: res.message,
+                        status: 'error',
+                        duration: 5000,
+                        isClosable: true,
+                    })
+                } else {
+                    toast({
+                        title: 'Review Published.',
+                        description: `We've published your review on ${props.vals.name}.`,
+                        status: 'success',
+                        duration: 5000,
+                        isClosable: true,
+                    })
+                }
+            })
     }
 
     const editPlaylist = () => {
