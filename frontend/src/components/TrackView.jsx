@@ -30,7 +30,7 @@ import {
 } from '@chakra-ui/icons'
 
 function TrackView (props) {
-    
+
     const auth = getAuth();
     const [user, setUser] = useState(null) 
     onAuthStateChanged(auth, (user) => {
@@ -92,7 +92,7 @@ function TrackView (props) {
                             </GridItem>
                              <Center>
                                 <GridItem colSpan={1}>
-                                    <Button 
+                                    {props.addBtn ? <Button 
                                         id={id} 
                                         onClick={select} 
                                         size='sm' 
@@ -100,7 +100,7 @@ function TrackView (props) {
                                         isDisabled={user ? false : true}
                                     > 
                                         {btnMsg}
-                                    </Button>
+                                    </Button> : <></> }
                                     <IconButton
                                         variant='ghost'
                                         colorScheme='gray'

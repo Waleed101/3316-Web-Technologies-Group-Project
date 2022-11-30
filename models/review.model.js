@@ -14,7 +14,7 @@ const Review = function(review) {
 
 Review.create = (newReview, result) => {
     
-    sql.query(`INSERT INTO review SET referenceID=${newReview.listId ? newReview.listId : newReview.trackId}, type=${newReview.listId ? 1 : 0}, userEmail="${newReview.user}", ` + 
+    sql.query(`INSERT INTO review SET referenceID=${newReview.referenceId}, type=${newReview.type}, userEmail="${newReview.user}", ` + 
               `description="${newReview.description}", rating=${newReview.rating}`, (err, res) => {
         if(err) {
             console.log("Error: ", err)
@@ -46,7 +46,7 @@ Review.findById = (id, result) => {
 }
 
 Review.getAll = (req, result) => {
-    let query = `SELECT * FROM review WHERE type=${req.listId ? 1 : 0}, referenceId=${req.listId ? req.listId : req.trackId}`
+    let query = `SELECT * FROM review WHERE type=${req.type} AND referenceId=${req.referenceId}`
 
     if (req.user) {
         query = `SELECT * FROM review WHERE userEmail=${req.user}`

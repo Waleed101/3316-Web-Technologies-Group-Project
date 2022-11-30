@@ -5,6 +5,7 @@ import { getAuth, onAuthStateChanged, signOut} from "firebase/auth";
 import "../firebase.js"
 
 import TrackList from '../components/TrackList'
+import ReviewList from '../components/ReviewList'
 import ReactStars from 'react-rating-stars-component'
 import CustomAlert from "../components/CustomAlert";
 
@@ -270,10 +271,19 @@ function Playlist (props) {
                         <Divider />
                         {
                             isOpen ?
-                                <CardBody>
-                                    {/* <Text>Your list has {props.vals.numberOfTracks} track{props.vals.numberOfTracks > 1 ? 's' : ''}</Text> */}
-                                    <TrackList tracks={props.vals.tracks.split(",")}></TrackList>
-                                </CardBody> 
+                                <>
+                                    <CardBody>
+                                        <Heading size="h4">Reviews</Heading>
+                                        <Divider />
+                                        <ReviewList reference={props.vals.id} type={1} summary={true}></ReviewList>
+                                        <br />
+                                        <Heading size="h4">Tracks</Heading>
+                                        <Divider />
+                                        <TrackList tracks={props.vals.tracks.split(",")}></TrackList>
+                                        <br />
+                                    </CardBody> 
+                                </>
+                                
                             : 
                                 <></>
                         }

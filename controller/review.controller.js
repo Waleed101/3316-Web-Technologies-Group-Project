@@ -16,7 +16,8 @@ exports.create = (req, res) => {
   console.log(req.body)
 
   const review = new Review({
-    listId: req.body.listId,
+    referenceId: req.body.listId ? req.body.listId : req.body.trackId,
+    type: req.body.listId ? 1 : 0,
     user: req.body.userEmail,
     description: req.body.description,
     rating: req.body.rating
@@ -35,8 +36,9 @@ exports.create = (req, res) => {
 // Retrieve all Review from the database (with condition).
 exports.findAll = (req, res) => {
     const query = {
-        user: req.query.user,
-        list: req.query.list
+        type: req.query.type,
+        referenceId: req.query.ref,
+        user: req.query.user
     }
 
     Review.getAll(query, (err, data) => {
