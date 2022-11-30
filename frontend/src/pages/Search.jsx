@@ -140,7 +140,7 @@ function Search() {
 
     const submitList = () => {
         let body = JSON.stringify({
-            "user": user.email,
+            "createdBy": user.email,
             "name": listTitle,
             "description": listDescription,
             "isPublic": document.getElementById("isPublic").checked,

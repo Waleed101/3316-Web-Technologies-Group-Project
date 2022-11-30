@@ -57,7 +57,7 @@ function Playlist (props) {
     }
 
     const convertToTime = (time) => {
-        return Math.floor(time / 60) + ":" + (time % 60)
+        return Math.floor(time / 60) + ":" + (time % 60).toString().padStart(2, '0')
     }
 
     const changePrivacy = () => {

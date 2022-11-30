@@ -206,30 +206,51 @@ List.update = (id, body, result) => {
     })
 
     listExisitsAndUserOwns.then(() => {
-        query = `UPDATE list SET name='${body.name}', description='${body.description}', tracks='${body.tracks}', 
-                    totalPlaytime=${body.totalPlayTime}, isPublic=${body.isPublic ? 1 : 0}
-                    WHERE id=${id}`
+
+        let lists = "(" + body.tracks + ")" 
+
+        let query = `SELECT id, duration FROM track WHERE id in ${lists}`
 
         console.log(query)
-
-        sql.query(
-            query,
-            (err, res) => {
-                if (err) {
-                    console.log("Error: ", err)
-                    result(null, err)
-                    return
-                }
         
-                if (res.affectedRows == 0) {
-                    result({kind: "not_found"}, null)
-                    return
-                }
-        
-                result(null, { name: body.name, ...body })
+        sql.query(query, (err, res) => {
+            if(err) {
+                console.log("Error: ", err)
+                result(null, err)
+                return
             }
-        )      
-        
+
+            let totalDuration = 0
+
+            res.forEach(val => {
+                const time = val.duration.split(":")
+                totalDuration += (parseInt(time[0]) * 60 + parseInt(time[1]))
+            })
+
+            query = `UPDATE list SET name='${body.name}', description='${body.description}', tracks='${body.tracks}', 
+                        totalPlaytime=${totalDuration}, isPublic=${body.isPublic ? 1 : 0}
+                        WHERE id=${id}`
+
+            console.log(query)
+
+            sql.query(
+                query,
+                (err, res) => {
+                    if (err) {
+                        console.log("Error: ", err)
+                        result(null, err)
+                        return
+                    }
+            
+                    if (res.affectedRows == 0) {
+                        result({kind: "not_found"}, null)
+                        return
+                    }
+            
+                    result(null, { name: body.name, ...body })
+                }
+            )     
+        })        
     })
 
 }
