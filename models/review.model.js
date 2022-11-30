@@ -1,5 +1,10 @@
 const sql = require('../dbseed.js')
 
+/* Type:
+    0 -> Review on a Track
+    1 -> Review on a List
+*/
+
 const Review = function(review) {
     this.listId = review.listId
     this.user = review.user
@@ -9,7 +14,7 @@ const Review = function(review) {
 
 Review.create = (newReview, result) => {
     
-    sql.query(`INSERT INTO review SET listId=${newReview.listId}, userEmail="${newReview.userEmail}", ` + 
+    sql.query(`INSERT INTO review SET referenceID=${newReview.listId ? newReview.listId : newReview.trackId}, type=${newReview.listId ? 1 : 0}, userEmail="${newReview.userEmail}", ` + 
               `description="${newReview.description}", rating=${newReview.rating}`, (err, res) => {
         if(err) {
             console.log("Error: ", err)

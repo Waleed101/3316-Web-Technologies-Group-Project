@@ -5,6 +5,7 @@ import { getAuth, onAuthStateChanged, signOut} from "firebase/auth";
 import "../firebase.js"
 
 import TrackList from '../components/TrackList'
+import ReactStars from 'react-rating-stars-component'
 
 import {
     Tag,
@@ -24,15 +25,25 @@ import {
     Avatar,
     IconButton,
     Tooltip,
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalCloseButton,
+    ModalBody,
+    ModalFooter,
+    useDisclosure,
+    FormLabel,
+    Textarea,
 } from '@chakra-ui/react'
 
 import {
-    AddIcon,
     EditIcon,
     TriangleDownIcon,
     TriangleUpIcon,
     ViewIcon,
     ViewOffIcon,
+    ChatIcon,
 } from '@chakra-ui/icons'
 
 let url = require("../setup/api.setup.js")
@@ -45,6 +56,14 @@ function Playlist (props) {
     })
     const [isOpen, setIsOpen] = useState(false)
     const [isPublic, setIsPublic] = useState(props.vals.isPublic)
+    const [reviewDescription, setReviewDescription] = useState("")
+
+    const [isModalOpen, setModalOpen] = useState(false)
+    const [rating, setRating] = useState(0)
+
+    const ratingChanged = (newRating) => {
+        console.log(newRating);
+    }
 
     const navigate = useNavigate()
 
@@ -90,72 +109,134 @@ function Playlist (props) {
         navigate('/search/', { state: props.vals })
     }
 
+    const addComment = () => setModalOpen(true)
+
+    const closing = () => setModalOpen(false)
+
     return(
-        <Box w="50%">
-            <Center>
-                <Card w="90%">
-                    <CardHeader>
-                        <Grid
-                            h='25px'
-                            templateColumns='repeat(5, 1fr)'
-                            gap={4}
-                        >
-                            <GridItem colSpan={5}>
-                                <Flex spacing='4'>
-                                    <Flex flex='1' gap='4' alignItems='center' flexWrap='wrap'>
-                                        <Box>
-                                            <Heading size='sm'>{props.vals.name} - {convertToTime(props.vals.totalPlayTime)}</Heading>
-                                            <Text fontSize="xs" as="i">
-                                                Last Updated on {props.vals.updated == "0000-00-00 00:00:00" ? getDate(props.vals.created) : getDate(props.vals.updated)}
-                                            </Text>
-                                        </Box>
-                                    </Flex>
-                                    <Flex flex='-1' gap='2' alignItems='center' flexWrap='wrap'>
-                                        <Tooltip label="Expand Content">
-                                            <IconButton
-                                                variant='ghost'
-                                                colorScheme='gray'
-                                                aria-label='See menu'
-                                                icon={isOpen ? <TriangleUpIcon /> : <TriangleDownIcon />}
-                                                onClick={changeContentState}
-                                            />
-                                        </Tooltip>
-                                        <Tooltip label={"Make " + (props.vals.isPublic ? 'Private' : 'Public')}>
-                                            <IconButton
-                                                variant='ghost'
-                                                colorScheme='gray'
-                                                aria-label='See menu'
-                                                icon={props.vals.isPublic ? <ViewIcon /> : <ViewOffIcon />}
-                                                onClick={changePrivacy}
-                                            />
-                                        </Tooltip>
-                                        <Tooltip label="Edit Playlist">
-                                            <IconButton
-                                                variant='ghost'
-                                                colorScheme='gray'
-                                                aria-label='See menu'
-                                                icon={<EditIcon />}
-                                                onClick={editPlaylist}
-                                            />
-                                        </Tooltip>
-                                    </Flex>
-                                </Flex>                                
-                            </GridItem>
-                        </Grid>
-                    </CardHeader>
-                    <Divider />
-                    {
-                        isOpen ?
-                            <CardBody>
-                                {/* <Text>Your list has {props.vals.numberOfTracks} track{props.vals.numberOfTracks > 1 ? 's' : ''}</Text> */}
-                                <TrackList tracks={props.vals.tracks.split(",")}></TrackList>
-                            </CardBody> 
-                        : 
-                            <></>
-                    }
-                </Card>
-            </Center>
-        </Box>
+        <>
+            <Modal 
+                isOpen={isModalOpen} 
+                onClose={closing}
+                motionPreset='slideInBottom'
+                w="500px"
+            >
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>Commenting on playlist <b>{props.vals.name}</b></ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                        <form>
+                            <FormLabel>Rating</FormLabel>
+                            <ReactStars
+                                count={5}
+                                onChange={ratingChanged}
+                                size={40}
+                                activeColor="#ffd700"
+                            />
+                            <br /><br />
+                            <FormLabel> Description: </FormLabel>
+                                <Textarea
+                                    placeholder = "Enter in your review..."
+                                    value = {reviewDescription}
+                                    onChange = {(e) => setReviewDescription(e.target.value)}
+                                />
+                            <br /><br />
+                        </form>
+                    </ModalBody>
+
+                    <ModalFooter>
+                        <Button colorScheme='green' mr={3}>
+                            Comment
+                        </Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
+            <Box w="50%">
+                <Center>
+                    <Card w="90%">
+                        <CardHeader>
+                            <Grid
+                                h='25px'
+                                templateColumns='repeat(5, 1fr)'
+                                gap={4}
+                            >
+                                <GridItem colSpan={5}>
+                                    <Flex spacing='4'>
+                                        <Flex flex='1' gap='4' alignItems='center' flexWrap='wrap'>
+                                            <Box>
+                                                <Heading size='sm'>{props.vals.name} - {convertToTime(props.vals.totalPlayTime)}</Heading>
+                                                <Text fontSize="xs" as="i">
+                                                    Last Updated on {props.vals.updated == "0000-00-00 00:00:00" ? getDate(props.vals.created) : getDate(props.vals.updated)}
+                                                </Text>
+                                            </Box>
+                                        </Flex>
+                                        <Flex flex='-1' gap='2' alignItems='center' flexWrap='wrap'>
+                                            <Tooltip label="Expand Content">
+                                                <IconButton
+                                                    variant='ghost'
+                                                    colorScheme='gray'
+                                                    aria-label='See menu'
+                                                    icon={isOpen ? <TriangleUpIcon /> : <TriangleDownIcon />}
+                                                    onClick={changeContentState}
+                                                />
+                                            </Tooltip>
+                                            
+                                            {
+                                                user &&
+                                                user.email == props.vals.createdBy ?
+                                                <>
+                                                    <Tooltip label={"Make " + (props.vals.isPublic ? 'Private' : 'Public')}>
+                                                        <IconButton
+                                                            variant='ghost'
+                                                            colorScheme='gray'
+                                                            aria-label='See menu'
+                                                            icon={props.vals.isPublic ? <ViewIcon /> : <ViewOffIcon />}
+                                                            onClick={changePrivacy}
+                                                        />
+                                                    </Tooltip>
+                                                    <Tooltip label="Edit Playlist">
+                                                        <IconButton
+                                                            variant='ghost'
+                                                            colorScheme='gray'
+                                                            aria-label='See menu'
+                                                            icon={<EditIcon />}
+                                                            onClick={editPlaylist}
+                                                        />
+                                                    </Tooltip>
+                                                </>                                                
+                                                :
+                                                <></>
+                                            }   
+                                            <Tooltip label="Add Comment">
+                                                <IconButton
+                                                    variant='ghost'
+                                                    colorScheme='gray'
+                                                    aria-label='See menu'
+                                                    icon={<ChatIcon />}
+                                                    onClick={addComment}
+                                                />
+                                            </Tooltip>                                     
+                                        </Flex>
+                                    </Flex>                                
+                                </GridItem>
+                            </Grid>
+                        </CardHeader>
+                        <Divider />
+                        {
+                            isOpen ?
+                                <CardBody>
+                                    {/* <Text>Your list has {props.vals.numberOfTracks} track{props.vals.numberOfTracks > 1 ? 's' : ''}</Text> */}
+                                    <TrackList tracks={props.vals.tracks.split(",")}></TrackList>
+                                </CardBody> 
+                            : 
+                                <></>
+                        }
+                    </Card>
+                </Center>
+            </Box> 
+        </>
+        
     )
 }
 
