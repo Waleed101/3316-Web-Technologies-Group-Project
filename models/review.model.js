@@ -111,10 +111,9 @@ Review.updateById = (id, review, result) => {
     )
 }
 
-Review.getAllAdmin = (req, result) => {
-    let query = `SELECT * FROM review`
+Review.getAllAdmin = (result) => {
 
-    sql.query(query, (err, res) => {
+    sql.query(`SELECT * FROM review`, (err, res) => {
         if(err) {
             console.log("Error: ", err);
             result(null, err);
@@ -124,6 +123,27 @@ Review.getAllAdmin = (req, result) => {
         console.log("Reviews: ", res);
         result(null, res);
     })
+}
+
+Review.hide = (id, hide, result) => {
+    sql.query(
+      "UPDATE review SET isHidden = ? WHERE id = ?",
+      [hide, id],
+      (err, res) => {
+        if (err) {
+          console.log("Error: ", err)
+          result(null, err)
+          return
+        }
+  
+        if (res.affectedRows == 0) {
+          result({ans: "Not Found"}, null)
+          return
+        }
+  
+        result(null, { id: id})
+      }
+    )
 }
 
 module.exports = Review

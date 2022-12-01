@@ -1,5 +1,7 @@
 const sanitize = require('../helper/sanitize.helper.js')
 
+const jwt = require("jsonwebtoken")
+
 const Auth = require("../models/auth.model.js");
 
 let addTime = 24*60*60*1000;
@@ -32,6 +34,7 @@ exports.register = (req, res) => {
           err.message || "Some error occurred while registering a User."
       });
     else {
+      
       let timeToExpire = new Date(new Date().getTime() + addTime);
       res.send({ loggedIn: true, email: data.email, name: data.name, time: timeToExpire})
     }
@@ -67,8 +70,15 @@ exports.login = (req, res) => {
           err.message || "Some error occurred while logging in the User."
       });
     else {
+      const token = jwt.sign(
+        { userEmail: data.email },
+        "secretkey",
+        {
+          expiresIn: "2h",
+        }
+      );
       let timeToExpire = new Date(new Date().getTime() + addTime);
-      res.send({ loggedIn: true, email: data.email, name: data.name, time: timeToExpire, status: data.status, role: parseInt(data.role)})
+      res.send({ loggedIn: true, email: data.email, name: data.name, time: timeToExpire, status: data.status, role: parseInt(data.role), token:token})
     } 
   });  
 }

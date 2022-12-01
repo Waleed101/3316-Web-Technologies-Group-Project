@@ -118,8 +118,8 @@ exports.delete = (req, res) => {
 };
   
 // Retrieve all Review from the database as admin
-exports.findAll = (req, res) => {
-  Review.getAll(query, (err, data) => {
+exports.findAllAdmin = (req, res) => {
+  Review.getAllAdmin((err, data) => {
     if (err)
       res.status(500).send({
         message:
@@ -131,3 +131,22 @@ exports.findAll = (req, res) => {
     }
   });
 };
+
+// Delete a Review with the specified id in the request
+exports.hide = (req, res) => {  
+  console.log(req.body)
+  Review.hide(req.params.id, req.body.toHide, (err, data) => {
+      if (err) {
+      if (err.kind === "not_found") {
+          res.status(404).send({
+          message: `Not found Review with id ${req.params.id}.`
+          });
+      } else {
+          res.status(500).send({
+          message: "Could not hide Review with id " + req.params.id
+          });
+      }
+      } else res.send({ message: `Review was hidden successfully!` });
+  });
+};
+

@@ -22,10 +22,17 @@ function ReviewList(props) {
         let reference = props.reference ? props.reference : ""
         let type = props.type ? props.type : ""
         let user = props.user ? props.user : ""
+        let access = props.access ? props.access : ""
 
         let temp = []
 
-        fetch(`${url}api/review/?ref=${reference}&type=${type}&user=${user}`)
+        let query = `${url}api/review/?ref=${reference}&type=${type}&user=${user}`
+
+        if (access == "admin") {
+            query = `${url}api/admin/review`
+        }
+
+        fetch(query)
             .then(res => res.json())
                 .then(res => {
                     if(!res) {
@@ -36,7 +43,7 @@ function ReviewList(props) {
                                 setReviews(temp)
                                 break
                             }
-                            temp.push(<ReviewView vals={res[i]} />)
+                            temp.push(<ReviewView vals={res[i]} access={access}/>)
                         }
                     }
                     

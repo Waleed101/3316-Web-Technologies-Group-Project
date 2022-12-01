@@ -76,7 +76,6 @@ Auth.updatePassword = (auth, result) => {
         if (err) {
             console.log(err)
         }
-    console.log(hash)
     sql.query(
         `UPDATE account SET password = '${hash}' WHERE email = '${auth.email}';`,
         (err, res) => {

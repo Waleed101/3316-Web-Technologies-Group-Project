@@ -14,7 +14,10 @@ let url = require("../setup/api.setup.js")
 
 function AdminReviewAccess() {
     return (
-        <ReviewList/>
+        <>
+        <h1>test</h1>
+        <ReviewList access="admin"/>
+        </>
     )
 }
 

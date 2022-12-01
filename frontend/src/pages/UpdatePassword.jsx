@@ -41,10 +41,12 @@ function UpdatePassword() {
             // Update successful.   
           }).catch((error) => {
             console.log(error)
+            return
           });
 
         let body = JSON.stringify({
-                    "newPassword": newPassword
+                    "newPassword": newPassword,
+                    "token" : cookies["user"].token
                 })
         
         console.log(url + `api/secure/updatepass/${cookies["user"].email}`)
