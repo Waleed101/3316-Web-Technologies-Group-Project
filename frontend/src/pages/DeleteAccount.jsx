@@ -3,6 +3,9 @@ import { useCookies } from 'react-cookie';
 import { BrowserRouter, Route, Link } from "react-router-dom";
 import { getAuth, deleteUser, onAuthStateChanged } from "firebase/auth";
 
+import {
+    useToast,
+} from '@chakra-ui/react'
 
 
 let url = require("../setup/api.setup.js")
@@ -11,6 +14,8 @@ let url = require("../setup/api.setup.js")
 function DeleteAccount() {
     const auth = getAuth();
     const [user, setUser] = useState(null)
+
+    const toast = useToast()
 
     
     onAuthStateChanged(auth, (user) => {
@@ -33,9 +38,21 @@ function DeleteAccount() {
         .then(res => res.json())
             .then(res => {
                     if(!res.message) {
-                        alert(`Error: ${res.message}`)
+                        toast({
+                            title: `Error Deleting Account`,
+                            description: res.message,
+                            status: 'error',
+                            duration: 10000,
+                            isClosable: true,
+                        })
                     } else {
-                        alert(res.message)
+                        toast({
+                            title: `Deleted Account.`,
+                            description: "Account was deleted successfully.",
+                            status: 'success',
+                            duration: 5000,
+                            isClosable: true,
+                        })
                     }
                 })
 

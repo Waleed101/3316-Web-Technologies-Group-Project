@@ -5,6 +5,8 @@ import "../firebase.js"
 import  { useNavigate } from 'react-router-dom'
 import { Button } from '@chakra-ui/react'
 
+import { useToast } from "@chakra-ui/react"
+
 function Home() {
     const [cookies, setCookie, removeCookie] = useCookies(["user"])
     const navigate = useNavigate()
@@ -12,12 +14,14 @@ function Home() {
     const auth = getAuth();
     const [user, setUser] = useState(null)
 
+    const toast = useToast()
+
     onAuthStateChanged(auth, (user) => {
         if (user) {
             setUser(user)
             name = <h1>Hi {user.displayName}</h1>
         } else {
-            name = <h1>Uh oh. No name for you.</h1>
+            name = <h1>Please log in.</h1>
         }
     })
 
@@ -47,7 +51,14 @@ function Home() {
             }}>Show User Cookie</Button>
 
             <Button onClick={() => {
-                signOut(auth).then(() => alert("Successfully Logged Out"))
+                signOut(auth).then(() => 
+                toast({
+                    title: `Logged Out`,
+                    description: "Successfully logged out",
+                    status: 'success',
+                    duration: 5000,
+                    isClosable: true,
+                }))
                 removeCookie("user")
                 console.log("Removed user cookie.")
             }}>Log-out</Button>

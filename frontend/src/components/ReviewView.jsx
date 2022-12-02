@@ -18,6 +18,7 @@ import {
     Center,
     Flex,
     IconButton,
+    useToast,
 } from '@chakra-ui/react'
 
 import {
@@ -39,6 +40,8 @@ function ReviewView (props) {
     onAuthStateChanged(auth, (user) => {
         if (user) setUser(user)
     })
+
+    const toast = useToast()
 
     const [isHidden, setIsHidden] = useState(props.vals.isHidden)
 
@@ -75,9 +78,21 @@ function ReviewView (props) {
             }).then(res => res.json())
             .then(res => {
                     if(!res.message) {
-                        alert(`Error: ${res.message}`)
+                        toast({
+                            title: `Error Hiding Review`,
+                            description: res.message,
+                            status: 'error',
+                            duration: 10000,
+                            isClosable: true,
+                        })
                     } else {
-                        alert(res.message)
+                        toast({
+                            title: `Successfully Changed Review`,
+                            description: "Review privacy was updated.",
+                            status: 'success',
+                            duration: 5000,
+                            isClosable: true,
+                        })
                     }
                 })
     }

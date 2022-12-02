@@ -2,6 +2,8 @@ import { React, useState } from 'react';
 import { getAuth, createUserWithEmailAndPassword, updateProfile, signInWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
 import { useCookies }  from "react-cookie";
 
+import { useToast } from "@chakra-ui/react"
+
 let url = require("../setup/api.setup.js")
 
 const auth = getAuth();
@@ -12,6 +14,8 @@ function Register() {
     const [name, setName] = useState("")
     const [password, setPassword] = useState("")
     const [cookies, setCookie, removeCookie] = useCookies(["user"])
+
+    const toast = useToast()
 
     const submit = (event) => {
         event.preventDefault();
@@ -42,14 +46,32 @@ function Register() {
     .then(res => res.json())
         .then(res => {
                 if(res.message) {
-                    alert(`Error: ${res.message}`)
+                    toast({
+                        title: `Error Creating Account`,
+                        description: res.message,
+                        status: 'error',
+                        duration: 10000,
+                        isClosable: true,
+                    })
                 } else {
-                    alert(`Successfully created account with email ${email}`)
+                    toast({
+                        title: `Created Account`,
+                        description: `Successfully created account with email ${email}. Welcome ${name}!`,
+                        status: 'success',
+                        duration: 5000,
+                        isClosable: true,
+                    })
                 }
             })
             sendEmailVerification(user);
             auth.signOut();
-            alert("Email verification sent!")
+            toast({
+                title: `Email Verification Sent`,
+                description: `Check ${email} inbox for your email verification!`,
+                status: 'info',
+                duration: 5000,
+                isClosable: true,
+            })
             
         })
         .catch((error) => {
