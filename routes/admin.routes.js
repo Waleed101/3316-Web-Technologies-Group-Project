@@ -1,4 +1,6 @@
 module.exports = app => {
+    const jwt = require("jsonwebtoken")
+
     const auth = require("../controller/auth.controller.js");
     const review = require("../controller/review.controller.js");
     const policy = require("../controller/policy.controller.js");
@@ -32,6 +34,17 @@ module.exports = app => {
 
     // Update policy
     router.put("/policy", policy.update)
+
+    // Verify JWT
+    app.use('/api/admin', (req, res, next) => {
+        try {
+            jwt.verify(req.headers.authorization, "secretkey")
+          } catch (err) {
+            return res.status(401).send("Invalid Token")
+          }
+          return next()
+      });
+
 
     app.use('/api/admin', router);
 };

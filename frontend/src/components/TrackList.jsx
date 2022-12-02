@@ -7,7 +7,7 @@ import {
     Spinner,
 } from '@chakra-ui/react'
 
-import TrackView from "../components/TrackView";
+import TrackView from "./TrackView";
 
 let url = require("../setup/api.setup.js")
 

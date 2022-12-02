@@ -35,6 +35,8 @@ let url = require("../setup/api.setup.js")
 
 function ActivationAccount() {
     const [email, setEmail] = useState("")
+    const [cookies, setCookie, removeCookie] = useCookies(["user"])
+
 
     const submit = (event) => {
         event.preventDefault();
@@ -44,7 +46,8 @@ function ActivationAccount() {
             method: "POST",
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': cookies["user"].token
             },
             body: JSON.stringify({"status": document.getElementById("isActivated").checked ? 1 : 2})
         })

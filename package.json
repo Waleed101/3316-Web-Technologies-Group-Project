@@ -21,6 +21,7 @@
     "@chakra-ui/react": "^2.4.1",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
+    "@hapi/joi": "^17.1.1",
     "bcrypt": "^5.1.0",
     "body-parser": "^1.20.1",
     "cookie-parser": "^1.4.6",
@@ -30,6 +31,8 @@
     "firebase": "^9.14.0",
     "firebase-admin": "^11.3.0",
     "framer-motion": "^7.6.7",
+    "hapi": "file:../../../../../../joi",
+    "joi": "^17.7.0",
     "jsonwebtoken": "^8.5.1",
     "lorem-ipsum": "^2.0.8",
     "mssql": "^9.0.1",
@@ -46,6 +49,7 @@
     "react-router-dom": "^6.4.3",
     "react-scripts": "^5.0.1",
     "react-stars": "^2.2.5",
+    "sanitize-html": "^2.7.3",
     "string-similarity": "^4.0.4"
   }
 }

@@ -23,7 +23,6 @@ Policy.getPolicy = (type, result) => {
 }
 
 Policy.update = (policy, result) => {
-    console.log(policy)
     sql.query(`UPDATE policy SET content = '${policy.content}' WHERE type = '${policy.type}'`, (err, res) => {
         if(err) {
             console.log("Error: ", err)

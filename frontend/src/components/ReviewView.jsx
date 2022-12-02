@@ -80,6 +80,9 @@ function ReviewView (props) {
 
     const [stars, setStars] = useState([])
 
+    const [cookies, setCookie, removeCookie] = useCookies(["user"])
+
+
     const changeContentState = () => {
         setIsOpen(!isOpen)
     }
@@ -227,7 +230,8 @@ function ReviewView (props) {
             method: "POST", 
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': cookies["user"].token
             },
             body: body
             }).then(res => res.json())

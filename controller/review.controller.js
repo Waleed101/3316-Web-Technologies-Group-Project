@@ -1,4 +1,23 @@
 const Review = require("../models/review.model.js");
+const Joi = require('@hapi/joi');
+const SanitizeHtml = require('sanitize-html');
+
+const customJoi = Joi.extend((joi) => {
+  return {
+      type: 'string',
+      base: joi.string(),
+      rules: {
+          htmlStrip: {
+              validate(value) {
+                  return SanitizeHtml(value, {
+                      allowedTags: [],
+                      allowedAttributes: {},
+                  });
+              },
+          },
+      },
+  };
+});
 
 // Create and Save a new Review
 exports.create = (req, res) => {
@@ -12,14 +31,40 @@ exports.create = (req, res) => {
     });
   }
 
+
+console.log(req.body)
+let schema = null
+  if (req.body.listId) {
+    schema = customJoi.object({
+      listId: customJoi.number().integer().required(),
+      userEmail: customJoi.string().htmlStrip().required(),
+  description: customJoi.string().max(255).htmlStrip().required(),
+    rating: customJoi.number().integer().required()
+    })
+} else {
+  schema = customJoi.object({
+    trackId: customJoi.number().integer().required(),
+    userEmail: customJoi.string().htmlStrip().required(),
+    description: customJoi.string().max(255).htmlStrip().required(),
+  rating: customJoi.number().integer().required()
+  })
+}
+  const { error } = schema.validate(req.body);
+  if (error) return res.status(400).send({message: "Status 400: " + error.details[0].message});
+
+  req.body = schema.validate(req.body).value
+
+  console.log(req.body)
+
   const review = new Review({
     referenceId: req.body.listId ? req.body.listId : req.body.trackId,
     type: req.body.listId ? 1 : 0,
     user: req.body.userEmail,
     description: req.body.description,
     rating: req.body.rating
-  });
+  });``
 
+  
   Review.create(review, (err, data) => {
     if (err)
       res.status(500).send({
