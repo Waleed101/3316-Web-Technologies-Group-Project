@@ -14,6 +14,8 @@ let url = require("../setup/api.setup.js")
 function ReviewList(props) {
 
     const [reviews, setReviews] = useState([<Spinner />])
+    const [cookies, setCookie, removeCookie] = useCookies(["user"])
+
 
     useEffect(() => {
         
@@ -37,7 +39,9 @@ function ReviewList(props) {
 
         console.log(query)
 
-        fetch(query)
+        fetch(query, {
+            'Authorization': cookies["user"].token ? cookies["user"].token : ""
+        }) 
             .then(res => res.json())
                 .then(res => {
                     console.log(res)

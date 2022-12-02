@@ -16,12 +16,15 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import GoogleLogin from "../components/GoogleLogin"
 import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
 
+
 let url = require("../setup/api.setup.js")
 const auth = getAuth();
 
 function AdminActivation() {
     const [email, setEmail] = useState("")
     const toast = useToast()
+    const [cookies, setCookie, removeCookie] = useCookies(["user"])
+
 
     const submit = (event) => {
         event.preventDefault();
@@ -31,7 +34,8 @@ function AdminActivation() {
             method: "POST",
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': cookies["user"].token
             },
         })
         .then(res => res.json())
