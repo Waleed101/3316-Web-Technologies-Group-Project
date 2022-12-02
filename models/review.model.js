@@ -49,7 +49,7 @@ Review.findById = (id, result) => {
 
 Review.getAll = (req, isAvg, result) => {
     let query = `SELECT * FROM review`
-    console.log(req)
+
     if (req.type || req.referenceId) {
         query = `SELECT * FROM review WHERE type=${req.type} AND referenceId=${req.referenceId} AND isHidden=0`
     }
@@ -60,8 +60,6 @@ Review.getAll = (req, isAvg, result) => {
     if (isAvg) {
         query = `SELECT AVG(rating) as avg FROM review WHERE type=${req.type} AND referenceId=${req.referenceId}`
     }
-
-    console.log(query)
 
     sql.query(query, (err, res) => {
         if(err) {
