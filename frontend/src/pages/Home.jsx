@@ -31,10 +31,11 @@ function Home() {
     console.log(cookies)
     if (cookies['user'] && cookies['user'].role == 2)
         adminMode = <div>
-                        <h2>Admin Privileges:</h2>
-                        <Button onClick={() => {navigate('/adminActivation')}}>Grant Admin Acess</Button>
-                        <Button onClick={() => {navigate('/activation')}}>Activate/Deactivate Account</Button>
-                        <Button onClick={() => {navigate('/adminReviewAccess')}}>Access Reviews</Button>
+                        <h1>Admin Privileges:</h1>
+                        <br />
+                        <Button onClick={() => {navigate('/adminActivation')}}>Grant Admin Acess</Button><br /><br />
+                        <Button onClick={() => {navigate('/activation')}}>Activate/Deactivate Account</Button><br /><br />
+                        <Button onClick={() => {navigate('/adminReviewAccess')}}>Access Reviews</Button><br /><br />
 
                     </div>
     
@@ -48,7 +49,7 @@ function Home() {
             
             <Button onClick={() => {
                 console.log(user)
-            }}>Show User Cookie</Button>
+            }}>Show User Cookie</Button><br /><br />
 
             <Button onClick={() => {
                 signOut(auth).then(() => 
