@@ -37,10 +37,12 @@ exports.findAll = (req, res) => {
     const info = {
       name: req.query.name,
       user: req.query.user
-    }
+        }
 
     List.getAll(info, (err, data) => {
-      
+    
+    
+
       if (err)
         res.status(500).send({
           message:
@@ -55,10 +57,21 @@ exports.findAllPublic = (req, res) => {
     
   const info = {
     user: req.query.user,
-    isPublic: 1
+    isPublic: 1,
+    // update: req.query.update,
+    // created:req.query.created
+    
   }
-  console.log(info)
+  //console.log("hola"+info)
   List.getAll(info, (err, data) => {
+    // const reverseSortedPlaylists = data.sort((a,b)=> b.update-a.update)
+    // const keys = Object.keys(data)
+    // console.log(keys)
+    // const reverseKeys = keys.reverse()
+    // reverseKeys.forEach(key=>{
+    //   console.log(key, data[key].update )
+    // })
+    // console.log(reverseKeys);
     if (err)
       res.status(500).send({
         message:

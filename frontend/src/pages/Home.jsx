@@ -6,6 +6,9 @@ import  { useNavigate } from 'react-router-dom'
 import { Button } from '@chakra-ui/react'
 
 import { useToast } from "@chakra-ui/react"
+import { Text } from '@chakra-ui/react'
+
+import pdf from './LiamBriggsResume.pdf';
 
 function Home() {
     const [cookies, setCookie, removeCookie] = useCookies(["user"])
@@ -25,7 +28,19 @@ function Home() {
         }
     })
 
-    
+    const onButtonClick = () => {
+        // fetch('./LiamBriggsResume.pdf').then(response => {
+        //     response.blob().then(blob => {
+        //         const fileURL = window.URL.createObjectURL(blob);
+        //         console.log(fileURL)
+        //         // Setting various property values
+        //         let alink = document.createElement('a');
+        //         alink.href = fileURL;
+        //         alink.download = 'LiamBriggsResume.pdf';
+        //         alink.click();
+        //     })
+        // })
+    }
 
     let adminMode = ""
     console.log(cookies)
@@ -36,17 +51,18 @@ function Home() {
                         <Button onClick={() => {navigate('/adminActivation')}}>Grant Admin Acess</Button><br /><br />
                         <Button onClick={() => {navigate('/activation')}}>Activate/Deactivate Account</Button><br /><br />
                         <Button onClick={() => {navigate('/adminReviewAccess')}}>Access Reviews</Button><br /><br />
-
+                        <a href={pdf} target="_blank" rel="noreferrer"><Button>DMCA</Button></a> <br /><br />
+                        
                     </div>
-    
-            
-
-    
+        
     return (
         <>
+        <Text fontSize='20px'>Welcome to the GROOVAY! 
+                  You will find many features within this app including searching for your favourite music, creating playlists, and viewing public playlists!
+                 <br></br> If you are not signed in click the Login button on the navigation bar to get started </Text>
+
             {name}
             {adminMode}
-            
             <Button onClick={() => {
                 console.log(user)
             }}>Show User Cookie</Button><br /><br />
