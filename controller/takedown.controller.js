@@ -29,20 +29,29 @@ exports.create = (req, res) => {
 // Retrieve all Takedown from the database (with condition).
 exports.getByReviewId = (req, res) => {
     Takedown.getByReviewId(req.params.id, (err, data) => {
-      if (err)
+      if (err) {
         res.status(500).send({
           message:
             err.message || "Some error occurred while retrieving all the Takedown requests associated with a review."
         });
-      else {
+    } else {
+        console.log(data)
         res.send(data)
       }
     });
 };
 
-// Update status of a Takedown with the specified id in the request
-exports.updateStatus = (req, res) => {  
-  Takedown.updateStatus(req.params.id, req.body.status, (err, data) => {
+// Update Takedown with the specified id in the request
+exports.update = (req, res) => {  
+
+    const takedown = new Takedown({
+        dateNoticeSent: req.body.dateNotice ? req.body.dateNotice : "",
+        dateDisputeRecieved: req.body.dateDispute ? req.body.dateDispute : "",
+        additionalInfo: req.body.additionalInfo,
+        status: req.body.status
+    });
+
+    Takedown.update(req.params.id, takedown, (err, data) => {
       if (err) {
       if (err.kind === "not_found") {
           res.status(404).send({

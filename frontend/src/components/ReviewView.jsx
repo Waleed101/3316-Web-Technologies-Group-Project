@@ -75,7 +75,7 @@ function ReviewView (props) {
     const openTakedownDialog = () => setModalOpen(true)
     const closeTakedownDialog = () => setModalOpen(false)
 
-    const [takedown, setTakedown] = useState(null)
+    const [takedown, setTakedown] = useState(false)
 
     const [stars, setStars] = useState([])
 
@@ -100,15 +100,14 @@ function ReviewView (props) {
             },
         }).then(res => res.json())
             .then(res => {
-                setTakedown(res.length == 0 ? null : res[0])
-
-                if(takedown) {
-                    setSubmittedBy(takedown.requestedBy)
-                    setAdditionalInfo(takedown.additionalInfo)
-                    setDateDispute(takedown.dateDispute)
-                    setDateNotice(takedown.dateNotice)
-                    setDateRequested(takedown.dateRequested)
-                    setStatus(takedown.status.toString())
+                if(res.length > 0) {
+                    setTakedown(true)
+                    setSubmittedBy(res[0]['requestedBy'])
+                    setAdditionalInfo(res[0]['additionalInfo'])
+                    setDateDispute(res[0]['dateDisputeRecieved'])
+                    setDateNotice(res[0]['dateNoticeSent'])
+                    setDateRequested(res[0]['dateRequestRecieved'])
+                    setStatus(res[0]['status'].toString())
                 }
             })
     }, [])
@@ -122,6 +121,43 @@ function ReviewView (props) {
             dateRequested: dateRequested,
             status: status,
             reviewId: props.vals.id
+        }
+
+        fetch(`${url}api/admin/takedown/`, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': cookies["user"].token
+            },
+            body: JSON.stringify(body)
+        }).then(res => res.json())
+            .then(res => {
+                if(res.message) {
+                    toast({
+                        title: `Error Creating Takedown Notice`,
+                        description: res.message,
+                        status: 'error',
+                        duration: 10000,
+                        isClosable: true,
+                    })
+                } else {
+                    toast({
+                        title: `Created Takedown Notice.`,
+                        description: "Takedown notice was created successfully.",
+                        status: 'success',
+                        duration: 5000,
+                        isClosable: true,
+                    })
+                }
+            })
+    }
+
+    const update = () => {
+        let body = {
+            dateDispute: dateDispute,
+            dateNotice: dateNotice,
+            status: status,
         }
 
         fetch(`${url}api/admin/takedown/`, {

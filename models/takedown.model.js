@@ -35,10 +35,10 @@ Takedown.create = (newTakedown, result) => {
     })
 }
 
-Takedown.updateStatus = (id, updateTakedown, result) => {
+Takedown.update = (id, updateTakedown, result) => {
     sql.query(
-        `UPDATE takedown SET dateNoticeSent="${newTakedown.dateNoticeSent}",dateDisputeRecieved="${newTakedown.dateDisputeRecieved}", ` + 
-        `requestedBy="${newTrack.requestedBy}", additionalInfo="${newTrack.additionalInfo}", status=${newTakedown.status}` +
+        `UPDATE takedown SET dateNoticeSent="${updateTakedown.dateNoticeSent}",dateDisputeRecieved="${updateTakedown.dateDisputeRecieved}", ` + 
+        `additionalInfo="${updateTakedown.additionalInfo}", status=${updateTakedown.status}` +
         `WHERE id = ${id}`,
         (err, res) => {
           if (err) {
@@ -60,6 +60,8 @@ Takedown.updateStatus = (id, updateTakedown, result) => {
 Takedown.getByReviewId = (reviewId, result) => {
     
     const query = `SELECT * FROM takedown WHERE reviewId=${reviewId}`
+
+    console.log(query)
 
     sql.query(query, (err, res) => {
         if(err) {
