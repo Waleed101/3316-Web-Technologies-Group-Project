@@ -15,8 +15,6 @@ function ReviewList(props) {
 
     const [reviews, setReviews] = useState([<Spinner />])
 
-    console.log(props.reviews)
-
     useEffect(() => {
         
         let reference = props.reference ? props.reference : ""
@@ -37,11 +35,14 @@ function ReviewList(props) {
             query = `${url}api/admin/review`
         }
 
+        console.log("Trying...")
+
         fetch(query)
             .then(res => res.json())
                 .then(res => {
-                    if(!res) {
-                        setReviews([])
+                    console.log(res)
+                    if(res.length == 0) {
+                        setReviews([<Text>No Reviews found for this.</Text>])
                     } else {
                         for(let i = 0; i <= res.length; i++) {
                             if (i == res.length) {

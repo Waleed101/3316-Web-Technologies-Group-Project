@@ -196,14 +196,19 @@ function Playlist (props) {
         fetch(`${url}api/review/?type=1&referenceId=${props.vals.id}&avg=y`)
             .then(res => res.json())
                 .then(res => {
-                    let temp = []
+                    if(res.length == 0) {
+                        setStars([<Text>No Ratings</Text>])
+                    } else {
+                        let temp = []
 
-                    for(let i = 0; i < Math.ceil(res[0]['avg']); i += 1) {
-                        temp.push(<StarIcon />)
+                        for(let i = 0; i < Math.ceil(res[0]['avg']); i += 1) {
+                            temp.push(<StarIcon />)
+                        }
+    
+                        setStars(temp)
+                        setAvgRating(res[0]['avg'])
                     }
 
-                    setStars(temp)
-                    setAvgRating(res[0]['avg'])
                 })
     }, [])
         

@@ -47,7 +47,7 @@ Review.findById = (id, result) => {
     })
 }
 
-Review.getAll = (req, result) => {
+Review.getAll = (req, isAvg, result) => {
     let query = `SELECT * FROM review`
     console.log(req)
     if (req.type || req.referenceId) {
