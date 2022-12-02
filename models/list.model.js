@@ -6,6 +6,7 @@ const List = function(list) {
     this.totalPlayTime = list.totalPlayTime
     this.description = list.description
     this.isPublic = list.isPublic
+    
 }
 
 List.create = (newList, result) => {
@@ -95,8 +96,8 @@ List.getAll = (info, result) => {
 
     if (info.isPublic){
         console.log('In tha loop')
-        query+= ` WHERE isPublic = 1 ORDER BY created LIMIT 10`
-        console.log(query.length)
+        query+= ` WHERE isPublic = 1 ORDER BY updated DESC LIMIT 10`
+        console.log(query)
     }
     else if(info.name) {
         query += ` WHERE name = "${info.name}" `
@@ -119,8 +120,31 @@ List.getAll = (info, result) => {
                 delete res[i]["tracks"]
             }
         }
+        // var dates = {}
+        // for(let i = 0; i < res.length; i++) {
+        //     if(res[i]['updated']=='0000-00-00 00:00:00') {
+        //         res[i]['updated']=res[i]['created']
+        //     }
+        //     console.log("Playlist"+res[i]['name']+" TIME "+res[i]['updated'])
+        //     dates[i] = res[i]['updated'].toString()
+        // }
 
-        console.log("Lists: ", res);
+        // console.log(typeof(dates[]))
+        // // dates['1'] = new Date(2022-12-12T05:05:52.000Z).toString()
+
+        // var items = Object.keys(dates).map(function(key) {
+        //     return [key, dates[key]];
+        //   });
+
+        // items.sort(function(first, second) {
+        //     return second[1] - first[1];
+        //   });
+
+        //   console.log(dates)
+       
+        // console.log(res[1]['updated'])    
+        // for (i = 0; i < timeArr.length; i++)
+        // console.log();        
         result(null, res);
     })
 }

@@ -75,7 +75,9 @@ function PublicPlaylist (props) {
     const navigate = useNavigate()
 
     const getDate = (val) => {
+        console.log("Hello from modified date")
         return val.split("T")[0]
+
     }
 
     const changeContentState = () => {
