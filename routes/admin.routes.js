@@ -1,6 +1,7 @@
 module.exports = app => {
     const auth = require("../controller/auth.controller.js");
     const review = require("../controller/review.controller.js");
+    const policy = require("../controller/policy.controller.js");
   
     var router = require("express").Router();
   
@@ -15,6 +16,9 @@ module.exports = app => {
 
     // Hide/unhide review
     router.post("/review/hide/:id", review.hide)
+
+    // Update policy
+    router.put("/policy", policy.update)
 
     app.use('/api/admin', router);
 };

@@ -31,22 +31,22 @@ function Register() {
                 "password": password
             })
     
-    fetch(url + "api/auth/register/", {
-        method: "POST",
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: body
-    })
-    .then(res => res.json())
-        .then(res => {
-                if(res.message) {
-                    alert(`Error: ${res.message}`)
-                } else {
-                    alert(`Successfully created account with email ${email}`)
-                }
+            fetch(url + "api/auth/register/", {
+                method: "POST",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: body
             })
+            .then(res => res.json())
+                .then(res => {
+                        if(res.message) {
+                            alert(`Error: ${res.message}`)
+                        } else {
+                            alert(`Successfully created account with email ${email}`)
+                        }
+                    })
             sendEmailVerification(user);
             auth.signOut();
             alert("Email verification sent!")
