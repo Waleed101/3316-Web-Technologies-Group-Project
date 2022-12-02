@@ -1,4 +1,4 @@
-import { React, useEffect, useState } from 'react'
+import { React, useState } from 'react'
 import { useCookies } from 'react-cookie'
 import  { useNavigate } from 'react-router-dom'
 import { getAuth, onAuthStateChanged, signOut} from "firebase/auth";
@@ -7,6 +7,7 @@ import "../firebase.js"
 import TrackList from '../components/TrackList'
 import ReviewList from '../components/ReviewList'
 import ReactStars from 'react-rating-stars-component'
+import CustomAlert from "../components/CustomAlert";
 
 import {
     Tag,
@@ -49,32 +50,27 @@ import {
     ViewIcon,
     ViewOffIcon,
     ChatIcon,
-    StarIcon,
 } from '@chakra-ui/icons'
 let url = require("../setup/api.setup.js")
 
-function Playlist (props) {
-    const auth = getAuth();
-    const [user, setUser] = useState(null)
-    onAuthStateChanged(auth, (user) => {
-        if (user) setUser(user)
-    })
+function PublicPlaylist (props) {
+    //const auth = getAuth();
+    //const [user, setUser] = useState(null)
+    // onAuthStateChanged(auth, (user) => {
+    //     if (user) setUser(user)
+    // })
     const [isOpen, setIsOpen] = useState(false)
     const [isPublic, setIsPublic] = useState(props.vals.isPublic)
     const [reviewDescription, setReviewDescription] = useState("")
-    const [cookies, setCookie, removeCookie] = useCookies(["user"])
 
     const [isModalOpen, setModalOpen] = useState(false)
     const [rating, setRating] = useState(0)
-    const [stars, setStars] = useState([<StarIcon />])
-
-    const [avgRating, setAvgRating] = useState(0)
 
     const toast = useToast()
 
-    const ratingChanged = (newRating) => {
-        setRating(newRating)
-    }
+    // const ratingChanged = (newRating) => {
+    //     setRating(newRating)
+    // }
 
     const navigate = useNavigate()
 
@@ -90,126 +86,103 @@ function Playlist (props) {
         return Math.floor(time / 60) + ":" + (time % 60).toString().padStart(2, '0')
     }
 
-    const changePrivacy = () => {
+    // const changePrivacy = () => {
 
-        console.log(props.vals)
+    //     console.log(props.vals)
 
-        props.vals.isPublic = !props.vals.isPublic
+    //     props.vals.isPublic = !props.vals.isPublic
 
-        fetch(`${url}api/secure/list/${props.vals.id}`, {
-            method: 'PUT',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': cookies["user"].token
-            },
-            body: JSON.stringify(props.vals)
-        })
-            .then(res => res.json()
-                .then(res => {
-                    if (res.message) {
-                        alert(res.message)
-                    } else {
-                        setIsPublic(props.vals.isPublic)
-                    }
-                })
-            )
-    }
+    //     fetch(`${url}api/list/${props.vals.id}`, {
+    //         method: 'PUT',
+    //         headers: {
+    //             'Accept': 'application/json',
+    //             'Content-Type': 'application/json'
+    //         },
+    //         body: JSON.stringify(props.vals)
+    //     })
+    //         .then(res => res.json()
+    //             .then(res => {
+    //                 if (res.message) {
+    //                     alert(res.message)
+    //                 } else {
+    //                     setIsPublic(props.vals.isPublic)
+    //                 }
+    //             })
+    //         )
+    // }
     
-    const addReview = () => {
-        closing()
+    // const addReview = () => {
+    //     closing()
 
-        let body = JSON.stringify({
-            "listId": props.vals.id,
-            "userEmail": user.email,
-            "description": reviewDescription,
-            "rating": rating
-        })
+    //     let body = JSON.stringify({
+    //         "listId": props.vals.id,
+    //         "userEmail": user.email,
+    //         "description": reviewDescription,
+    //         "rating": rating
+    //     })
 
-        console.log(body)
+    //     console.log(body)
 
-        fetch(`${url}api/secure/review`, {
-            method: "POST",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': cookies["user"].token
-            },
-            body: body
-        }).then(res => console.log(res))
-            .then(res => {
-                if(res && res.message) {
-                    toast({
-                        title: 'Error Publishing Review',
-                        description: res.message,
-                        status: 'error',
-                        duration: 5000,
-                        isClosable: true,
-                    })
-                } else {
-                    toast({
-                        title: 'Review Published.',
-                        description: `We've published your review on ${props.vals.name}.`,
-                        status: 'success',
-                        duration: 5000,
-                        isClosable: true,
-                    })
-                }
-            })
-    }
+    //     fetch(`${url}api/review`, {
+    //         method: "POST",
+    //         headers: {
+    //             'Accept': 'application/json',
+    //             'Content-Type': 'application/json'
+    //         },
+    //         body: body
+    //     }).then(res => console.log(res))
+    //         .then(res => {
+    //             if(res && res.message) {
+    //                 toast({
+    //                     title: 'Error Publishing Review',
+    //                     description: res.message,
+    //                     status: 'error',
+    //                     duration: 5000,
+    //                     isClosable: true,
+    //                 })
+    //             } else {
+    //                 toast({
+    //                     title: 'Review Published.',
+    //                     description: `We've published your review on ${props.vals.name}.`,
+    //                     status: 'success',
+    //                     duration: 5000,
+    //                     isClosable: true,
+    //                 })
+    //             }
+    //         })
+    // }
 
-    const editPlaylist = () => {
-        console.log("Redirecting...")
-        navigate('/search/', { state: props.vals })
-    }
-    
-    const deletePlaylist = () =>{
-        let body = JSON.stringify({
-            'user': user.email,
-            'name': props.vals.name
-        })
+    // const editPlaylist = () => {
+    //     console.log("Redirecting...")
+    //     navigate('/search/', { state: props.vals })
+    // }
+    // console.log(props.vals)
+    // const deletePlaylist = () =>{
+    //     let body = JSON.stringify({
+    //         'user': user.email,
+    //         'name': props.vals.name
+    //     })
+    //     console.log(body)
         
-        fetch(`${url}api/secure/list/`,{
-            method: "DELETE", 
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': cookies["user"].token
-            },
-            body: body}).then(res => res.json())
-            .then(res => {
-                    if(!res.message) {
-                        alert(`Error: ${res.message}`)
-                    } else {
-                        alert(res.message)
-                    }
-                })
-    }
+    //     fetch(`${url}api/list/`,{
+    //         method: "DELETE", 
+    //         headers: {
+    //             'Accept': 'application/json',
+    //             'Content-Type': 'application/json'
+    //         },
+    //         body: body}).then(res => res.json())
+    //         .then(res => {
+    //                 if(!res.message) {
+    //                     alert(`Error: ${res.message}`)
+    //                 } else {
+    //                     alert(res.message)
+    //                 }
+    //             })
+    // }
                 
-    const addComment = () => setModalOpen(true)
+    // const addComment = () => setModalOpen(true)
 
     const closing = () => setModalOpen(false)
-
-    useEffect(() => {
-        console.log(props.vals.id)
-        fetch(`${url}api/review/?type=1&referenceId=${props.vals.id}&avg=y`)
-            .then(res => res.json())
-                .then(res => {
-                    if(res.length == 0) {
-                        setStars([<Text>No Ratings</Text>])
-                    } else {
-                        let temp = []
-
-                        for(let i = 0; i < Math.ceil(res[0]['avg']); i += 1) {
-                            temp.push(<StarIcon />)
-                        }
-    
-                        setStars(temp)
-                        setAvgRating(res[0]['avg'])
-                    }
-
-                })
-    }, [])
         
     return(
         <>
@@ -221,33 +194,33 @@ function Playlist (props) {
             >
                 <ModalOverlay />
                 <ModalContent>
-                    <ModalHeader>Commenting on playlist <b>{props.vals.name}</b></ModalHeader>
+                    {/* <ModalHeader>Commenting on playlist <b>{props.vals.name}</b></ModalHeader> */}
                     <ModalCloseButton />
                     <ModalBody>
                         <form>
                             <FormLabel>Rating</FormLabel>
                             <ReactStars
                                 count={5}
-                                onChange={ratingChanged}
+                                // onChange={ratingChanged}
                                 size={40}
                                 activeColor="#ffd700"
                             />
                             <br /><br />
-                            <FormLabel> Description: </FormLabel>
+                            {/* <FormLabel> Description: </FormLabel>
                                 <Textarea
                                     placeholder = "Enter in your review..."
                                     value = {reviewDescription}
                                     onChange = {(e) => setReviewDescription(e.target.value)}
                                 />
-                            <br /><br />
+                            <br /><br /> */}
                         </form>
                     </ModalBody>
 
-                    <ModalFooter>
-                        <Button colorScheme='green' mr={3} onClick={addReview}>
-                            Comment
+                    {/* <ModalFooter>
+                        {/* <Button colorScheme='green' mr={3} onClick={addReview}> */}
+                            {/* Comment
                         </Button>
-                    </ModalFooter>
+                    </ModalFooter> */} 
                 </ModalContent>
             </Modal>
             <Box w="50%">
@@ -280,7 +253,7 @@ function Playlist (props) {
                                                 />
                                             </Tooltip>
                                             
-                                            {
+                                            {/* {
                                                 user &&
                                                 user.email == props.vals.createdBy ?
                                                 <>
@@ -303,20 +276,11 @@ function Playlist (props) {
                                                             onClick={editPlaylist}
                                                         />
                                                     </Tooltip>
-                                                    <Tooltip label="Delete Playlist">
-                                                        <IconButton
-                                                            variant='ghost'
-                                                            colorScheme='gray'
-                                                            aria-label='See menu'
-                                                            icon={<DeleteIcon />}
-                                                            onClick={deletePlaylist}
-                                                        />
-                                                    </Tooltip>
                                                 </>                                                
                                                 :
                                                 <></>
                                             }   
-                                            {user ? <Tooltip label="Add Comment">
+                                            <Tooltip label="Add Comment">
                                                 <IconButton
                                                     variant='ghost'
                                                     colorScheme='gray'
@@ -324,7 +288,16 @@ function Playlist (props) {
                                                     icon={<ChatIcon />}
                                                     onClick={addComment}
                                                 />
-                                            </Tooltip> : <></> }                                 
+                                            </Tooltip>  
+                                            <Tooltip label="Delete Playlist">
+                                                        <IconButton
+                                                            variant='ghost'
+                                                            colorScheme='gray'
+                                                            aria-label='See menu'
+                                                            icon={<DeleteIcon />}
+                                                            onClick={deletePlaylist}
+                                                        />
+                                                    </Tooltip>                                    */}
                                         </Flex>
                                     </Flex>                                
                                 </GridItem>
@@ -335,15 +308,9 @@ function Playlist (props) {
                             isOpen ?
                                 <>
                                     <CardBody>
-                                        <Heading size="h4">Information</Heading>
-                                        <Divider />
-                                        <br />
-                                        <Text><b>Description: </b> {props.vals.description}</Text>
-                                        <Text><b>Average Rating: </b> {avgRating} - {stars.map((s) => <>{s}</>)}</Text>
-                                        <br />
                                         <Heading size="h4">Reviews</Heading>
                                         <Divider />
-                                        <ReviewList user={user ? user.email : null} reference={props.vals.id} type={1} summary={true}></ReviewList>
+                                        <ReviewList reference={props.vals.id} type={1} summary={true}></ReviewList>
                                         <br />
                                         <Heading size="h4">Tracks</Heading>
                                         <Divider />
@@ -363,4 +330,4 @@ function Playlist (props) {
     )
 }
 
-export default Playlist
+export default PublicPlaylist

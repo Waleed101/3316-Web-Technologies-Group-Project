@@ -6,16 +6,32 @@ import { getAuth, onAuthStateChanged, signOut} from "firebase/auth";
 import "../firebase.js"
 
 import { 
-    Alert,
-    AlertIcon,
-    Link,
-    Text,
+    Button,
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalFooter,
+    ModalBody,
+    ModalCloseButton,
+    useDisclosure,
+    FormLabel,
+    Input,
+    Stack,
+    Table,
+    Thead,
+    Tbody,
+    Tfoot,
+    Tr,
+    Th,
+    Td,
+    TableCaption,
+    TableContainer,
+    Textarea,
+    Switch,
+    Spinner,
  } from '@chakra-ui/react'
-
 import Playlist from '../components/Playlist.jsx';
-
-import {
-} from '@chakra-ui/icons'
 
 let url = require("../setup/api.setup.js")
 
@@ -25,11 +41,13 @@ function DisplayPlaylists() {
     const navigate = useNavigate()
     const auth = getAuth();
     const [user, setUser] = useState(null)
-    const [playlists, setPlaylists] = useState([])
+    const [playlists, setPlaylists] = useState([<Spinner />])
     const [cookies, setCookie, removeCookie] = useCookies(["user"])
 
-        useEffect(() => {
-            if (user) {
+    useEffect(() => {
+        console.log("Requesting...")
+        if (user) {
+            console.log("User.")
             fetch(`${url}api/secure/list?user=${user.email}`, { 
                 headers: {
                     'Accept': 'application/json',
@@ -41,21 +59,41 @@ function DisplayPlaylists() {
                 .then(res => {
                     let temp = []
 
-
+                    console.log(res)
                     res.forEach(row => {
                         temp.push(<Playlist vals={row}></Playlist>)
                     })
 
                     setPlaylists(temp)
                 })
-            }
-        }, [user])
+        }
+    }, [user])
     
 
 onAuthStateChanged(auth, (user) => {
         if (user) {
             setUser(user)
+        // fetch(`${url}api/secure/list?user=${user.email}`, {
+        //     headers: {
+        //         'Accept': 'application/json',
+        //         'Content-Type': 'application/json',
+        //         'Authorization': cookies["user"].token
+        //     },
+        // }).then(res => res.json())
+        //         .then(res => {
+        //             let temp = []
+
+        //             console.log(res)
+
+        //             res.forEach(row => {
+        //                 temp.push(<Playlist vals={row}></Playlist>)
+        //             })
+
+        //             setPlaylists(temp)
+        //         })
+            
             } else {
+            console.log("Redirecting...")
             navigate('/login', { state: {redirectTo: '/playlists'} })
         }
     })
@@ -64,20 +102,10 @@ onAuthStateChanged(auth, (user) => {
 
     const redirect = false
 
-    return (
-        playlists == [] ?
-            <>
-                <Alert status='warning'>
-                    <AlertIcon />
-                    <Text>
-                        Uh oh! Seems like you haven't created any Playlists yet. Navigate over to the <Link href="/search" color='teal.500'> Search</Link> page to get started.
-                    </Text>
-                </Alert>
-            </>
-        :
-            <>{playlists}</>
-        
-    )
+    
+
+
+    return (<>{playlists}</>)
 }
 
 export default DisplayPlaylists;

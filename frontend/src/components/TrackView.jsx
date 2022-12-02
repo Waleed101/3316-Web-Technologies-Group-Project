@@ -1,5 +1,5 @@
 import { React, useEffect, useState } from 'react'
-
+import { useCookies } from 'react-cookie'
 import { getAuth, onAuthStateChanged, signOut} from "firebase/auth";
 import "../firebase.js"
 
@@ -62,6 +62,7 @@ function TrackView (props) {
 
     const [added, setAdded] = useState(props.isSelected)
     const [btnMsg, setBtnMsg] = useState(props.isSelected ? REMOVE_FROM : ADD_TO)
+    const [cookies, setCookie, removeCookie] = useCookies(["user"])
 
     const [rating, setRating] = useState(0)
 
@@ -121,19 +122,20 @@ function TrackView (props) {
 
         let body = JSON.stringify({
             "trackId": props.arr.id,
-            "userEmail": user.email,
+            "userEmail": user ? user.email : null,
             "description": reviewDescription,
             "rating": rating
         })
 
-        fetch(`${url}api/review`, {
+        fetch(`${url}api/secure/review`, {
             method: "POST",
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': cookies["user"].token
             },
             body: body
-        }).then(res => console.log(res))
+        }).then(res => res.json())
             .then(res => {
                 if(res && res.message) {
                     toast({
@@ -163,7 +165,11 @@ function TrackView (props) {
         fetch(`${url}api/review/?type=0&referenceId=${props.arr.id}&avg=y`)
             .then(res => res.json())
                 .then(res => {
-                    let temp = []
+                    if (res.length == 0) {
+                        setStars([<Text>No reviews on this.</Text>])
+                        return
+                    }
+                    let temp = []   
 
                     for(let i = 0; i < Math.ceil(res[0]['avg']); i += 1) {
                         temp.push(<StarIcon />)
@@ -277,7 +283,7 @@ function TrackView (props) {
                                 <br />
                                 <Heading size="h4">Reviews</Heading>
                                 <Divider />
-                                <ReviewList user={user.email} reference={props.arr.id} type={2} summary={true}></ReviewList>
+                                <ReviewList user={user ? user.email :  null} reference={props.arr.id} type={2} summary={true}></ReviewList>
                                 <br />
                                 {genre}
                             </CardBody>

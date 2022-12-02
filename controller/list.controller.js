@@ -40,6 +40,7 @@ exports.findAll = (req, res) => {
     }
 
     List.getAll(info, (err, data) => {
+      
       if (err)
         res.status(500).send({
           message:
@@ -48,6 +49,25 @@ exports.findAll = (req, res) => {
       else res.send(data);
     });
 };
+
+// Retrieve all List from the database (with condition).
+exports.findAllPublic = (req, res) => {
+    
+  const info = {
+    user: req.query.user,
+    isPublic: 1
+  }
+  console.log(info)
+  List.getAll(info, (err, data) => {
+    if (err)
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving list."
+      });
+    else res.send(data);
+  });
+};
+
 
 // Find a single List with a id
 exports.findOne = (req, res) => {
@@ -83,24 +103,24 @@ exports.update = (req, res) => {
     //     });
     //   }
       
-    //   if (!sanitize.stringLength(req.body.name, 3, 255)) {
-    //     res.status(403).send({ message: "Your input is not between the length of 3 and 255"})
-    //     return
-    //   }
+      if (!sanitize.stringLength(req.body.name, 3, 255)) {
+        res.status(403).send({ message: "Your input is not between the length of 3 and 255"})
+        return
+      }
 
-    //   if (sanitize.hasNoScript(req.body.tracks)) {
-    //     res.status(403).send({ message: "Your input cannot have any of: <, >"})
-    //     return
-    //   }  
+      if (sanitize.hasNoScript(req.body.tracks)) {
+        res.status(403).send({ message: "Your input cannot have any of: <, >"})
+        return
+      }  
 
-      // const vals = req.body.tracks.split(",")
+      const vals = req.body.tracks.split(",")
 
-      // for(let i = 0; i < vals.length; i += 1) {
-      //   if (!sanitize.isInteger(vals[i])) {
-      //     res.status(403).send({ message: "All the IDs you inputted should only be numbers."})
-      //     return
-      //   }
-      // }
+      for(let i = 0; i < vals.length; i += 1) {
+        if (!sanitize.isInteger(vals[i])) {
+          res.status(403).send({ message: "All the IDs you inputted should only be numbers."})
+          return
+        }
+      }
     
       List.update(
         req.params.id,
