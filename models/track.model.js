@@ -1,6 +1,10 @@
 const sql = require('../dbseed.js')
+var similar = require('string-similarity')
 
 const MAX_TRACKS_TO_RETURN = 50
+const OPEN_TRACKS = 150000
+
+const POSSIBLE_DISTANCE = 0.5
 
 const Track = function(track) {
     this.id = track.id
@@ -76,26 +80,20 @@ Track.findById = (id, result) => {
 
 Track.getAll = (req, result) => {
 
-    let artistQuery = req.artist ? `WHERE name LIKE '%${req.artist}%'` : ''
-    let genreQuery = req.genre ? `WHERE genreID in (${req.genre.join(",")})` : ''
-    let titleQuery = req.title ? `WHERE t.title LIKE '%${req.title}%'` : ''
-    let idQuery = req.id ? `WHERE id in (${req.id})` : ''
-
     let query = `SELECT DISTINCT id, title, albumID, artistID, datePublished, duration, interest, listens, artistName, genres FROM 
                     (SELECT * FROM track t
-                    JOIN (SELECT id as artist, name as artistName FROM artist ${artistQuery}) AS a
+                    JOIN (SELECT id as artist, name as artistName FROM artist) AS a
                     ON t.artistID = a.artist
                     JOIN (
                             SELECT * FROM trackGenre
                             JOIN (SELECT id as gId, title as gTitle FROM genre) as genre
                             ON genre.gId = trackGenre.genreID
-                            ${genreQuery}
+                            ${req.genre ? `WHERE genreID in (${req.genre.join(",")})` : ''}
                         ) as g
                     ON t.id = g.trackID
-                    ${titleQuery == '' ? idQuery : titleQuery}) as res
-                    LIMIT ${MAX_TRACKS_TO_RETURN}`
+                    ${req.id == '' ? `WHERE id in (${req.id})` : ''}) as res
+                    LIMIT ${req.id ? MAX_TRACKS_TO_RETURN : OPEN_TRACKS}`
 
-    console.log(idQuery)
     console.log(query)
 
     sql.query(query, (err, res) => {
@@ -104,25 +102,57 @@ Track.getAll = (req, result) => {
             result(null, err);
             return;
         }
-      
-        res["albumName"] = res["name"]
-        delete res["name"]
-        
-        for (let i = 0; i < res.length; i++) {
-            if (res[i]['genres'] != "[undefined]") {
-                let genresToSearch = res[i]['genres'].replace("[", "(")
-                genresToSearch = genresToSearch.replace("]", ")")
-                
-                sql.query(`SELECT * FROM genre WHERE id in ${genresToSearch}`, (eGenres, rGenres) => {
-                    res[i]['genres'] = rGenres
 
-                    if ((i + 1) == res.length) {
-                        console.log("Done.")
-                        result(null, res)
+        let filteredResult = []
+
+        var fuzzySearch = new Promise((resolve, reject) => {
+            if(!req.id) {
+                let resultCount = 0
+                
+                for (let i = 0; i < res.length; i++) {
+                    var artistSimilar = req.artist ? similar.compareTwoStrings(req.artist, res[i]["artistName"]) : 1
+                    var titleSimilar = req.title ? similar.compareTwoStrings(req.title, res[i]["title"]) : 1
+
+                    if (artistSimilar >= POSSIBLE_DISTANCE && titleSimilar >= POSSIBLE_DISTANCE) {
+                        filteredResult.push(res[i])
+                        resultCount += 1
                     }
-                })
+
+                    if (resultCount >= MAX_TRACKS_TO_RETURN || i == (res.length - 1)) {
+                        if (resultCount == 0) {
+                            console.log("No results...")
+                            result(null, [])
+                            return
+                        }
+                        resolve()
+                    }
+                }
+            } else {
+                filteredResult = res
+                resolve()
             }
-        }
+        })
+        
+        fuzzySearch.then(() => {
+            for (let i = 0; i < filteredResult.length; i++) {
+            
+                filteredResult["albumName"] = filteredResult["name"]
+                delete filteredResult["name"]
+                if (filteredResult[i]['genres'] != "[undefined]") {
+                    let genresToSearch = filteredResult[i]['genres'].replace("[", "(")
+                    genresToSearch = genresToSearch.replace("]", ")")
+                    
+                    sql.query(`SELECT * FROM genre WHERE id in ${genresToSearch}`, (eGenres, rGenres) => {
+                        filteredResult[i]['genres'] = rGenres
+    
+                        if ((i + 1) == filteredResult.length) {
+                            console.log("Done.")
+                            result(null, filteredResult)
+                        }
+                    })
+                }
+            }
+        })
     })
 }
   

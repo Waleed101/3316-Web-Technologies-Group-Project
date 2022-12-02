@@ -44,6 +44,7 @@
     "react-rating-stars-component": "^2.2.0",
     "react-router-dom": "^6.4.3",
     "react-scripts": "^5.0.1",
-    "react-stars": "^2.2.5"
+    "react-stars": "^2.2.5",
+    "string-similarity": "^4.0.4"
   }
 }

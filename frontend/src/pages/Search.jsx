@@ -32,6 +32,7 @@ import {
     Textarea,
     Switch,
     Spinner,
+    Text,
   } from '@chakra-ui/react'
 
 let url = require("../setup/api.setup.js")
@@ -141,6 +142,10 @@ function Search() {
                 .then(res => {
                     if(res.message) {
                         return
+                    }
+
+                    if(res.length == 0) {
+                        output = [<Text>No results found under search paramaters.</Text>]
                     }
                     
                     res.forEach(record => {
