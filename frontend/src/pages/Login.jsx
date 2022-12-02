@@ -38,13 +38,13 @@ function Login() {
     const handleClick = () => setShow(!show)  
     const resend = () => {
         console.log(tempEmail, tempPassword)
-        signInWithEmailAndPassword(auth, tempEmail, tempPassword)
+        signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
             const user = userCredential.user
             alert(user.emailVerified)
-        sendEmailVerification(user)
-        alert("Email verification link sent!")
-        auth.signOut()
+            sendEmailVerification(user)
+            alert("Email verification link sent!")
+            auth.signOut()
         })
     }
     const submit = (event) => {
@@ -107,7 +107,7 @@ function Login() {
                 setTempPassword(password)
                 auth.signOut()
                 alert("Please verify your email before attempting to log in")
-                setResendBtn(<Button onClick={resend}>Resend Email Verification Link</Button>)
+                setResendBtn(<Button onClick={resend}>Send Email Verification Link</Button>)
                 console.log(tempEmail)
             }
         })
