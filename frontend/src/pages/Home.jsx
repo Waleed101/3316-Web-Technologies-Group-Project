@@ -5,6 +5,8 @@ import "../firebase.js"
 import  { useNavigate } from 'react-router-dom'
 import { Button } from '@chakra-ui/react'
 
+import { useToast } from "@chakra-ui/react"
+
 function Home() {
     const [cookies, setCookie, removeCookie] = useCookies(["user"])
     const navigate = useNavigate()
@@ -12,12 +14,14 @@ function Home() {
     const auth = getAuth();
     const [user, setUser] = useState(null)
 
+    const toast = useToast()
+
     onAuthStateChanged(auth, (user) => {
         if (user) {
             setUser(user)
             name = <h1>Hi {user.displayName}</h1>
         } else {
-            name = <h1>Uh oh. No name for you.</h1>
+            name = <h1>Please log in.</h1>
         }
     })
 
@@ -27,10 +31,11 @@ function Home() {
     console.log(cookies)
     if (cookies['user'] && cookies['user'].role == 2)
         adminMode = <div>
-                        <h2>Admin Privileges:</h2>
-                        <Button onClick={() => {navigate('/adminActivation')}}>Grant Admin Acess</Button>
-                        <Button onClick={() => {navigate('/activation')}}>Activate/Deactivate Account</Button>
-                        <Button onClick={() => {navigate('/adminReviewAccess')}}>Access Reviews</Button>
+                        <h1>Admin Privileges:</h1>
+                        <br />
+                        <Button onClick={() => {navigate('/adminActivation')}}>Grant Admin Acess</Button><br /><br />
+                        <Button onClick={() => {navigate('/activation')}}>Activate/Deactivate Account</Button><br /><br />
+                        <Button onClick={() => {navigate('/adminReviewAccess')}}>Access Reviews</Button><br /><br />
 
                     </div>
     
@@ -44,10 +49,17 @@ function Home() {
             
             <Button onClick={() => {
                 console.log(user)
-            }}>Show User Cookie</Button>
+            }}>Show User Cookie</Button><br /><br />
 
             <Button onClick={() => {
-                signOut(auth).then(() => alert("Successfully Logged Out"))
+                signOut(auth).then(() => 
+                toast({
+                    title: `Logged Out`,
+                    description: "Successfully logged out",
+                    status: 'success',
+                    duration: 5000,
+                    isClosable: true,
+                }))
                 removeCookie("user")
                 console.log("Removed user cookie.")
             }}>Log-out</Button>

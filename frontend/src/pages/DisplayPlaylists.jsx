@@ -46,6 +46,10 @@ function DisplayPlaylists() {
 
     useEffect(() => {
         console.log("Requesting...")
+        getPlaylistData()
+    }, [user])
+
+    const getPlaylistData = () => {
         if (user) {
             console.log("User.")
             fetch(`${url}api/secure/list?user=${user.email}`, { 
@@ -61,13 +65,13 @@ function DisplayPlaylists() {
 
                     console.log(res)
                     res.forEach(row => {
-                        temp.push(<Playlist vals={row}></Playlist>)
+                        temp.push(<Playlist vals={row} refreshPlaylist={getPlaylistData}></Playlist>)
                     })
 
                     setPlaylists(temp)
                 })
         }
-    }, [user])
+    }
     
 
 onAuthStateChanged(auth, (user) => {

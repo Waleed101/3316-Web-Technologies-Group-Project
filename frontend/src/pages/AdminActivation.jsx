@@ -5,7 +5,8 @@ import {
     Input,
     InputGroup,
     InputRightElement,
-    FormLabel
+    FormLabel,
+    useToast
  } from '@chakra-ui/react'
 
 import { Navigate, useLocation } from 'react-router-dom';
@@ -20,11 +21,12 @@ const auth = getAuth();
 
 function AdminActivation() {
     const [email, setEmail] = useState("")
+    const toast = useToast()
 
     const submit = (event) => {
         event.preventDefault();
             
-        console.log(url + `api/admin/setAdmin/${email}`)
+        // console.log(url + `api/admin/setAdmin/${email}`)
         fetch(url + `api/admin/setAdmin/${email}`, {
             method: "POST",
             headers: {
@@ -34,10 +36,22 @@ function AdminActivation() {
         })
         .then(res => res.json())
             .then(res => {
-                    if(!res.message) {
-                        alert(`Error: ${res.message}`)
+                    if(!res.message) {  
+                        toast({
+                            title: `Failed to Grant Admin Access`,
+                            description: res.message,
+                            status: 'error',
+                            duration: 10000,
+                            isClosable: true,
+                        })
                     } else {
-                        alert(res.message)
+                        toast({
+                            title: `${email} now has Admin Access`,
+                            description: res.message,
+                            status: 'success',
+                            duration: 5000,
+                            isClosable: true,
+                        })
                     }
                 })    
     }

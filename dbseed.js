@@ -108,6 +108,20 @@ conn.connect(function(err) {
         if(error) throw error
         console.log(result);
     });
+
+    conn.query("CREATE TABLE IF NOT EXISTS `takedown` (" +
+                "id int NOT NULL AUTO_INCREMENT," +
+                "dateRequestRecieved varchar(100)," +
+                "dateNoticeSent varchar(100)," +
+                "dateDisputeRecieved varchar(100)," +
+                "requestedBy varchar(255) NOT NULL," +
+                "reviewId int NOT NULL," +
+                "additionalInfo varchar(512)," +
+                "PRIMARY KEY(id))", function(error, result, fields) {
+        if(error) throw error
+        console.log(result);
+    });
+
     // conn.end()
 });
 

@@ -3,6 +3,7 @@ import { useCookies } from 'react-cookie';
 import { BrowserRouter, Route, Link } from "react-router-dom";
 import { getAuth, updatePassword, onAuthStateChanged } from "firebase/auth";
 
+import { useToast } from "@chakra-ui/react"
 
 
 let url = require("../setup/api.setup.js")
@@ -15,6 +16,8 @@ function UpdatePassword() {
     onAuthStateChanged(auth, (user) => {
         if (user) setUser(user)
     })
+
+    const toast = useToast()
 
     console.log(user)
 
@@ -61,9 +64,21 @@ function UpdatePassword() {
         .then(res => res.json())
             .then(res => {
                     if(!res.message) {
-                        alert(`Error: ${res.message}`)
+                        toast({
+                            title: `Error Updating Password`,
+                            description: res.message,
+                            status: 'error',
+                            duration: 10000,
+                            isClosable: true,
+                        })
                     } else {
-                        alert(res.message)
+                        toast({
+                            title: `Updated Password`,
+                            description: `Successfully updated password!`,
+                            status: 'success',
+                            duration: 5000,
+                            isClosable: true,
+                        })
                     }
                 })
     }

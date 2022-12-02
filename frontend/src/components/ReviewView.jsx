@@ -18,6 +18,7 @@ import {
     Center,
     Flex,
     IconButton,
+    useToast,
 } from '@chakra-ui/react'
 
 import {
@@ -26,6 +27,8 @@ import {
     TriangleDownIcon,
     TriangleUpIcon,
     StarIcon,
+    ViewOffIcon,
+    ViewIcon,
 } from '@chakra-ui/icons'
 
 let url = require("../setup/api.setup.js")
@@ -37,6 +40,10 @@ function ReviewView (props) {
     onAuthStateChanged(auth, (user) => {
         if (user) setUser(user)
     })
+
+    const toast = useToast()
+
+    const [isHidden, setIsHidden] = useState(props.vals.isHidden)
 
     const [isOpen, setIsOpen] = useState(false)
 
@@ -55,9 +62,12 @@ function ReviewView (props) {
     }, [])
 
     const hideReview = () => {
+        setIsHidden(!isHidden)
+
         let body = JSON.stringify({
-            toHide: 1
+            toHide: isHidden
         })
+
         fetch(`${url}api/admin/review/hide/${props.vals.id}`,{
             method: "POST", 
             headers: {
@@ -68,9 +78,21 @@ function ReviewView (props) {
             }).then(res => res.json())
             .then(res => {
                     if(!res.message) {
-                        alert(`Error: ${res.message}`)
+                        toast({
+                            title: `Error Hiding Review`,
+                            description: res.message,
+                            status: 'error',
+                            duration: 10000,
+                            isClosable: true,
+                        })
                     } else {
-                        alert(res.message)
+                        toast({
+                            title: `Successfully Changed Review`,
+                            description: "Review privacy was updated.",
+                            status: 'success',
+                            duration: 5000,
+                            isClosable: true,
+                        })
                     }
                 })
     }
@@ -99,8 +121,14 @@ function ReviewView (props) {
                                     />
                                 </GridItem>
                                 {props.access ? 
-                                <GridItem>
-                                    <Button onClick={hideReview}>Hide</Button>
+                                <GridItem colSpan={1}>
+                                    <IconButton
+                                        variant='ghost'
+                                        colorScheme='gray'
+                                        aria-label='See menu'
+                                        icon={!isHidden ? <ViewIcon /> : <ViewOffIcon />}
+                                        onClick={hideReview}
+                                    />
                                 </GridItem>
                                 :
                                 <></>
