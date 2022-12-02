@@ -55,7 +55,9 @@ Review.getAll = (req, isAvg, result) => {
     }
     else if (req.user) {
         query = `SELECT * FROM review WHERE userEmail="${req.user}" and isHidden=0`
-    } else if (isAvg) {
+    } 
+    
+    if (isAvg) {
         query = `SELECT AVG(rating) as avg FROM review WHERE type=${req.type} AND referenceId=${req.referenceId}`
     }
 
