@@ -1,4 +1,4 @@
-import { React, useEffect, useState } from 'react'
+import { React, useEffect, useState, useRef } from 'react'
 import { useCookies } from 'react-cookie'
 import  { useNavigate } from 'react-router-dom'
 import { getAuth, onAuthStateChanged, signOut} from "firebase/auth";
@@ -37,7 +37,13 @@ import {
     useDisclosure,
     FormLabel,
     Textarea,
-    useToast,
+    useToast,    
+    AlertDialog,
+    AlertDialogBody,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogContent,
+    AlertDialogOverlay,
 } from '@chakra-ui/react'
 
 import {
@@ -63,6 +69,8 @@ function Playlist (props) {
     const [isPublic, setIsPublic] = useState(props.vals.isPublic)
     const [reviewDescription, setReviewDescription] = useState("")
     const [cookies, setCookie, removeCookie] = useCookies(["user"])
+
+    const [isDeleteOpen, setIsDeleteOpen] = useState(false)
 
     const [isModalOpen, setModalOpen] = useState(false)
     const [rating, setRating] = useState(0)
@@ -164,6 +172,8 @@ function Playlist (props) {
     }
     
     const deletePlaylist = () =>{
+        deletePlaylistCancel()
+
         let body = JSON.stringify({
             'user': user.email,
             'name': props.vals.name
@@ -185,6 +195,10 @@ function Playlist (props) {
                     }
                 })
     }
+
+    const deletePlaylistStart = () => setIsDeleteOpen(true)
+
+    const deletePlaylistCancel = () => setIsDeleteOpen(false)
                 
     const addComment = () => setModalOpen(true)
 
@@ -250,6 +264,30 @@ function Playlist (props) {
                     </ModalFooter>
                 </ModalContent>
             </Modal>
+            <Modal 
+                isOpen={isDeleteOpen} 
+                onClose={deletePlaylistCancel}
+                motionPreset='slideInBottom'
+                w="500px"
+            >
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>Are you sure you want to delete <b>{props.vals.name}</b>?</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                        This action is <b>not</b> reversible.
+                    </ModalBody>
+
+                    <ModalFooter>
+                        <Button colorScheme='gray' mr={3} onClick={deletePlaylistCancel}>
+                            Cancel
+                        </Button>
+                        <Button colorScheme='red' mr={3} onClick={deletePlaylist}>
+                            Delete
+                        </Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
             <Box w="50%">
                 <Center>
                     <Card w="90%">
@@ -309,7 +347,7 @@ function Playlist (props) {
                                                             colorScheme='gray'
                                                             aria-label='See menu'
                                                             icon={<DeleteIcon />}
-                                                            onClick={deletePlaylist}
+                                                            onClick={deletePlaylistStart}
                                                         />
                                                     </Tooltip>
                                                 </>                                                
