@@ -67,7 +67,7 @@ function ReviewView (props) {
     const [dateRequested, setDateRequested] = useState("")
     const [dateNotice, setDateNotice] = useState("")
     const [dateDispute, setDateDispute] = useState("")
-    const [status, setStatus] = useState(0)
+    const [status, setStatus] = useState('0')
 
     const [isOpen, setIsOpen] = useState(false)
     const [takedownModal, setModalOpen] = useState(false)
@@ -108,13 +108,50 @@ function ReviewView (props) {
                     setDateDispute(takedown.dateDispute)
                     setDateNotice(takedown.dateNotice)
                     setDateRequested(takedown.dateRequested)
-                    setStatus(takedown.status)
+                    setStatus(takedown.status.toString())
                 }
             })
     }, [])
 
     const create = () => {
-        
+        let body = {
+            requestedBy: submittedBy,
+            additionalInfo: additionalInfo,
+            dateDispute: dateDispute,
+            dateNotice: dateNotice,
+            dateRequested: dateRequested,
+            status: status,
+            reviewId: props.vals.id
+        }
+
+        fetch(`${url}api/admin/takedown/`, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': cookies["user"].token
+            },
+            body: JSON.stringify(body)
+        }).then(res => res.json())
+            .then(res => {
+                if(res.message) {
+                    toast({
+                        title: `Error Creating Takedown Notice`,
+                        description: res.message,
+                        status: 'error',
+                        duration: 10000,
+                        isClosable: true,
+                    })
+                } else {
+                    toast({
+                        title: `Created Takedown Notice.`,
+                        description: "Takedown notice was created successfully.",
+                        status: 'success',
+                        duration: 5000,
+                        isClosable: true,
+                    })
+                }
+            })
     }
 
     const hideReview = () => {
@@ -178,11 +215,11 @@ function ReviewView (props) {
                                 disabled={takedown ? true : false} 
                             />
                         <br /><br />
-                        <FormLabel> Dispute Date: </FormLabel>
+                        <FormLabel> Requested Date: </FormLabel>
                             <Input
                                 type = "date"
-                                value = {dateDispute}
-                                onChange = {(e) => setSubmittedBy(e.target.value)}
+                                value = {dateRequested}
+                                onChange = {(e) => setDateRequested(e.target.value)}
                                 disabled={takedown ? true : false} 
                             />
                         <br /><br />
@@ -190,19 +227,19 @@ function ReviewView (props) {
                             <Input
                                 type = "date"
                                 value = {dateNotice}
-                                onChange = {(e) => setSubmittedBy(e.target.value)}
+                                onChange = {(e) => setDateNotice(e.target.value)}
                             />
                         <br /><br />
-                        <FormLabel> Requested Date: </FormLabel>
+                        <FormLabel> Dispute Date: </FormLabel>
                             <Input
                                 type = "date"
-                                value = {dateRequested}
-                                onChange = {(e) => setSubmittedBy(e.target.value)}
+                                value = {dateDispute}
+                                onChange = {(e) => setDateDispute(e.target.value)}
                             />
                         <br /><br />
 
                         <FormLabel> Status: </FormLabel>
-                            <Select placeholder='Select a status' value={takedown ? takedown.status : ''}>
+                            <Select placeholder='Select a status' value={status} onChange={(event) => setStatus(event.target.value)}>
                                 <option value='0'>Requested</option>
                                 <option value='1'>Sent</option>
                                 <option value='2'>Disputed</option>
@@ -216,7 +253,7 @@ function ReviewView (props) {
                     <Button colorScheme='ghost' mr={3} onClick={closeTakedownDialog}>
                         Close
                     </Button>
-                    <Button colorScheme='green' mr={3} >
+                    <Button colorScheme='green' mr={3} onClick={takedown ? console.log("1") : create}>
                         {takedown ? "Save" : "Create"}
                     </Button>
                 </ModalFooter>

@@ -4,15 +4,17 @@ const Takedown = require("../models/takedown.model.js");
 exports.create = (req, res) => {
 
   const takedown = new Takedown({
-    id: req.id,
-    dateRequestRecieved: req.dateRequestRecieved ? req.dateRequestRecieved : "",
-    dateNoticeSent: req.dateNoticeSent ? req.dateNoticeSent : "",
-    dateDisputeRecieved: req.dateDisputeRecieved ? req.dateDisputeRecieved : "",
-    requestedBy: req.requestedBy,
-    reviewId: req.reviewId,
-    additionalInfo: req.additionalInfo,
-    status: req.status
+    id: req.body.id,
+    dateRequestRecieved: req.body.dateRequested ? req.body.dateRequested : "",
+    dateNoticeSent: req.body.dateNotice ? req.body.dateNotice : "",
+    dateDisputeRecieved: req.body.dateDispute ? req.body.dateDispute : "",
+    requestedBy: req.body.requestedBy,
+    reviewId: req.body.reviewId,
+    additionalInfo: req.body.additionalInfo,
+    status: req.body.status
   });
+
+  console.log(takedown)
 
   Takedown.create(takedown, (err, data) => {
     if (err)

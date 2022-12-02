@@ -21,8 +21,8 @@ const Takedown = function(takedown) {
 }
 
 Takedown.create = (newTakedown, result) => {    
-    sql.query(`INSERT INTO takedown SET dateRequestRecieved="${newTakedown.dateRequestRecieved}", dateNoticeSent="${newTakedown.dateNoticeSent}", reviewId=${newTakedown.reviewId}` + 
-    `dateDisputeRecieved="${newTakedown.dateDisputeRecieved}", requestedBy="${newTrack.requestedBy}", additionalInfo="${newTrack.additionalInfo}", status=${newTakedown.status}`, (err, res) => {
+    sql.query(`INSERT INTO takedown SET dateRequestRecieved="${newTakedown.dateRequestRecieved}", dateNoticeSent="${newTakedown.dateNoticeSent}", reviewId=${newTakedown.reviewId},` + 
+    `dateDisputeRecieved="${newTakedown.dateDisputeRecieved}", requestedBy="${newTakedown.requestedBy}", additionalInfo="${newTakedown.additionalInfo}", status=${newTakedown.status}`, (err, res) => {
         if(err) {
             console.log("Error: ", err)
             result(err, null)
