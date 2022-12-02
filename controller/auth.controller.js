@@ -84,7 +84,7 @@ exports.login = (req, res) => {
 }
 
 exports.updatePassword = (req, res) => {
-  
+  console.log("a")
    // Validate request
    if (!req.body) {
     res.status(400).send({
@@ -96,7 +96,7 @@ exports.updatePassword = (req, res) => {
     email: req.params.email,
     password: req.body.newPassword
   })
-
+  
   Auth.updatePassword(auth, (err, data) => {
     if (err)
       res.status(500).send({
@@ -104,6 +104,7 @@ exports.updatePassword = (req, res) => {
           err.message || "Some error occurred while updating the password."
       });
     else {
+      console.log("r")
       res.send(data)
     } 
   });  

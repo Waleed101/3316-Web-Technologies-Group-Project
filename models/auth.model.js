@@ -72,6 +72,7 @@ Auth.login = (auth, result) => {
 
 
 Auth.updatePassword = (auth, result) => {
+    console.log("w")
     bcrypt.hash(auth.password, saltRounds, (err, hash) => {
         if (err) {
             console.log(err)

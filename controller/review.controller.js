@@ -134,7 +134,6 @@ exports.findAllAdmin = (req, res) => {
 
 // Delete a Review with the specified id in the request
 exports.hide = (req, res) => {  
-  console.log(req.body)
   Review.hide(req.params.id, req.body.toHide, (err, data) => {
       if (err) {
       if (err.kind === "not_found") {

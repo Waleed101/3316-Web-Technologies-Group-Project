@@ -46,7 +46,6 @@ function UpdatePassword() {
 
         let body = JSON.stringify({
                     "newPassword": newPassword,
-                    "token" : cookies["user"].token
                 })
         
         console.log(url + `api/secure/updatepass/${cookies["user"].email}`)
@@ -54,7 +53,8 @@ function UpdatePassword() {
             method: "POST",
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': cookies["user"].token
             },
             body: body
         })
