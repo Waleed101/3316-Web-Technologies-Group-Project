@@ -41,7 +41,7 @@ function Login() {
     const handleClick = () => setShow(!show)  
     const resend = () => {
         console.log(tempEmail, tempPassword)
-        signInWithEmailAndPassword(auth, tempEmail, tempPassword)
+        signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
             const user = userCredential.user
             // alert(user.emailVerified)

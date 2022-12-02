@@ -39,7 +39,6 @@ module.exports = app => {
           } catch (err) {
             return res.status(401).send("Invalid Token")
           }
-          console.log("r")
           return next()
       });
 
