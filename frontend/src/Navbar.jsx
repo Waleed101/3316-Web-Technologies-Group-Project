@@ -14,7 +14,7 @@ function Navbar() {
   return (
     <nav>
       <br/>
-      <ul>
+      <ul class="navbar">
         <li>
           <Link to="/">Home</Link>
         </li>

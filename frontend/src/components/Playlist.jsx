@@ -116,8 +116,21 @@ function Playlist (props) {
             .then(res => res.json()
                 .then(res => {
                     if (res.message) {
-                        alert(res.message)
+                        toast({
+                            title: 'Error Changing Privacy',
+                            description: res.message,
+                            status: 'error',
+                            duration: 10000,
+                            isClosable: true,
+                        })
                     } else {
+                        toast({
+                            title: 'Successfuly Updated Privacy.',
+                            description: `Made Playlist ${!props.vals.isPublic ? 'public' : 'private'}`,
+                            status: 'success',
+                            duration: 5000,
+                            isClosable: true,
+                        })
                         setIsPublic(props.vals.isPublic)
                     }
                 })
@@ -151,7 +164,7 @@ function Playlist (props) {
                         title: 'Error Publishing Review',
                         description: res.message,
                         status: 'error',
-                        duration: 5000,
+                        duration: 10000,
                         isClosable: true,
                     })
                 } else {
@@ -189,9 +202,21 @@ function Playlist (props) {
             body: body}).then(res => res.json())
             .then(res => {
                     if(!res.message) {
-                        alert(`Error: ${res.message}`)
+                        toast({
+                            title: 'Error Deleting Playlist.',
+                            description: `The following error was encountered ${res.message}`,
+                            status: 'error',
+                            duration: 10000,
+                            isClosable: true,
+                        })
                     } else {
-                        alert(res.message)
+                        toast({
+                            title: 'Deleted Playlist.',
+                            description: `Successfully deleted the playlist.`,
+                            status: 'success',
+                            duration: 5000,
+                            isClosable: true,
+                        })
                     }
                     props.refreshPlaylist()
                 })
