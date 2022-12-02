@@ -1,5 +1,6 @@
 import { React, useState } from 'react';
 import { getAuth, createUserWithEmailAndPassword, updateProfile, signInWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
+import { useCookies }  from "react-cookie";
 
 let url = require("../setup/api.setup.js")
 
@@ -10,6 +11,7 @@ function Register() {
     const [email, setEmail] = useState("")
     const [name, setName] = useState("")
     const [password, setPassword] = useState("")
+    const [cookies, setCookie, removeCookie] = useCookies(["user"])
 
     const submit = (event) => {
         event.preventDefault();
@@ -39,18 +41,16 @@ function Register() {
     })
     .then(res => res.json())
         .then(res => {
-            console.log(res)
                 if(res.message) {
                     alert(`Error: ${res.message}`)
                 } else {
                     alert(`Successfully created account with email ${email}`)
                 }
             })
-            
             sendEmailVerification(user);
             auth.signOut();
             alert("Email verification sent!")
-            // ...
+            
         })
         .catch((error) => {
             const errorCode = error.code;

@@ -76,7 +76,7 @@ exports.findAll = (req, res) => {
 
 // Find a single Track with a id
 exports.findOne = (req, res) => {
-  console.log(req)
+  // console.log(req)
     Track.findById(req.params.id, (err, data) => {
         if (err) {
           if (err.kind === "not_found") {

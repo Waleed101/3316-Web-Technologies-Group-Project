@@ -12,9 +12,6 @@ exports.create = (req, res) => {
     });
   }
 
-  // Test
-  console.log(req.body)
-
   const review = new Review({
     referenceId: req.body.listId ? req.body.listId : req.body.trackId,
     type: req.body.listId ? 1 : 0,
@@ -37,11 +34,14 @@ exports.create = (req, res) => {
 exports.findAll = (req, res) => {
     const query = {
         type: req.query.type,
-        referenceId: req.query.ref,
+        referenceId: req.query.referenceId || req.query.ref,
         user: req.query.user
     }
 
-    Review.getAll(query, (err, data) => {
+    console.log(req.query)
+    console.log("Looking for above...")
+
+    Review.getAll(query, req.query.avg , (err, data) => {
       if (err)
         res.status(500).send({
           message:
@@ -117,3 +117,35 @@ exports.delete = (req, res) => {
     });
 };
   
+// Retrieve all Review from the database as admin
+exports.findAllAdmin = (req, res) => {
+  Review.getAllAdmin((err, data) => {
+    if (err)
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving Review."
+      });
+    else {
+      console.log(data)
+      res.send(data)
+    }
+  });
+};
+
+// Delete a Review with the specified id in the request
+exports.hide = (req, res) => {  
+  Review.hide(req.params.id, req.body.toHide, (err, data) => {
+      if (err) {
+      if (err.kind === "not_found") {
+          res.status(404).send({
+          message: `Not found Review with id ${req.params.id}.`
+          });
+      } else {
+          res.status(500).send({
+          message: "Could not hide Review with id " + req.params.id
+          });
+      }
+      } else res.send({ message: `Review was hidden successfully!` });
+  });
+};
+

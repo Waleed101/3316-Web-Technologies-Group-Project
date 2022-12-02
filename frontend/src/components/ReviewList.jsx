@@ -15,28 +15,41 @@ function ReviewList(props) {
 
     const [reviews, setReviews] = useState([<Spinner />])
 
-    console.log(props.reviews)
-
     useEffect(() => {
         
         let reference = props.reference ? props.reference : ""
         let type = props.type ? props.type : ""
+
+        if(props.type == 2) {
+            type = 0
+        }
+
         let user = props.user ? props.user : ""
+        let access = props.access ? props.access : ""
 
         let temp = []
 
-        fetch(`${url}api/review/?ref=${reference}&type=${type}&user=${user}`)
+        let query = `${url}api/review/?ref=${reference}&type=${type}&user=${user}`
+
+        if (access == "admin") {
+            query = `${url}api/admin/review`
+        }
+
+        console.log(query)
+
+        fetch(query)
             .then(res => res.json())
                 .then(res => {
-                    if(!res) {
-                        setReviews([])
+                    console.log(res)
+                    if(res.length == 0) {
+                        setReviews([<Text>No Reviews found for this.</Text>])
                     } else {
                         for(let i = 0; i <= res.length; i++) {
                             if (i == res.length) {
                                 setReviews(temp)
                                 break
                             }
-                            temp.push(<ReviewView vals={res[i]} />)
+                            temp.push(<ReviewView vals={res[i]} access={access}/>)
                         }
                     }
                     

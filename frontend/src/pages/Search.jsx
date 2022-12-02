@@ -64,6 +64,8 @@ function Search() {
 
     const [searching, setSearching] = useState(false)
 
+    const [cookies, setCookie, removeCookie] = useCookies(["user"])
+
     const { isOpen, onOpen, onClose } = useDisclosure()
 
     let tracksSelected = useRef({})
@@ -179,11 +181,12 @@ function Search() {
             "tracks": Object.keys(tracks)
         })
 
-        fetch(`${url}api/list/${state ? state.id : ''}`, {
+        fetch(`${url}api/secure/list/${state ? state.id : ''}`, {
             method: state ? "PUT" : "POST",
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': cookies["user"].token
             },
             body: body
         }).then(res => res.json())

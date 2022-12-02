@@ -19,6 +19,7 @@ import DisplayPlaylists from "./pages/DisplayPlaylists";
 import ActivationAccount from "./pages/ActivationAccount";
 import Policies from "./pages/Policies";
 import AdminActivation from "./pages/AdminActivation"
+import AdminReviewAccess from "./pages/AdminReviewAccess";
 
 // Styling
 import './index.css'
@@ -43,6 +44,7 @@ export default function App() {
                 <Route path="activation" element={<ActivationAccount />} />
                 <Route path="policies" element={<Policies />} />
                 <Route path="adminActivation" element={<AdminActivation />} />
+                <Route path="adminReviewAccess" element={<AdminReviewAccess />} />
               {/* <Route path="*" element={<NoPage />} /> */}
               </Route>
             </Routes>

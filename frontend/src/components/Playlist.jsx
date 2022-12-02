@@ -1,4 +1,4 @@
-import { React, useState } from 'react'
+import { React, useEffect, useState } from 'react'
 import { useCookies } from 'react-cookie'
 import  { useNavigate } from 'react-router-dom'
 import { getAuth, onAuthStateChanged, signOut} from "firebase/auth";
@@ -7,7 +7,6 @@ import "../firebase.js"
 import TrackList from '../components/TrackList'
 import ReviewList from '../components/ReviewList'
 import ReactStars from 'react-rating-stars-component'
-import CustomAlert from "../components/CustomAlert";
 
 import {
     Tag,
@@ -50,6 +49,7 @@ import {
     ViewIcon,
     ViewOffIcon,
     ChatIcon,
+    StarIcon,
 } from '@chakra-ui/icons'
 let url = require("../setup/api.setup.js")
 
@@ -62,9 +62,13 @@ function Playlist (props) {
     const [isOpen, setIsOpen] = useState(false)
     const [isPublic, setIsPublic] = useState(props.vals.isPublic)
     const [reviewDescription, setReviewDescription] = useState("")
+    const [cookies, setCookie, removeCookie] = useCookies(["user"])
 
     const [isModalOpen, setModalOpen] = useState(false)
     const [rating, setRating] = useState(0)
+    const [stars, setStars] = useState([<StarIcon />])
+
+    const [avgRating, setAvgRating] = useState(0)
 
     const toast = useToast()
 
@@ -92,11 +96,12 @@ function Playlist (props) {
 
         props.vals.isPublic = !props.vals.isPublic
 
-        fetch(`${url}api/list/${props.vals.id}`, {
+        fetch(`${url}api/secure/list/${props.vals.id}`, {
             method: 'PUT',
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': cookies["user"].token
             },
             body: JSON.stringify(props.vals)
         })
@@ -123,11 +128,12 @@ function Playlist (props) {
 
         console.log(body)
 
-        fetch(`${url}api/review`, {
+        fetch(`${url}api/secure/review`, {
             method: "POST",
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': cookies["user"].token
             },
             body: body
         }).then(res => console.log(res))
@@ -156,19 +162,19 @@ function Playlist (props) {
         console.log("Redirecting...")
         navigate('/search/', { state: props.vals })
     }
-    console.log(props.vals)
+    
     const deletePlaylist = () =>{
         let body = JSON.stringify({
             'user': user.email,
             'name': props.vals.name
         })
-        console.log(body)
         
-        fetch(`${url}api/list/`,{
+        fetch(`${url}api/secure/list/`,{
             method: "DELETE", 
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': cookies["user"].token
             },
             body: body}).then(res => res.json())
             .then(res => {
@@ -183,6 +189,27 @@ function Playlist (props) {
     const addComment = () => setModalOpen(true)
 
     const closing = () => setModalOpen(false)
+
+    useEffect(() => {
+        console.log(props.vals.id)
+        fetch(`${url}api/review/?type=1&referenceId=${props.vals.id}&avg=y`)
+            .then(res => res.json())
+                .then(res => {
+                    if(res.length == 0) {
+                        setStars([<Text>No Ratings</Text>])
+                    } else {
+                        let temp = []
+
+                        for(let i = 0; i < Math.ceil(res[0]['avg']); i += 1) {
+                            temp.push(<StarIcon />)
+                        }
+    
+                        setStars(temp)
+                        setAvgRating(res[0]['avg'])
+                    }
+
+                })
+    }, [])
         
     return(
         <>
@@ -276,20 +303,7 @@ function Playlist (props) {
                                                             onClick={editPlaylist}
                                                         />
                                                     </Tooltip>
-                                                </>                                                
-                                                :
-                                                <></>
-                                            }   
-                                            <Tooltip label="Add Comment">
-                                                <IconButton
-                                                    variant='ghost'
-                                                    colorScheme='gray'
-                                                    aria-label='See menu'
-                                                    icon={<ChatIcon />}
-                                                    onClick={addComment}
-                                                />
-                                            </Tooltip>  
-                                            <Tooltip label="Delete Playlist">
+                                                    <Tooltip label="Delete Playlist">
                                                         <IconButton
                                                             variant='ghost'
                                                             colorScheme='gray'
@@ -297,7 +311,20 @@ function Playlist (props) {
                                                             icon={<DeleteIcon />}
                                                             onClick={deletePlaylist}
                                                         />
-                                                    </Tooltip>                                   
+                                                    </Tooltip>
+                                                </>                                                
+                                                :
+                                                <></>
+                                            }   
+                                            {user ? <Tooltip label="Add Comment">
+                                                <IconButton
+                                                    variant='ghost'
+                                                    colorScheme='gray'
+                                                    aria-label='See menu'
+                                                    icon={<ChatIcon />}
+                                                    onClick={addComment}
+                                                />
+                                            </Tooltip> : <></> }                                 
                                         </Flex>
                                     </Flex>                                
                                 </GridItem>
@@ -308,9 +335,15 @@ function Playlist (props) {
                             isOpen ?
                                 <>
                                     <CardBody>
+                                        <Heading size="h4">Information</Heading>
+                                        <Divider />
+                                        <br />
+                                        <Text><b>Description: </b> {props.vals.description}</Text>
+                                        <Text><b>Average Rating: </b> {avgRating} - {stars.map((s) => <>{s}</>)}</Text>
+                                        <br />
                                         <Heading size="h4">Reviews</Heading>
                                         <Divider />
-                                        <ReviewList reference={props.vals.id} type={1} summary={true}></ReviewList>
+                                        <ReviewList user={user ? user.email : null} reference={props.vals.id} type={1} summary={true}></ReviewList>
                                         <br />
                                         <Heading size="h4">Tracks</Heading>
                                         <Divider />

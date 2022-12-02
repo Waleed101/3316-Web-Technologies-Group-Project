@@ -24,7 +24,7 @@ function Start() {
                  <br></br> Click the Login button below to get started </Text>
 
             <Button onClick={() => {
-                routeChange();
+                // routeChange();
             }}>Login</Button>
             <Button onClick={() => {
 

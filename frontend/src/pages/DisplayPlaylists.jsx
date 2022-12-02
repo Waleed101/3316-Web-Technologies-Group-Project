@@ -29,6 +29,7 @@ import {
     TableContainer,
     Textarea,
     Switch,
+    Spinner,
  } from '@chakra-ui/react'
 import Playlist from '../components/Playlist.jsx';
 
@@ -40,34 +41,64 @@ function DisplayPlaylists() {
     const navigate = useNavigate()
     const auth = getAuth();
     const [user, setUser] = useState(null)
+    const [playlists, setPlaylists] = useState([<Spinner />])
+    const [cookies, setCookie, removeCookie] = useCookies(["user"])
 
     useEffect(() => {
+        console.log("Requesting...")
+        if (user) {
+            console.log("User.")
+            fetch(`${url}api/secure/list?user=${user.email}`, { 
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': cookies["user"].token
+                },
+            })
+            .then(res => res.json())
+                .then(res => {
+                    let temp = []
+
+                    console.log(res)
+                    res.forEach(row => {
+                        temp.push(<Playlist vals={row}></Playlist>)
+                    })
+
+                    setPlaylists(temp)
+                })
+        }
+    }, [user])
+    
+
 onAuthStateChanged(auth, (user) => {
         if (user) {
             setUser(user)
-        fetch(`${url}api/list?user=${user.email}`)
-                .then(res => res.json())
-                    .then(res => {
-                        let temp = []
+        // fetch(`${url}api/secure/list?user=${user.email}`, {
+        //     headers: {
+        //         'Accept': 'application/json',
+        //         'Content-Type': 'application/json',
+        //         'Authorization': cookies["user"].token
+        //     },
+        // }).then(res => res.json())
+        //         .then(res => {
+        //             let temp = []
 
-                        console.log(res)
+        //             console.log(res)
 
-                        res.forEach(row => {
-                            temp.push(<Playlist vals={row}></Playlist>)
-                        })
+        //             res.forEach(row => {
+        //                 temp.push(<Playlist vals={row}></Playlist>)
+        //             })
 
-                        setPlaylists(temp)
-                    })
+        //             setPlaylists(temp)
+        //         })
             
             } else {
             console.log("Redirecting...")
             navigate('/login', { state: {redirectTo: '/playlists'} })
         }
     })
-    }, [])
     
 
-    const [playlists, setPlaylists] = useState([])
 
     const redirect = false
 
