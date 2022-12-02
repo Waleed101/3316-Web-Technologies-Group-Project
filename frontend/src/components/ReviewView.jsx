@@ -92,10 +92,11 @@ function ReviewView (props) {
 
     const changeHideStatus = (val) => {
         if (val == '2' || val == '3') {
-            hideReview(true)
+            setIsHidden(true)
         } else {
-            hideReview(false)
+            setIsHidden(false)
         }
+        switchHideView()
     }
 
     useEffect(() => {
@@ -175,7 +176,6 @@ function ReviewView (props) {
     const update = () => {
         closeTakedownDialog()
         changeHideStatus(status)
-        
         let body = {
             dateDispute: dateDispute,
             dateNotice: dateNotice,
@@ -213,9 +213,12 @@ function ReviewView (props) {
             })
     }
 
-    const hideReview = (hideVal = !isHidden) => {
-        setIsHidden(hideVal)
+    const switchHideView = () => {
+        setIsHidden(!isHidden)
+        hideReview()
+    }
 
+    const hideReview = () => {
         let body = JSON.stringify({
             toHide: isHidden
         })
@@ -339,7 +342,7 @@ function ReviewView (props) {
                                                 colorScheme='gray'
                                                 aria-label='See menu'
                                                 icon={!isHidden ? <ViewIcon /> : <ViewOffIcon />}
-                                                onClick={hideReview}
+                                                onClick={switchHideView}
                                             />
                                         </Tooltip>
                                     </GridItem>
