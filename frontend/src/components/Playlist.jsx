@@ -63,6 +63,7 @@ function Playlist (props) {
     const [isOpen, setIsOpen] = useState(false)
     const [isPublic, setIsPublic] = useState(props.vals.isPublic)
     const [reviewDescription, setReviewDescription] = useState("")
+    const [cookies, setCookie, removeCookie] = useCookies(["user"])
 
     const [isModalOpen, setModalOpen] = useState(false)
     const [rating, setRating] = useState(0)
@@ -93,11 +94,12 @@ function Playlist (props) {
 
         props.vals.isPublic = !props.vals.isPublic
 
-        fetch(`${url}api/list/${props.vals.id}`, {
+        fetch(`${url}api/secure/list/${props.vals.id}`, {
             method: 'PUT',
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': cookies["user"].token
             },
             body: JSON.stringify(props.vals)
         })
@@ -124,11 +126,12 @@ function Playlist (props) {
 
         console.log(body)
 
-        fetch(`${url}api/review`, {
+        fetch(`${url}api/secure/review`, {
             method: "POST",
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': cookies["user"].token
             },
             body: body
         }).then(res => console.log(res))
@@ -165,11 +168,12 @@ function Playlist (props) {
         })
         console.log(body)
         
-        fetch(`${url}api/list/`,{
+        fetch(`${url}api/secure/list/`,{
             method: "DELETE", 
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': cookies["user"].token
             },
             body: body}).then(res => res.json())
             .then(res => {
