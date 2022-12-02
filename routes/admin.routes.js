@@ -2,6 +2,7 @@ module.exports = app => {
     const auth = require("../controller/auth.controller.js");
     const review = require("../controller/review.controller.js");
     const policy = require("../controller/policy.controller.js");
+    const takedown = require("../controller/takedown.controller.js")
   
     var router = require("express").Router();
   
@@ -16,6 +17,15 @@ module.exports = app => {
 
     // Hide/unhide review
     router.post("/review/hide/:id", review.hide)
+
+    // Create a new takedown request
+    router.post("/takedown/", takedown.create)
+
+    // Update status of a takedown
+    router.put("/takedown/:id", takedown.updateStatus)
+
+    // Update status of a takedown
+    router.get("/takedown/:id", takedown.getByReviewId)
 
     // Update policy
     router.put("/policy", policy.update)
