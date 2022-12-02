@@ -6,6 +6,7 @@ import  { useNavigate } from 'react-router-dom'
 import { Button } from '@chakra-ui/react'
 
 import { useToast } from "@chakra-ui/react"
+import { Text } from '@chakra-ui/react'
 
 import pdf from './LiamBriggsResume.pdf';
 
@@ -56,6 +57,10 @@ function Home() {
         
     return (
         <>
+        <Text fontSize='20px'>Welcome to the GROOVAY! 
+                  You will find many features within this app including searching for your favourite music, creating playlists, and viewing public playlists!
+                 <br></br> If you are not signed in click the Login button on the navigation bar to get started </Text>
+
             {name}
             {adminMode}
             <Button onClick={() => {
