@@ -82,17 +82,19 @@ function TrackView (props) {
 
     let genre = []
 
-    props.arr.genres.forEach(g => {
-        genre.push(<Tag 
-                        size='md' 
-                        variant='solid' 
-                        colorScheme={COLORS[g.id % (COLORS.length)]}
-                    >
-                        <Text fontSize={props.size}>
-                            {g.title}
-                        </Text>
-                    </Tag>)
-    })
+    if(props.arr.genres.length != 0) {
+            props.arr.genres.forEach(g => {
+            genre.push(<Tag 
+                            size='md' 
+                            variant='solid' 
+                            colorScheme={COLORS[g.id % (COLORS.length)]}
+                        >
+                            <Text fontSize={props.size}>
+                                {g.title}
+                            </Text>
+                        </Tag>)
+        })
+    }
 //access the track data
     const id = "addTo" + props.arr.id
 
