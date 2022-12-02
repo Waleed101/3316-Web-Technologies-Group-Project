@@ -4,7 +4,7 @@ import  { useNavigate } from 'react-router-dom'
 import { getAuth, onAuthStateChanged, signOut} from "firebase/auth";
 import "../firebase.js"
 
-import TrackList from '../components/TrackList'
+import TrackList from './TrackList'
 import ReviewList from '../components/ReviewList'
 import ReactStars from 'react-rating-stars-component'
 

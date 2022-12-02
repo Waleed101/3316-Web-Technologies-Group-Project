@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import { useCookies }  from "react-cookie";
-import { getAuth, onAuthStateChanged, signOut} from "firebase/auth";
+import { getAuth, onAuthStateChanged, reload, signOut} from "firebase/auth";
 import "../firebase.js"
 import  { useNavigate } from 'react-router-dom'
 import { Button } from '@chakra-ui/react'
@@ -78,6 +78,7 @@ function Home() {
                 }))
                 removeCookie("user")
                 console.log("Removed user cookie.")
+                window.location.reload(false)
             }}>Log-out</Button>
         </>
     );

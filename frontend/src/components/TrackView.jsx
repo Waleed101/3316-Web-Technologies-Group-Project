@@ -203,12 +203,12 @@ function TrackView (props) {
                     <ModalBody>
                         <form>
                             <FormLabel>Rating</FormLabel>
-                            <ReactStars
+                            {/* <ReactStars
                                 count={5}
                                 onChange={ratingChanged}
                                 size={40}
                                 activeColor="#ffd700"
-                            />
+                            /> */}
                             <br /><br />
                             <FormLabel> Description: </FormLabel>
                                 <Textarea

@@ -68,7 +68,8 @@ const submit = (event) => {
           method: 'PUT',
           headers: {
                'Accept': 'application/json',
-               'Content-Type': 'application/json'
+               'Content-Type': 'application/json',
+               'Authorization': cookies["user"].token
           },
           body: body
      })

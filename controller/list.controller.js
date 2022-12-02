@@ -1,6 +1,26 @@
 const sanitize = require('../helper/sanitize.helper.js')
+const Joi = require('@hapi/joi');
 
 const List = require("../models/list.model.js");
+
+const SanitizeHtml = require('sanitize-html');
+
+const customJoi = Joi.extend((joi) => {
+    return {
+        type: 'string',
+        base: joi.string(),
+        rules: {
+            htmlStrip: {
+                validate(value) {
+                    return SanitizeHtml(value, {
+                        allowedTags: [],
+                        allowedAttributes: {},
+                    });
+                },
+            },
+        },
+    };
+});
 
 // Create and Save a new List
 exports.create = (req, res) => {
@@ -19,6 +39,21 @@ exports.create = (req, res) => {
     });
     return
   }
+
+  const schema = customJoi.object({
+    createdBy: customJoi.string().required(),
+    name: customJoi.string().max(255).htmlStrip().required(),
+    description: customJoi.string().max(255).htmlStrip(),
+    isPublic: customJoi.boolean(),
+    totalPlaytime: customJoi.number().integer(),
+    tracks: customJoi.array().items(customJoi.string())
+  });
+  const { error } = schema.validate(req.body);
+  if (error) return res.status(400).send({message: "Status 400: " + error.details[0].message});
+
+  req.body = schema.validate(req.body).value
+
+  console.log(req.body)
 
   List.create(req.body, (err, data) => {
     console.log("Creating...")

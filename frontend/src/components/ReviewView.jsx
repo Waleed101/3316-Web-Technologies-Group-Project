@@ -1,4 +1,5 @@
 import { React, useEffect, useState } from 'react'
+import { useCookies }  from "react-cookie";
 
 import { getAuth, onAuthStateChanged, signOut} from "firebase/auth";
 import "../firebase.js"
@@ -49,6 +50,9 @@ function ReviewView (props) {
 
     const [stars, setStars] = useState([<StarIcon />])
 
+    const [cookies, setCookie, removeCookie] = useCookies(["user"])
+
+
     const changeContentState = () => {
         setIsOpen(!isOpen)
     }
@@ -72,7 +76,8 @@ function ReviewView (props) {
             method: "POST", 
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': cookies["user"].token
             },
             body: body
             }).then(res => res.json())
