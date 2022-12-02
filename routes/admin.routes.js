@@ -2,9 +2,12 @@ module.exports = app => {
     const auth = require("../controller/auth.controller.js");
     const review = require("../controller/review.controller.js");
     const policy = require("../controller/policy.controller.js");
-    const takedown = require("../controller/takedown.controller.js")
+    const takedown = require("../controller/takedown.controller.js");
+    var cors = require('cors')
   
     var router = require("express").Router();
+
+    router.use(cors())
   
     // Set as admin
     router.post("/setAdmin/:email", auth.setAdmin);

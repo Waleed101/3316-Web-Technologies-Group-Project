@@ -26,7 +26,7 @@ exports.create = (req, res) => {
 
 // Retrieve all Takedown from the database (with condition).
 exports.getByReviewId = (req, res) => {
-    Takedown.getAll(req.reviewId, (err, data) => {
+    Takedown.getByReviewId(req.params.id, (err, data) => {
       if (err)
         res.status(500).send({
           message:

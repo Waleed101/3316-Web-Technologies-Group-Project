@@ -6,6 +6,8 @@
     4 -> Closed, denied
 */
 
+const sql = require('../dbseed.js')
+
 
 const Takedown = function(takedown) {
     this.id = takedown.id
@@ -33,10 +35,11 @@ Takedown.create = (newTakedown, result) => {
     })
 }
 
-Takedown.updateStatus = (id, newStatus, result) => {
+Takedown.updateStatus = (id, updateTakedown, result) => {
     sql.query(
-        "UPDATE takedown SET status = ? WHERE id = ?",
-        [newStatus, id],
+        `UPDATE takedown SET dateNoticeSent="${newTakedown.dateNoticeSent}",dateDisputeRecieved="${newTakedown.dateDisputeRecieved}", ` + 
+        `requestedBy="${newTrack.requestedBy}", additionalInfo="${newTrack.additionalInfo}", status=${newTakedown.status}` +
+        `WHERE id = ${id}`,
         (err, res) => {
           if (err) {
             console.log("Error: ", err)
@@ -64,8 +67,8 @@ Takedown.getByReviewId = (reviewId, result) => {
             result(null, err);
             return;
         }
-
-        result(res[0], null)
+        // console.log(res)
+        result(null, res)
     })
 }
 
