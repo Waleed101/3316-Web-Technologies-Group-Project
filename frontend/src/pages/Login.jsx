@@ -94,7 +94,7 @@ function Login() {
                     alert(`Error: ${res.message}`)
                 } else {
                     setCookie("user", res, { path: "/" })
-
+                    console.log(cookies['user'])
                     alert(`Successfully logged in with email ${email}`)
                     console.log(state)
                     if(state) {

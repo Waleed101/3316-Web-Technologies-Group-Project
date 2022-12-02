@@ -1,21 +1,17 @@
 import { React, useState } from 'react';
 import { getAuth, createUserWithEmailAndPassword, updateProfile, signInWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
+import { useCookies }  from "react-cookie";
 
 let url = require("../setup/api.setup.js")
 
 const auth = getAuth();
-
-const actionCodeSettings = {
-    // URL you want to redirect back to. The domain (www.example.com) for
-    // this URL must be whitelisted in the Firebase Console.
-    url: url+"/emailVerified"
-  };
 
 function Register() {
 
     const [email, setEmail] = useState("")
     const [name, setName] = useState("")
     const [password, setPassword] = useState("")
+    const [cookies, setCookie, removeCookie] = useCookies(["user"])
 
     const submit = (event) => {
         event.preventDefault();
@@ -45,15 +41,13 @@ function Register() {
     })
     .then(res => res.json())
         .then(res => {
-            console.log(res)
                 if(res.message) {
                     alert(`Error: ${res.message}`)
                 } else {
                     alert(`Successfully created account with email ${email}`)
                 }
             })
-            const actionCodeSettings = {url: "https://www.google.com/", handleCodeInApp: true,}
-            sendEmailVerification(user, actionCodeSettings);
+            sendEmailVerification(user);
             auth.signOut();
             alert("Email verification sent!")
             

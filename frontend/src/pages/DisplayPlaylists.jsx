@@ -26,11 +26,17 @@ function DisplayPlaylists() {
     const auth = getAuth();
     const [user, setUser] = useState(null)
     const [playlists, setPlaylists] = useState([])
-
+    const [cookies, setCookie, removeCookie] = useCookies(["user"])
 
         useEffect(() => {
             if (user) {
-            fetch(`${url}api/list?user=${user.email}`)
+            fetch(`${url}api/secure/list?user=${user.email}`, { 
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': cookies["user"].token
+                },
+            })
             .then(res => res.json())
                 .then(res => {
                     let temp = []

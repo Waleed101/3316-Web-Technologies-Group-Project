@@ -28,6 +28,8 @@ import {
     StarIcon,
 } from '@chakra-ui/icons'
 
+let url = require("../setup/api.setup.js")
+
 function ReviewView (props) {
 
     const auth = getAuth();
@@ -52,6 +54,27 @@ function ReviewView (props) {
         setStars(stars)
     }, [])
 
+    const hideReview = () => {
+        let body = JSON.stringify({
+            toHide: 1
+        })
+        fetch(`${url}api/admin/review/hide/${props.vals.id}`,{
+            method: "POST", 
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: body
+            }).then(res => res.json())
+            .then(res => {
+                    if(!res.message) {
+                        alert(`Error: ${res.message}`)
+                    } else {
+                        alert(res.message)
+                    }
+                })
+    }
+
     return(
         <Box w="100%">
             <Center>
@@ -75,6 +98,13 @@ function ReviewView (props) {
                                         onClick={changeContentState}
                                     />
                                 </GridItem>
+                                {props.access ? 
+                                <GridItem>
+                                    <Button onClick={hideReview}>Hide</Button>
+                                </GridItem>
+                                :
+                                <></>
+                                }         
                             </Center>
                         </Grid>
                         <Flex flex='1' gap='2' alignItems='center' flexWrap='wrap'>

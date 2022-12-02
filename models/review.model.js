@@ -11,6 +11,7 @@ const Review = function(review) {
     this.user = review.user
     this.description = review.description
     this.rating = review.rating
+    this.isHidden = review.isHidden
 }
 
 Review.create = (newReview, result) => {
@@ -46,10 +47,15 @@ Review.findById = (id, result) => {
     })
 }
 
-Review.getAll = (req, isAvg, result) => {
-    let query = `SELECT * FROM review WHERE type=${req.type} AND referenceId=${req.referenceId}`
+Review.getAll = (req, result) => {
+    let query = `SELECT * FROM review`
+    console.log(req)
+    if (req.type || req.referenceId) {
+        query = `SELECT * FROM review WHERE type=${req.type} AND referenceId=${req.referenceId} AND isHidden=0`
+    }
+
     if (req.user) {
-        query = `SELECT * FROM review WHERE userEmail=${req.user}`
+        query = `SELECT * FROM review WHERE userEmail=${req.user} and isHidden=0`
     } else if (isAvg) {
         query = `SELECT AVG(rating) as avg FROM review WHERE type=${req.type} AND referenceId=${req.referenceId}`
     }
@@ -105,6 +111,41 @@ Review.updateById = (id, review, result) => {
   
         console.log("Updated Review: ", { id: id, ...review })
         result(null, { id: id, ...review })
+      }
+    )
+}
+
+Review.getAllAdmin = (result) => {
+
+    sql.query(`SELECT * FROM review`, (err, res) => {
+        if(err) {
+            console.log("Error: ", err);
+            result(null, err);
+            return;
+        }
+
+        console.log("Reviews: ", res);
+        result(null, res);
+    })
+}
+
+Review.hide = (id, hide, result) => {
+    sql.query(
+      "UPDATE review SET isHidden = ? WHERE id = ?",
+      [hide, id],
+      (err, res) => {
+        if (err) {
+          console.log("Error: ", err)
+          result(null, err)
+          return
+        }
+  
+        if (res.affectedRows == 0) {
+          result({ans: "Not Found"}, null)
+          return
+        }
+  
+        result(null, { id: id})
       }
     )
 }
