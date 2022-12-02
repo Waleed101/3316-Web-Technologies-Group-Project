@@ -47,9 +47,12 @@ List.create = (newList, result) => {
                         totalDuration += (parseInt(time[0]) * 60 + parseInt(time[1]))
                     })
 
+                    const query = `INSERT INTO list SET name="${newList.name}", createdBy="${newList.createdBy}", tracks="${newList.tracks.join(",")}",
+                    totalPlayTime=${totalDuration}, description="${newList.description}", isPublic=${newList.isPublic ? 1 : 0}, updated="${new Date().toISOString().slice(0, 19).replace('T', ' ')}"`
 
-                    sql.query(`INSERT INTO list SET name="${newList.name}", createdBy="${newList.createdBy}", tracks="${newList.tracks.join(",")}",
-                                totalPlayTime=${totalDuration}, description="${newList.description}", isPublic=${newList.isPublic ? 1 : 0}`, (err, res) => {
+                    console.log(query)
+
+                    sql.query(query, (err, res) => {
                         if(err) {
                             console.log("Error: ", err)
                             result(err, null)

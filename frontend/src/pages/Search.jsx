@@ -28,6 +28,7 @@ import {
     Th,
     Td,
     TableCaption,
+    useToast,
     TableContainer,
     Textarea,
     Switch,
@@ -49,6 +50,8 @@ function Search() {
     const [title, setTitle] = useState("")
     const [genre, setGenre] = useState([])
     const [artist, setArtist] = useState("")
+
+    const toast = useToast()
 
     // Creating the list form
     const [listTitle, setListTitle] = useState("")
@@ -198,9 +201,23 @@ function Search() {
             .then(res => {
                 onClose()
                 if (res.message) {
-                    setCreateState(<CustomAlert isError={true} msg={res.message}></CustomAlert>)
+                    toast({
+                        title: `${state ? "Changes" : "Creation"} Failed`,
+                        description: res.message,
+                        status: 'error',
+                        duration: 10000,
+                        isClosable: true,
+                    })
+                    // setCreateState(<CustomAlert isError={true} msg={res.message}></CustomAlert>)
                 } else {
-                    setCreateState(<CustomAlert isError={false} msg={`Successfully ${state ? "edited" : "created"} playlist.`}></CustomAlert>)
+                    toast({
+                        title: `${state ? "Changes" : "Creation"} was Successful`,
+                        description: `Successfully ${state ? "edited" : "created"} playlist.`,
+                        status: 'success',
+                        duration: 5000,
+                        isClosable: true,
+                    })
+                    // setCreateState(<CustomAlert isError={false} msg={`Successfully ${state ? "edited" : "created"} playlist.`}></CustomAlert>)
                 
                     if (!state) {
                         // Resetting user inputted data
@@ -224,6 +241,7 @@ function Search() {
 
     useEffect(() => {
         if (state) {
+            console.log(state)
             setListDescription(state.description)
             setListTitle(state.name)
             search(null)

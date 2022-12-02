@@ -5,7 +5,8 @@ import {
     Input,
     InputGroup,
     InputRightElement,
-    FormLabel
+    FormLabel,
+    useToast,
  } from '@chakra-ui/react'
 
 import { Navigate, useLocation } from 'react-router-dom';
@@ -30,6 +31,8 @@ function Login() {
     const navigate = useNavigate()
     const [resendBtn, setResendBtn] = useState("")
 
+    const toast = useToast()
+
 
     const route = new URLSearchParams(useLocation().search).get("rdr")
     console.log(route)
@@ -41,21 +44,46 @@ function Login() {
         signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
             const user = userCredential.user
-            alert(user.emailVerified)
-            sendEmailVerification(user)
-            alert("Email verification link sent!")
-            auth.signOut()
+            // alert(user.emailVerified)
+        sendEmailVerification(user)
+        console.log("Email verification link sent!")
+        toast({
+            title: `Email Verification Link`,
+            description: `A link was sent to the email associated with your account.`,
+            status: 'info',
+            duration: 5000,
+            isClosable: true,
+        })
+        auth.signOut()
         })
     }
     const submit = (event) => {
         event.preventDefault();
 
         if (!email && !password) {
-            alert("Please enter an email and password")
+            toast({
+                title: `Missing Paramaters`,
+                description: "Please enter an email and password",
+                status: 'error',
+                duration: 5000,
+                isClosable: true,
+            })
         } else if (!email){
-            alert("Please enter an email")
+            toast({
+                title: `Missing Paramaters`,
+                description: "Please enter an email",
+                status: 'error',
+                duration: 5000,
+                isClosable: true,
+            })
         } else if (!password) {
-            alert("Please enter a password")
+            toast({
+                title: `Missing Paramaters`,
+                description: "Please enter a password",
+                status: 'error',
+                duration: 5000,
+                isClosable: true,
+            })
         }
 
         if (!(email && password))
@@ -77,44 +105,74 @@ function Login() {
         .then(res => res.json())
             .then(res => {
                 if (res.status == 2) {
-                    alert("Account is deactivated, please contact site administrator.")
+                    toast({
+                        title: `Deactiviate Account`,
+                        description: "Account is deactivated, please contact site administrator.",
+                        status: 'error',
+                        duration: 10000,
+                        isClosable: true,
+                    })
                     return
                 }
                 console.log(res)
                 signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
             const user = userCredential.user
-            alert(user.emailVerified)
+            // alert(user.emailVerified)
 
             if (user.emailVerified) {
             // Signed in 
                 console.log(userCredential.user)
                 
                 if(res.message) {
-                    alert(`Error: ${res.message}`)
+                    toast({
+                        title: `Error Logging In`,
+                        description: res.message,
+                        status: 'error',
+                        duration: 10000,
+                        isClosable: true,
+                    })
                 } else {
                     setCookie("user", res, { path: "/" })
                     console.log(cookies['user'])
-                    alert(`Successfully logged in with email ${email}`)
+                    toast({
+                        title: `Logged In`,
+                        description: 'Successfully logged in. Welcome back!',
+                        status: 'success',
+                        duration: 5000,
+                        isClosable: true,
+                    })
                     console.log(state)
                     if(state) {
                         navigate(state.redirectTo)
                     }                        
                 }
             } else {
-                console.log(email,password)
+                // console.log(email,password)
                 setTempEmail(email)
                 setTempPassword(password)
                 auth.signOut()
-                alert("Please verify your email before attempting to log in")
-                setResendBtn(<Button onClick={resend}>Send Email Verification Link</Button>)
-                console.log(tempEmail)
+                toast({
+                    title: `Verify Email Address`,
+                    description: "Please verify your email address before continuing.",
+                    status: 'warning',
+                    duration: 5000,
+                    isClosable: true,
+                })
+                setResendBtn(<Button onClick={resend}>Resend Email Verification Link</Button>)
+                // console.log(tempEmail)
             }
         })
         .catch((error) => {
             const errorCode = error.code;
             const errorMessage = error.message;
-            alert(errorMessage)
+            toast({
+                title: `Error Logging In`,
+                description: errorMessage,
+                status: 'error',
+                duration: 10000,
+                isClosable: true,
+            })
         });
 
         // DELETE ONCE YOU UNCOMMENT EMAIL VERIFICATION

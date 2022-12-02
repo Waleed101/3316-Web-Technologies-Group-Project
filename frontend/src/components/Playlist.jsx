@@ -1,4 +1,4 @@
-import { React, useEffect, useState } from 'react'
+import { React, useEffect, useState, useRef } from 'react'
 import { useCookies } from 'react-cookie'
 import  { useNavigate } from 'react-router-dom'
 import { getAuth, onAuthStateChanged, signOut} from "firebase/auth";
@@ -37,7 +37,13 @@ import {
     useDisclosure,
     FormLabel,
     Textarea,
-    useToast,
+    useToast,    
+    AlertDialog,
+    AlertDialogBody,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogContent,
+    AlertDialogOverlay,
 } from '@chakra-ui/react'
 
 import {
@@ -63,6 +69,8 @@ function Playlist (props) {
     const [isPublic, setIsPublic] = useState(props.vals.isPublic)
     const [reviewDescription, setReviewDescription] = useState("")
     const [cookies, setCookie, removeCookie] = useCookies(["user"])
+
+    const [isDeleteOpen, setIsDeleteOpen] = useState(false)
 
     const [isModalOpen, setModalOpen] = useState(false)
     const [rating, setRating] = useState(0)
@@ -108,8 +116,21 @@ function Playlist (props) {
             .then(res => res.json()
                 .then(res => {
                     if (res.message) {
-                        alert(res.message)
+                        toast({
+                            title: 'Error Changing Privacy',
+                            description: res.message,
+                            status: 'error',
+                            duration: 10000,
+                            isClosable: true,
+                        })
                     } else {
+                        toast({
+                            title: 'Successfuly Updated Privacy.',
+                            description: `Made Playlist ${props.vals.isPublic ? 'public' : 'private'}`,
+                            status: 'success',
+                            duration: 5000,
+                            isClosable: true,
+                        })
                         setIsPublic(props.vals.isPublic)
                     }
                 })
@@ -143,7 +164,7 @@ function Playlist (props) {
                         title: 'Error Publishing Review',
                         description: res.message,
                         status: 'error',
-                        duration: 5000,
+                        duration: 10000,
                         isClosable: true,
                     })
                 } else {
@@ -164,6 +185,8 @@ function Playlist (props) {
     }
     
     const deletePlaylist = () =>{
+        deletePlaylistCancel()
+
         let body = JSON.stringify({
             'user': user.email,
             'name': props.vals.name
@@ -179,19 +202,35 @@ function Playlist (props) {
             body: body}).then(res => res.json())
             .then(res => {
                     if(!res.message) {
-                        alert(`Error: ${res.message}`)
+                        toast({
+                            title: 'Error Deleting Playlist.',
+                            description: `The following error was encountered ${res.message}`,
+                            status: 'error',
+                            duration: 10000,
+                            isClosable: true,
+                        })
                     } else {
-                        alert(res.message)
+                        toast({
+                            title: 'Deleted Playlist.',
+                            description: `Successfully deleted the playlist.`,
+                            status: 'success',
+                            duration: 5000,
+                            isClosable: true,
+                        })
                     }
+                    props.refreshPlaylist()
                 })
     }
+
+    const deletePlaylistStart = () => setIsDeleteOpen(true)
+
+    const deletePlaylistCancel = () => setIsDeleteOpen(false)
                 
     const addComment = () => setModalOpen(true)
 
     const closing = () => setModalOpen(false)
 
     useEffect(() => {
-        console.log(props.vals.id)
         fetch(`${url}api/review/?type=1&referenceId=${props.vals.id}&avg=y`)
             .then(res => res.json())
                 .then(res => {
@@ -246,6 +285,30 @@ function Playlist (props) {
                     <ModalFooter>
                         <Button colorScheme='green' mr={3} onClick={addReview}>
                             Comment
+                        </Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
+            <Modal 
+                isOpen={isDeleteOpen} 
+                onClose={deletePlaylistCancel}
+                motionPreset='slideInBottom'
+                w="500px"
+            >
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>Are you sure you want to delete <b>{props.vals.name}</b>?</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                        This action is <b>not</b> reversible.
+                    </ModalBody>
+
+                    <ModalFooter>
+                        <Button colorScheme='gray' mr={3} onClick={deletePlaylistCancel}>
+                            Cancel
+                        </Button>
+                        <Button colorScheme='red' mr={3} onClick={deletePlaylist}>
+                            Delete
                         </Button>
                     </ModalFooter>
                 </ModalContent>
@@ -309,7 +372,7 @@ function Playlist (props) {
                                                             colorScheme='gray'
                                                             aria-label='See menu'
                                                             icon={<DeleteIcon />}
-                                                            onClick={deletePlaylist}
+                                                            onClick={deletePlaylistStart}
                                                         />
                                                     </Tooltip>
                                                 </>                                                

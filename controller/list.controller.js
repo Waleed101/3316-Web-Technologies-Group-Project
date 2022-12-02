@@ -113,14 +113,15 @@ exports.update = (req, res) => {
         return
       }  
 
-      const vals = req.body.tracks.split(",")
+      console.log(req.body.tracks)
+      // const vals = req.body.tracks.split(",")
 
-      for(let i = 0; i < vals.length; i += 1) {
-        if (!sanitize.isInteger(vals[i])) {
-          res.status(403).send({ message: "All the IDs you inputted should only be numbers."})
-          return
-        }
-      }
+      // for(let i = 0; i < vals.length; i += 1) {
+      //   if (!sanitize.isInteger(vals[i])) {
+      //     res.status(403).send({ message: "All the IDs you inputted should only be numbers."})
+      //     return
+      //   }
+      // }
     
       List.update(
         req.params.id,

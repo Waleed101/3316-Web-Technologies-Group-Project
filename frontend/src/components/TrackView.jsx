@@ -122,6 +122,8 @@ function TrackView (props) {
     const addReview = () => {
         closing()
 
+        console.log(cookies['user'].token)
+
         let body = JSON.stringify({
             "trackId": props.arr.id,
             "userEmail": user ? user.email : null,
@@ -171,6 +173,9 @@ function TrackView (props) {
                         setStars([<Text>No reviews on this.</Text>])
                         return
                     }
+
+                    console.log(res[0]['avg'])
+
                     let temp = []   
 
                     for(let i = 0; i < Math.ceil(res[0]['avg']); i += 1) {

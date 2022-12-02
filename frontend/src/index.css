@@ -10,7 +10,7 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
-ul>li{
+.navbar>li{
     display: inline-block;
     border-radius: 5%;
     zoom:1;

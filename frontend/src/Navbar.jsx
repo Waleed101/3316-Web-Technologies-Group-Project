@@ -13,8 +13,9 @@ function Navbar() {
   
   return (
     <nav>
-      <ul>
-        <li color="gray.100">
+      <br/>
+      <ul class="navbar">
+        <li>
           <Link to="/">Home</Link>
         </li>
         {user ? 
