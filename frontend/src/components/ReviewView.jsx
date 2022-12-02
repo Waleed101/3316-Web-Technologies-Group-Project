@@ -84,6 +84,20 @@ function ReviewView (props) {
         setIsOpen(!isOpen)
     }
 
+    // 0 -> Requested
+    // 1 -> Sent
+    // 2 -> Disputed
+    // 3 -> Closed, accepted
+    // 4 -> Closed, denied
+
+    const changeHideStatus = (val) => {
+        if (val == '2' || val == '3') {
+            hideReview(true)
+        } else {
+            hideReview(false)
+        }
+    }
+
     useEffect(() => {
         setStars([]);
 
@@ -116,6 +130,8 @@ function ReviewView (props) {
 
     const create = () => {
         closeTakedownDialog()
+        changeHideStatus(status)
+        
         let body = {
             requestedBy: submittedBy,
             additionalInfo: additionalInfo,
@@ -158,6 +174,8 @@ function ReviewView (props) {
 
     const update = () => {
         closeTakedownDialog()
+        changeHideStatus(status)
+        
         let body = {
             dateDispute: dateDispute,
             dateNotice: dateNotice,
@@ -195,8 +213,8 @@ function ReviewView (props) {
             })
     }
 
-    const hideReview = () => {
-        setIsHidden(!isHidden)
+    const hideReview = (hideVal = !isHidden) => {
+        setIsHidden(hideVal)
 
         let body = JSON.stringify({
             toHide: isHidden
