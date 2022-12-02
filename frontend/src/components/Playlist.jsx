@@ -193,6 +193,7 @@ function Playlist (props) {
                     } else {
                         alert(res.message)
                     }
+                    props.refreshPlaylist()
                 })
     }
 
@@ -205,7 +206,6 @@ function Playlist (props) {
     const closing = () => setModalOpen(false)
 
     useEffect(() => {
-        console.log(props.vals.id)
         fetch(`${url}api/review/?type=1&referenceId=${props.vals.id}&avg=y`)
             .then(res => res.json())
                 .then(res => {
