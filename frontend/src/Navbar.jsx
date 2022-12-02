@@ -10,7 +10,7 @@ function Navbar() {
   onAuthStateChanged(auth, (user) => {
       if (user) setUser(user)
   })
-  
+
   return (
     <nav>
       <br/>
