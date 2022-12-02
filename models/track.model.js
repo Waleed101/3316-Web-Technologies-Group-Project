@@ -91,7 +91,7 @@ Track.getAll = (req, result) => {
                             ${req.genre ? `WHERE genreID in (${req.genre.join(",")})` : ''}
                         ) as g
                     ON t.id = g.trackID
-                    ${req.id == '' ? `WHERE id in (${req.id})` : ''}) as res
+                    ${req.id != '' ? `WHERE id in (${req.id})` : ''}) as res
                     LIMIT ${req.id ? MAX_TRACKS_TO_RETURN : OPEN_TRACKS}`
 
     console.log(query)

@@ -241,6 +241,7 @@ function Search() {
 
     useEffect(() => {
         if (state) {
+            console.log(state)
             setListDescription(state.description)
             setListTitle(state.name)
             search(null)

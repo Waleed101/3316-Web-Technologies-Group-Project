@@ -126,7 +126,7 @@ function Playlist (props) {
                     } else {
                         toast({
                             title: 'Successfuly Updated Privacy.',
-                            description: `Made Playlist ${!props.vals.isPublic ? 'public' : 'private'}`,
+                            description: `Made Playlist ${props.vals.isPublic ? 'public' : 'private'}`,
                             status: 'success',
                             duration: 5000,
                             isClosable: true,
