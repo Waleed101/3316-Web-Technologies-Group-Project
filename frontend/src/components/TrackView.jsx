@@ -277,7 +277,7 @@ function TrackView (props) {
                                 <br />
                                 <Heading size="h4">Reviews</Heading>
                                 <Divider />
-                                <ReviewList reference={props.arr.id} type={2} summary={true}></ReviewList>
+                                <ReviewList user={user.email} reference={props.arr.id} type={2} summary={true}></ReviewList>
                                 <br />
                                 {genre}
                             </CardBody>

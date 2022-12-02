@@ -35,7 +35,7 @@ function ReviewList(props) {
             query = `${url}api/admin/review`
         }
 
-        console.log("Trying...")
+        console.log(query)
 
         fetch(query)
             .then(res => res.json())

@@ -343,7 +343,7 @@ function Playlist (props) {
                                         <br />
                                         <Heading size="h4">Reviews</Heading>
                                         <Divider />
-                                        <ReviewList reference={props.vals.id} type={1} summary={true}></ReviewList>
+                                        <ReviewList user={user.email} reference={props.vals.id} type={1} summary={true}></ReviewList>
                                         <br />
                                         <Heading size="h4">Tracks</Heading>
                                         <Divider />
