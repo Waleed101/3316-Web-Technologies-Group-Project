@@ -38,7 +38,7 @@ Takedown.create = (newTakedown, result) => {
 Takedown.update = (id, updateTakedown, result) => {
     sql.query(
         `UPDATE takedown SET dateNoticeSent="${updateTakedown.dateNoticeSent}",dateDisputeRecieved="${updateTakedown.dateDisputeRecieved}", ` + 
-        `additionalInfo="${updateTakedown.additionalInfo}", status=${updateTakedown.status}` +
+        `additionalInfo="${updateTakedown.additionalInfo}", status=${updateTakedown.status} ` +
         `WHERE id = ${id}`,
         (err, res) => {
           if (err) {

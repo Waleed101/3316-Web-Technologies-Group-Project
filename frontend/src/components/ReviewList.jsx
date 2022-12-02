@@ -48,9 +48,6 @@ function ReviewList(props) {
                                 break
                             }
                             temp.push(<ReviewView vals={res[i]} access={access}/>)
-                            
-                            // setReviews(temp)
-                            // break
                         }
                     }
                     

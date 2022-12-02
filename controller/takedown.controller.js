@@ -62,7 +62,7 @@ exports.update = (req, res) => {
           message: "Could not hide Takedown with id " + req.params.id
           });
       }
-      } else res.send({ message: `Takedown's status was updated successfully!` });
+      } else res.send({ ans: `Takedown's status was updated successfully!` });
   });
 };
 

@@ -25,7 +25,7 @@ module.exports = app => {
     router.post("/takedown/", takedown.create)
 
     // Update status of a takedown
-    router.put("/takedown/:id", takedown.updateStatus)
+    router.put("/takedown/:id", takedown.update)
 
     // Update status of a takedown
     router.get("/takedown/:id", takedown.getByReviewId)

@@ -68,6 +68,7 @@ function ReviewView (props) {
     const [dateNotice, setDateNotice] = useState("")
     const [dateDispute, setDateDispute] = useState("")
     const [status, setStatus] = useState('0')
+    const [takedownId, setTakeDownId] = useState(0)
 
     const [isOpen, setIsOpen] = useState(false)
     const [takedownModal, setModalOpen] = useState(false)
@@ -108,11 +109,13 @@ function ReviewView (props) {
                     setDateNotice(res[0]['dateNoticeSent'])
                     setDateRequested(res[0]['dateRequestRecieved'])
                     setStatus(res[0]['status'].toString())
+                    setTakeDownId(res[0]['id'])
                 }
             })
     }, [])
 
     const create = () => {
+        closeTakedownDialog()
         let body = {
             requestedBy: submittedBy,
             additionalInfo: additionalInfo,
@@ -154,14 +157,16 @@ function ReviewView (props) {
     }
 
     const update = () => {
+        closeTakedownDialog()
         let body = {
             dateDispute: dateDispute,
             dateNotice: dateNotice,
             status: status,
+            additionalInfo: additionalInfo
         }
 
-        fetch(`${url}api/admin/takedown/`, {
-            method: 'POST',
+    fetch(`${url}api/admin/takedown/${takedownId}`, {
+            method: 'PUT',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
@@ -172,7 +177,7 @@ function ReviewView (props) {
             .then(res => {
                 if(res.message) {
                     toast({
-                        title: `Error Creating Takedown Notice`,
+                        title: `Error Updating Takedown Notice`,
                         description: res.message,
                         status: 'error',
                         duration: 10000,
@@ -180,8 +185,8 @@ function ReviewView (props) {
                     })
                 } else {
                     toast({
-                        title: `Created Takedown Notice.`,
-                        description: "Takedown notice was created successfully.",
+                        title: `Updated Takedown Notice.`,
+                        description: res.ans,
                         status: 'success',
                         duration: 5000,
                         isClosable: true,
@@ -248,7 +253,6 @@ function ReviewView (props) {
                                 placeholder = "Additional info submitted by user..."
                                 value = {additionalInfo}
                                 onChange = {(e) => setAdditionalInfo(e.target.value)}
-                                disabled={takedown ? true : false} 
                             />
                         <br /><br />
                         <FormLabel> Requested Date: </FormLabel>
@@ -289,8 +293,8 @@ function ReviewView (props) {
                     <Button colorScheme='ghost' mr={3} onClick={closeTakedownDialog}>
                         Close
                     </Button>
-                    <Button colorScheme='green' mr={3} onClick={takedown ? console.log("1") : create}>
-                        {takedown ? "Save" : "Create"}
+                    <Button colorScheme='green' mr={3} onClick={takedown ? update : create}>
+                        {takedown ? "Update" : "Create"}
                     </Button>
                 </ModalFooter>
                 </ModalContent>
