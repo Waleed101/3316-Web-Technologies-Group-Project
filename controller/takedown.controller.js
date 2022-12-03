@@ -1,17 +1,50 @@
 const Takedown = require("../models/takedown.model.js");
+const Joi = require('@hapi/joi');
+const SanitizeHtml = require('sanitize-html');
+
+const customJoi = Joi.extend((joi) => {
+  return {
+      type: 'string',
+      base: joi.string(),
+      rules: {
+          htmlStrip: {
+              validate(value) {
+                  return SanitizeHtml(value, {
+                      allowedTags: [],
+                      allowedAttributes: {},
+                  });
+              },
+          },
+      },
+  };
+});
 
 // Create and Save a new Takedown
 exports.create = (req, res) => {
+  console.log(req.body)
+  const schema = customJoi.object({
+    dateRequested: customJoi.string().required(),
+    dateNotice: customJoi.string().htmlStrip().allow(null, ''),
+    dateDispute: customJoi.string().htmlStrip().allow(null, ''),
+    requestedBy: customJoi.string().htmlStrip().required(),
+    reviewId: customJoi.number().integer().required(),
+    additionalInfo: customJoi.string().htmlStrip().allow(null, ''),
+    status: customJoi.string().required()
+  });
+
+  const { error } = schema.validate(req.body);
+  if (error) return res.status(400).send({message: "Status 400: " + error.details[0].message});
+
+  req.body = schema.validate(req.body).value
 
   const takedown = new Takedown({
-    id: req.body.id,
-    dateRequestRecieved: req.body.dateRequested ? req.body.dateRequested : "",
-    dateNoticeSent: req.body.dateNotice ? req.body.dateNotice : "",
-    dateDisputeRecieved: req.body.dateDispute ? req.body.dateDispute : "",
-    requestedBy: req.body.requestedBy,
-    reviewId: req.body.reviewId,
-    additionalInfo: req.body.additionalInfo,
-    status: req.body.status
+    dateRequestRecieved: req.body.dateRequested ? req.body.dateRequested : "", // string, required
+    dateNoticeSent: req.body.dateNotice ? req.body.dateNotice : "", // string, opt
+    dateDisputeRecieved: req.body.dateDispute ? req.body.dateDispute : "", // string, opt
+    requestedBy: req.body.requestedBy, // string, required
+    reviewId: req.body.reviewId, // int, required
+    additionalInfo: req.body.additionalInfo, // string, opt
+    status: req.body.status // int, required
   });
 
   console.log(takedown)

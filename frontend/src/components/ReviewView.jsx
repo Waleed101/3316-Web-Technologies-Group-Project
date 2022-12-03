@@ -132,7 +132,6 @@ function ReviewView (props) {
 
     const create = () => {
         closeTakedownDialog()
-        changeHideStatus(status)
         
         let body = {
             requestedBy: submittedBy,
@@ -170,13 +169,13 @@ function ReviewView (props) {
                         duration: 5000,
                         isClosable: true,
                     })
+                    changeHideStatus(status)
                 }
             })
     }
 
     const update = () => {
         closeTakedownDialog()
-        changeHideStatus(status)
         let body = {
             dateDispute: dateDispute,
             dateNotice: dateNotice,
@@ -210,6 +209,7 @@ function ReviewView (props) {
                         duration: 5000,
                         isClosable: true,
                     })
+                    changeHideStatus(status)
                 }
             })
     }
