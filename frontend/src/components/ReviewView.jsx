@@ -80,8 +80,6 @@ function ReviewView (props) {
 
     const [stars, setStars] = useState([])
 
-    const [cookies, setCookie, removeCookie] = useCookies(["user"])
-
 
     const changeContentState = () => {
         setIsOpen(!isOpen)
