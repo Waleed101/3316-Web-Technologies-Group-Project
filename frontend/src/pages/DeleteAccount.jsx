@@ -61,7 +61,14 @@ function DeleteAccount() {
             }).catch((error) => {
             // An error ocurred
             // ...
-            alert(error)
+                
+                toast({
+                    title: `Error Deleting Account`,
+                    description: error,
+                    status: 'error',
+                    duration: 10000,
+                    isClosable: true,
+                })
             });
         
     }
