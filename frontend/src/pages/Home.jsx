@@ -8,7 +8,7 @@ import { Button } from '@chakra-ui/react'
 import { useToast } from "@chakra-ui/react"
 import { Text } from '@chakra-ui/react'
 
-import pdf from './LiamBriggsResume.pdf';
+import pdf from './DMCA.pdf';
 
 function Home() {
     const [cookies, setCookie, removeCookie] = useCookies(["user"])

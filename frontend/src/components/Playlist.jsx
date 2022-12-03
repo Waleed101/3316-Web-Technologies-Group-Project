@@ -327,9 +327,7 @@ function Playlist (props) {
                                         <Flex flex='1' gap='4' alignItems='center' flexWrap='wrap'>
                                             <Box>
                                                 <Heading size='sm'>{props.vals.name} - {convertToTime(props.vals.totalPlayTime)}</Heading>
-                                                <Text fontSize="xs" as="i">
-                                                    Last Updated on {props.vals.updated == "0000-00-00 00:00:00" ? getDate(props.vals.created) : getDate(props.vals.updated)}
-                                                </Text>
+                                                <Text fontSize="xs" as="i">By: { user && user.email == props.vals.createdBy ? "You" : props.vals.name}</Text>
                                             </Box>
                                         </Flex>
                                         <Flex flex='-1' gap='2' alignItems='center' flexWrap='wrap'>
@@ -403,6 +401,9 @@ function Playlist (props) {
                                         <br />
                                         <Text><b>Description: </b> {props.vals.description}</Text>
                                         <Text><b>Average Rating: </b> {avgRating} - {stars.map((s) => <>{s}</>)}</Text>
+                                        <Text fontSize="xs" as="i">
+                                                    Last Updated on {props.vals.updated == "0000-00-00 00:00:00" ? getDate(props.vals.created) : getDate(props.vals.updated)}
+                                                </Text>
                                         <br />
                                         <Heading size="h4">Reviews</Heading>
                                         <Divider />
@@ -412,6 +413,7 @@ function Playlist (props) {
                                         <Divider />
                                         <TrackList tracks={props.vals.tracks.split(",")}></TrackList>
                                         <br />
+
                                     </CardBody> 
                                 </>
                                 

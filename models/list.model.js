@@ -21,12 +21,12 @@ List.create = (newList, result) => {
             return
         } else {
 
-            let queryCheckName = `SELECT * FROM list WHERE name = '${newList.name}'`
+            let queryCheckName = `SELECT * FROM list WHERE name = '${newList.name}' AND createdBy="${newList.createdBy}"`
 
             sql.query(queryCheckName, (err, res) => {
                 if(!res || res.length != 0) {
                     console.log("Exisits...")
-                    result({message: `A list with name ${newList.name} already exisits.`}, null)
+                    result({message: `You already have a list with name ${newList.name}.`}, null)
                     return
                 }
 
@@ -94,19 +94,19 @@ List.findById = (id, result) => {
 
 List.getAll = (info, result) => {
     console.log("Hello")
-    let query = `SELECT * FROM list`
+    let query = `SELECT * FROM list INNER JOIN account ON account.email = list.createdBy`
     let removeTracks = false
 
     if (info.isPublic){
         console.log('In tha loop')
-        query+= ` WHERE isPublic = 1 ORDER BY updated DESC LIMIT 10`
+        query+= ` WHERE isPublic = 1 ORDER BY list.updated DESC LIMIT 10`
         console.log(query)
     }
     else if(info.name) {
-        query += ` WHERE name = "${info.name}" `
+        query += ` WHERE list.name = "${info.name}" `
         removeTracks = false
     } else if (info.user) {
-        query += ` WHERE createdBy = "${info.user}"`
+        query += ` WHERE list.createdBy = "${info.user}"`
         removeTracks = false
     }
 

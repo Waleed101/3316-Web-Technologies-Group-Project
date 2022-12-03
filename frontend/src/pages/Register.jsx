@@ -77,7 +77,13 @@ function Register() {
         .catch((error) => {
             const errorCode = error.code;
             const errorMessage = error.message;
-            alert(error)
+            toast({
+                title: `Error Registering In`,
+                description: error.message,
+                status: 'error',
+                duration: 10000,
+                isClosable: true,
+            })
             return
             // ..
         });

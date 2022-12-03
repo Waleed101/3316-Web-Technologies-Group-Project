@@ -43,7 +43,7 @@ exports.create = (req, res) => {
   const schema = customJoi.object({
     createdBy: customJoi.string().required(),
     name: customJoi.string().max(255).htmlStrip().required(),
-    description: customJoi.string().max(255).htmlStrip(),
+    description: customJoi.string().max(255).htmlStrip().allow(null, ""),
     isPublic: customJoi.boolean(),
     totalPlaytime: customJoi.number().integer(),
     tracks: customJoi.array().items(customJoi.string())
