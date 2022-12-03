@@ -41,7 +41,7 @@ function ReviewList(props) {
 
         fetch(query, {
             headers: {
-            'Authorization': cookies["user"].token ? cookies["user"].token : ""
+                'Authorization': cookies["user"] ? cookies["user"].token : ""
             }
         }) 
             .then(res => res.json())
