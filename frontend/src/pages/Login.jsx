@@ -33,7 +33,6 @@ function Login() {
 
     const toast = useToast()
 
-
     const route = new URLSearchParams(useLocation().search).get("rdr")
     console.log(route)
 
