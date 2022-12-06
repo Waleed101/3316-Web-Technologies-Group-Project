@@ -170,7 +170,7 @@ function Playlist (props) {
                 } else {
                     toast({
                         title: 'Review Published.',
-                        description: `We've published your review on ${props.vals.name}.`,
+                        description: `We've published your review on ${props.vals.list_name}.`,
                         status: 'success',
                         duration: 5000,
                         isClosable: true,
@@ -189,7 +189,7 @@ function Playlist (props) {
 
         let body = JSON.stringify({
             'user': user.email,
-            'name': props.vals.name
+            'name': props.vals.list_name
         })
         
         fetch(`${url}api/secure/list/`,{
@@ -260,7 +260,7 @@ function Playlist (props) {
             >
                 <ModalOverlay />
                 <ModalContent>
-                    <ModalHeader>Commenting on playlist <b>{props.vals.name}</b></ModalHeader>
+                    <ModalHeader>Commenting on playlist <b>{props.vals.list_name}</b></ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
                         <form>
@@ -297,7 +297,7 @@ function Playlist (props) {
             >
                 <ModalOverlay />
                 <ModalContent>
-                    <ModalHeader>Are you sure you want to delete <b>{props.vals.name}</b>?</ModalHeader>
+                    <ModalHeader>Are you sure you want to delete <b>{props.vals.list_name}</b>?</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
                         This action is <b>not</b> reversible.
@@ -326,7 +326,7 @@ function Playlist (props) {
                                     <Flex spacing='4'>
                                         <Flex flex='1' gap='4' alignItems='center' flexWrap='wrap'>
                                             <Box>
-                                                <Heading size='sm'>{props.vals.name} - {convertToTime(props.vals.totalPlayTime)}</Heading>
+                                                <Heading size='sm'>{props.vals.list_name} - {convertToTime(props.vals.totalPlayTime)}</Heading>
                                                 <Text fontSize="xs" as="i">By: { user && user.email == props.vals.createdBy ? "You" : props.vals.name}</Text>
                                             </Box>
                                         </Flex>
