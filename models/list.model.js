@@ -94,7 +94,7 @@ List.findById = (id, result) => {
 
 List.getAll = (info, result) => {
     console.log("Hello")
-    let query = `SELECT * FROM list INNER JOIN account ON account.email = list.createdBy`
+    let query = `SELECT *, list.name as list_name FROM list INNER JOIN account ON account.email = list.createdBy`
     let removeTracks = false
 
     if (info.isPublic){
@@ -147,7 +147,8 @@ List.getAll = (info, result) => {
        
         // console.log(res[1]['updated'])    
         // for (i = 0; i < timeArr.length; i++)
-        // console.log();        
+        // console.log();     
+        console.log(res)   
         result(null, res);
     })
 }
